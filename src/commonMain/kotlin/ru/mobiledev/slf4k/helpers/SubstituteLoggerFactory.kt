@@ -22,59 +22,51 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.slf4j.helpers;
+package ru.mobiledev.slf4k.helpers
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.LinkedBlockingQueue;
-
-import org.slf4j.ILoggerFactory;
-import org.slf4j.Logger;
-import org.slf4j.event.SubstituteLoggingEvent;
+import ru.mobiledev.slf4k.ILoggerFactory
+import ru.mobiledev.slf4k.Logger
+import
+import ru.mobiledev.slf4k.event.SubstituteLoggingEvent
+import kotlin.jvm.Synchronized
 
 /**
- * SubstituteLoggerFactory manages instances of {@link SubstituteLogger}.
+ * SubstituteLoggerFactory manages instances of [SubstituteLogger].
  *
  * @author Ceki G&uuml;lc&uuml;
  * @author Chetan Mehrotra
  */
-public class SubstituteLoggerFactory implements ILoggerFactory {
-
-    boolean postInitialization = false;
-    
-    final Map<String, SubstituteLogger> loggers = new HashMap<String, SubstituteLogger>();
-
-    final LinkedBlockingQueue<SubstituteLoggingEvent> eventQueue = new LinkedBlockingQueue<SubstituteLoggingEvent>();
-
-    synchronized public  Logger getLogger(String name) {
-        SubstituteLogger logger = loggers.get(name);
+class SubstituteLoggerFactory : ILoggerFactory {
+    var postInitialization = false
+    val loggers: MutableMap<String, SubstituteLogger> = HashMap()
+    val eventQueue: LinkedBlockingQueue<SubstituteLoggingEvent> = LinkedBlockingQueue<SubstituteLoggingEvent>()
+    @Synchronized
+    override fun getLogger(name: String): Logger {
+        var logger = loggers[name]
         if (logger == null) {
-            logger = new SubstituteLogger(name, eventQueue, postInitialization);
-            loggers.put(name, logger);
+            logger = SubstituteLogger(name, eventQueue, postInitialization)
+            loggers[name] = logger
         }
-        return logger;
+        return logger
     }
 
-    public List<String> getLoggerNames() {
-        return new ArrayList<String>(loggers.keySet());
+    val loggerNames: List<String>
+        get() = ArrayList<String>(loggers.keys)
+
+    fun getLoggers(): List<SubstituteLogger> {
+        return ArrayList<SubstituteLogger>(loggers.values)
     }
 
-    public List<SubstituteLogger> getLoggers() {
-        return new ArrayList<SubstituteLogger>(loggers.values());
+    fun getEventQueue(): LinkedBlockingQueue<SubstituteLoggingEvent> {
+        return eventQueue
     }
 
-    public LinkedBlockingQueue<SubstituteLoggingEvent> getEventQueue() {
-        return eventQueue;
+    fun postInitialization() {
+        postInitialization = true
     }
 
-    public void postInitialization() {
-    	postInitialization = true;
-    }
-    
-    public void clear() {
-        loggers.clear();
-        eventQueue.clear();
+    fun clear() {
+        loggers.clear()
+        eventQueue.clear()
     }
 }

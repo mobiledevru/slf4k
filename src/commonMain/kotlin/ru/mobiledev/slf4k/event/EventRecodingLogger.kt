@@ -1,323 +1,304 @@
-package org.slf4j.event;
+package ru.mobiledev.slf4k.event
 
-import java.util.Queue;
-
-import org.slf4j.Logger;
-import org.slf4j.Marker;
-import org.slf4j.helpers.MessageFormatter;
-import org.slf4j.helpers.SubstituteLogger;
+import ru.mobiledev.slf4k.Logger
+import ru.mobiledev.slf4k.Marker
+import ru.mobiledev.slf4k.helpers.MessageFormatter
+import ru.mobiledev.slf4k.helpers.SubstituteLogger
 
 /**
  *
  * This class is used to record events during the initialization phase of the
- * underlying logging framework. It is called by {@link SubstituteLogger}.
+ * underlying logging framework. It is called by [SubstituteLogger].
  *
  *
- * @author Ceki G&uumllc&uuml;
+ * @author Ceki G&uuml;lc&uuml;
  * @author Wessel van Norel
- *
  */
-public class EventRecodingLogger implements Logger {
+class EventRecodingLogger(logger: SubstituteLogger, eventQueue: ArrayDeque<SubstituteLoggingEvent>) : Logger {
+    override var name: String? = logger.name
+    var logger: SubstituteLogger
+    var eventQueue: ArrayDeque<SubstituteLoggingEvent>
 
-    String name;
-    SubstituteLogger logger;
-    Queue<SubstituteLoggingEvent> eventQueue;
-
-    // as an event recording logger we have no choice but to record all events
-    final static boolean RECORD_ALL_EVENTS = true;
-
-    public EventRecodingLogger(SubstituteLogger logger, Queue<SubstituteLoggingEvent> eventQueue) {
-        this.logger = logger;
-        this.name = logger.getName();
-        this.eventQueue = eventQueue;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public boolean isTraceEnabled() {
-        return RECORD_ALL_EVENTS;
-    }
-
-    public void trace(String msg) {
-        recordEvent_0Args(Level.TRACE, null, msg, null);
-    }
-
-    public void trace(String format, Object arg) {
-        recordEvent_1Args(Level.TRACE, null, format, arg);
+    init {
+        this.logger = logger
+        this.eventQueue = eventQueue
     }
 
-    public void trace(String format, Object arg1, Object arg2) {
-        recordEvent2Args(Level.TRACE, null, format, arg1, arg2);
-    }
-
-    public void trace(String format, Object... arguments) {
-        recordEventArgArray(Level.TRACE, null, format, arguments);
-    }
+    override val isTraceEnabled: Boolean
+        get() = RECORD_ALL_EVENTS
+    override val isDebugEnabled: Boolean
+        get() = RECORD_ALL_EVENTS
+    override val isInfoEnabled: Boolean
+        get() = RECORD_ALL_EVENTS
+    override val isWarnEnabled: Boolean
+        get() = RECORD_ALL_EVENTS
+    override val isErrorEnabled: Boolean
+        get() = RECORD_ALL_EVENTS
 
-    public void trace(String msg, Throwable t) {
-        recordEvent_0Args(Level.TRACE, null, msg, t);
+    override fun trace(msg: String) {
+        recordEvent_0Args(Level.TRACE, null, msg, null)
     }
 
-    public boolean isTraceEnabled(Marker marker) {
-        return RECORD_ALL_EVENTS;
+    override fun trace(format: String, arg: Any) {
+        recordEvent_1Args(Level.TRACE, null, format, arg)
     }
 
-    public void trace(Marker marker, String msg) {
-        recordEvent_0Args(Level.TRACE, marker, msg, null);
+    override fun trace(format: String, arg1: Any, arg2: Any) {
+        recordEvent2Args(Level.TRACE, null, format, arg1, arg2)
     }
 
-    public void trace(Marker marker, String format, Object arg) {
-        recordEvent_1Args(Level.TRACE, marker, format, arg);
+    override fun trace(format: String, vararg arguments: Any) {
+        recordEventArgArray(Level.TRACE, null, format, arguments)
     }
 
-    public void trace(Marker marker, String format, Object arg1, Object arg2) {
-        recordEvent2Args(Level.TRACE, marker, format, arg1, arg2);
+    override fun trace(msg: String, t: Throwable?) {
+        recordEvent_0Args(Level.TRACE, null, msg, t)
     }
 
-    public void trace(Marker marker, String format, Object... argArray) {
-        recordEventArgArray(Level.TRACE, marker, format, argArray);
+    override fun isTraceEnabled(marker: Marker?): Boolean {
+        return isTraceEnabled
     }
 
-    public void trace(Marker marker, String msg, Throwable t) {
-        recordEvent_0Args(Level.TRACE, marker, msg, t);
+    override fun trace(marker: Marker?, msg: String) {
+        recordEvent_0Args(Level.TRACE, marker, msg, null)
     }
 
-    public boolean isDebugEnabled() {
-        return RECORD_ALL_EVENTS;
+    override fun trace(marker: Marker?, format: String, arg: Any) {
+        recordEvent_1Args(Level.TRACE, marker, format, arg)
     }
 
-    public void debug(String msg) {
-        recordEvent_0Args(Level.DEBUG, null, msg, null);
+    override fun trace(marker: Marker?, format: String, arg1: Any, arg2: Any) {
+        recordEvent2Args(Level.TRACE, marker, format, arg1, arg2)
     }
 
-    public void debug(String format, Object arg) {
-        recordEvent_1Args(Level.DEBUG, null, format, arg);
+    override fun trace(marker: Marker?, format: String, vararg argArray: Any) {
+        recordEventArgArray(Level.TRACE, marker, format, argArray)
     }
 
-    public void debug(String format, Object arg1, Object arg2) {
-        recordEvent2Args(Level.DEBUG, null, format, arg1, arg2);
+    override fun trace(marker: Marker?, msg: String, t: Throwable?) {
+        recordEvent_0Args(Level.TRACE, marker, msg, t)
     }
 
-    public void debug(String format, Object... arguments) {
-        recordEventArgArray(Level.DEBUG, null, format, arguments);
+    override fun debug(msg: String) {
+        recordEvent_0Args(Level.DEBUG, null, msg, null)
     }
 
-    public void debug(String msg, Throwable t) {
-        recordEvent_0Args(Level.DEBUG, null, msg, t);
+    override fun debug(format: String, arg: Any) {
+        recordEvent_1Args(Level.DEBUG, null, format, arg)
     }
 
-    public boolean isDebugEnabled(Marker marker) {
-        return RECORD_ALL_EVENTS;
+    override fun debug(format: String, arg1: Any, arg2: Any) {
+        recordEvent2Args(Level.DEBUG, null, format, arg1, arg2)
     }
 
-    public void debug(Marker marker, String msg) {
-        recordEvent_0Args(Level.DEBUG, marker, msg, null);
+    override fun debug(format: String, vararg arguments: Any) {
+        recordEventArgArray(Level.DEBUG, null, format, arguments)
     }
 
-    public void debug(Marker marker, String format, Object arg) {
-        recordEvent_1Args(Level.DEBUG, marker, format, arg);
+    override fun debug(msg: String, t: Throwable?) {
+        recordEvent_0Args(Level.DEBUG, null, msg, t)
     }
 
-    public void debug(Marker marker, String format, Object arg1, Object arg2) {
-        recordEvent2Args(Level.DEBUG, marker, format, arg1, arg2);
+    override fun isDebugEnabled(marker: Marker?): Boolean {
+        return isDebugEnabled
     }
 
-    public void debug(Marker marker, String format, Object... arguments) {
-        recordEventArgArray(Level.DEBUG, marker, format, arguments);
+    override fun debug(marker: Marker?, msg: String) {
+        recordEvent_0Args(Level.DEBUG, marker, msg, null)
     }
 
-    public void debug(Marker marker, String msg, Throwable t) {
-        recordEvent_0Args(Level.DEBUG, marker, msg, t);
+    override fun debug(marker: Marker?, format: String, arg: Any) {
+        recordEvent_1Args(Level.DEBUG, marker, format, arg)
     }
 
-    public boolean isInfoEnabled() {
-        return RECORD_ALL_EVENTS;
+    override fun debug(marker: Marker?, format: String, arg1: Any, arg2: Any) {
+        recordEvent2Args(Level.DEBUG, marker, format, arg1, arg2)
     }
 
-    public void info(String msg) {
-        recordEvent_0Args(Level.INFO, null, msg, null);
+    override fun debug(marker: Marker?, format: String, vararg arguments: Any) {
+        recordEventArgArray(Level.DEBUG, marker, format, arguments)
     }
 
-    public void info(String format, Object arg) {
-        recordEvent_1Args(Level.INFO, null, format, arg);
+    override fun debug(marker: Marker?, msg: String, t: Throwable?) {
+        recordEvent_0Args(Level.DEBUG, marker, msg, t)
     }
 
-    public void info(String format, Object arg1, Object arg2) {
-        recordEvent2Args(Level.INFO, null, format, arg1, arg2);
+    override fun info(msg: String) {
+        recordEvent_0Args(Level.INFO, null, msg, null)
     }
 
-    public void info(String format, Object... arguments) {
-        recordEventArgArray(Level.INFO, null, format,  arguments);
+    override fun info(format: String, arg: Any) {
+        recordEvent_1Args(Level.INFO, null, format, arg)
     }
 
-    public void info(String msg, Throwable t) {
-        recordEvent_0Args(Level.INFO, null, msg, t);
+    override fun info(format: String, arg1: Any, arg2: Any) {
+        recordEvent2Args(Level.INFO, null, format, arg1, arg2)
     }
 
-    public boolean isInfoEnabled(Marker marker) {
-        return RECORD_ALL_EVENTS;
+    override fun info(format: String, vararg arguments: Any) {
+        recordEventArgArray(Level.INFO, null, format, arguments)
     }
 
-    public void info(Marker marker, String msg) {
-        recordEvent_0Args(Level.INFO, marker, msg, null);
+    override fun info(msg: String, t: Throwable?) {
+        recordEvent_0Args(Level.INFO, null, msg, t)
     }
 
-    public void info(Marker marker, String format, Object arg) {
-        recordEvent_1Args(Level.INFO, marker, format, arg);
+    override fun isInfoEnabled(marker: Marker?): Boolean {
+        return isInfoEnabled
     }
 
-    public void info(Marker marker, String format, Object arg1, Object arg2) {
-        recordEvent2Args(Level.INFO, marker, format, arg1, arg2);
+    override fun info(marker: Marker?, msg: String) {
+        recordEvent_0Args(Level.INFO, marker, msg, null)
     }
 
-    public void info(Marker marker, String format, Object... arguments) {
-        recordEventArgArray(Level.INFO, marker, format, arguments);
+    override fun info(marker: Marker?, format: String, arg: Any) {
+        recordEvent_1Args(Level.INFO, marker, format, arg)
     }
-
-    public void info(Marker marker, String msg, Throwable t) {
-        recordEvent_0Args(Level.INFO, marker, msg, t);
 
+    override fun info(marker: Marker?, format: String, arg1: Any, arg2: Any) {
+        recordEvent2Args(Level.INFO, marker, format, arg1, arg2)
     }
 
-    public boolean isWarnEnabled() {
-        return RECORD_ALL_EVENTS;
+    override fun info(marker: Marker?, format: String, vararg arguments: Any) {
+        recordEventArgArray(Level.INFO, marker, format, arguments)
     }
 
-    public void warn(String msg) {
-        recordEvent_0Args(Level.WARN, null, msg, null);
+    override fun info(marker: Marker?, msg: String, t: Throwable?) {
+        recordEvent_0Args(Level.INFO, marker, msg, t)
     }
 
-    public void warn(String format, Object arg) {
-        recordEvent_1Args(Level.WARN, null, format, arg);
+    override fun warn(msg: String) {
+        recordEvent_0Args(Level.WARN, null, msg, null)
     }
 
-    public void warn(String format, Object arg1, Object arg2) {
-        recordEvent2Args(Level.WARN, null, format, arg1, arg2);
+    override fun warn(format: String, arg: Any) {
+        recordEvent_1Args(Level.WARN, null, format, arg)
     }
 
-    public void warn(String format, Object... arguments) {
-        recordEventArgArray(Level.WARN, null, format, arguments);
+    override fun warn(format: String, arg1: Any, arg2: Any) {
+        recordEvent2Args(Level.WARN, null, format, arg1, arg2)
     }
 
-    public void warn(String msg, Throwable t) {
-        recordEvent_0Args(Level.WARN, null, msg, t);
+    override fun warn(format: String, vararg arguments: Any) {
+        recordEventArgArray(Level.WARN, null, format, arguments)
     }
 
-    public boolean isWarnEnabled(Marker marker) {
-        return RECORD_ALL_EVENTS;
+    override fun warn(msg: String, t: Throwable?) {
+        recordEvent_0Args(Level.WARN, null, msg, t)
     }
 
-    public void warn(Marker marker, String msg) {
-        recordEvent_0Args(Level.WARN, marker, msg, null);
+    override fun isWarnEnabled(marker: Marker?): Boolean {
+        return isWarnEnabled
     }
 
-    public void warn(Marker marker, String format, Object arg) {
-        recordEvent_1Args(Level.WARN, marker, format, arg);
+    override fun warn(marker: Marker?, msg: String) {
+        recordEvent_0Args(Level.WARN, marker, msg, null)
     }
 
-    public void warn(Marker marker, String format, Object arg1, Object arg2) {
-        recordEvent2Args(Level.WARN, marker, format, arg1, arg2);
+    override fun warn(marker: Marker?, format: String, arg: Any) {
+        recordEvent_1Args(Level.WARN, marker, format, arg)
     }
 
-    public void warn(Marker marker, String format, Object... arguments) {
-        recordEventArgArray(Level.WARN, marker, format, arguments);
+    override fun warn(marker: Marker?, format: String, arg1: Any, arg2: Any) {
+        recordEvent2Args(Level.WARN, marker, format, arg1, arg2)
     }
 
-    public void warn(Marker marker, String msg, Throwable t) {
-        recordEvent_0Args(Level.WARN, marker, msg, t);
+    override fun warn(marker: Marker?, format: String, vararg arguments: Any) {
+        recordEventArgArray(Level.WARN, marker, format, arguments)
     }
 
-    public boolean isErrorEnabled() {
-        return RECORD_ALL_EVENTS;
+    override fun warn(marker: Marker?, msg: String, t: Throwable?) {
+        recordEvent_0Args(Level.WARN, marker, msg, t)
     }
 
-    public void error(String msg) {
-        recordEvent_0Args(Level.ERROR, null, msg, null);
+    override fun error(msg: String) {
+        recordEvent_0Args(Level.ERROR, null, msg, null)
     }
 
-    public void error(String format, Object arg) {
-        recordEvent_1Args(Level.ERROR, null, format, arg);
+    override fun error(format: String, arg: Any) {
+        recordEvent_1Args(Level.ERROR, null, format, arg)
     }
 
-    public void error(String format, Object arg1, Object arg2) {
-        recordEvent2Args(Level.ERROR, null, format, arg1, arg2);
+    override fun error(format: String, arg1: Any, arg2: Any) {
+        recordEvent2Args(Level.ERROR, null, format, arg1, arg2)
     }
 
-    public void error(String format, Object... arguments) {
-        recordEventArgArray(Level.ERROR, null, format, arguments);
+    override fun error(format: String, vararg arguments: Any) {
+        recordEventArgArray(Level.ERROR, null, format, arguments)
     }
 
-    public void error(String msg, Throwable t) {
-        recordEvent_0Args(Level.ERROR, null, msg, t);
+    override fun error(msg: String, t: Throwable?) {
+        recordEvent_0Args(Level.ERROR, null, msg, t)
     }
 
-    public boolean isErrorEnabled(Marker marker) {
-        return RECORD_ALL_EVENTS;
+    override fun isErrorEnabled(marker: Marker?): Boolean {
+        return isErrorEnabled
     }
 
-    public void error(Marker marker, String msg) {
-        recordEvent_0Args(Level.ERROR, marker, msg, null);
+    override fun error(marker: Marker?, msg: String) {
+        recordEvent_0Args(Level.ERROR, marker, msg, null)
     }
 
-    public void error(Marker marker, String format, Object arg) {
-        recordEvent_1Args(Level.ERROR, marker, format, arg);
+    override fun error(marker: Marker?, format: String, arg: Any) {
+        recordEvent_1Args(Level.ERROR, marker, format, arg)
     }
 
-    public void error(Marker marker, String format, Object arg1, Object arg2) {
-        recordEvent2Args(Level.ERROR, marker, format, arg1, arg2);
+    override fun error(marker: Marker?, format: String, arg1: Any, arg2: Any) {
+        recordEvent2Args(Level.ERROR, marker, format, arg1, arg2)
     }
 
-    public void error(Marker marker, String format, Object... arguments) {
-        recordEventArgArray(Level.ERROR, marker, format, arguments);
+    override fun error(marker: Marker?, format: String, vararg arguments: Any) {
+        recordEventArgArray(Level.ERROR, marker, format, arguments)
     }
 
-    public void error(Marker marker, String msg, Throwable t) {
-        recordEvent_0Args(Level.ERROR, marker, msg, t);
+    override fun error(marker: Marker?, msg: String, t: Throwable?) {
+        recordEvent_0Args(Level.ERROR, marker, msg, t)
     }
 
-    private void recordEvent_0Args(Level level, Marker marker, String msg, Throwable t) {
-        recordEvent(level, marker, msg, null, t);
+    private fun recordEvent_0Args(level: Level, marker: Marker?, msg: String, t: Throwable?) {
+        recordEvent(level, marker, msg, null, t)
     }
 
-    private void recordEvent_1Args(Level level, Marker marker, String msg, Object arg1) {
-        recordEvent(level, marker, msg, new Object[] { arg1 }, null);
+    private fun recordEvent_1Args(level: Level, marker: Marker?, msg: String, arg1: Any) {
+        recordEvent(level, marker, msg, arrayOf(arg1), null)
     }
 
-    private void recordEvent2Args(Level level, Marker marker, String msg, Object arg1, Object arg2) {
-        if (arg2 instanceof Throwable) {
-            recordEvent(level, marker, msg, new Object[] { arg1 }, (Throwable) arg2);
+    private fun recordEvent2Args(level: Level, marker: Marker?, msg: String, arg1: Any, arg2: Any) {
+        if (arg2 is Throwable) {
+            recordEvent(level, marker, msg, arrayOf(arg1), arg2)
         } else {
-            recordEvent(level, marker, msg, new Object[] { arg1, arg2 }, null);
+            recordEvent(level, marker, msg, arrayOf(arg1, arg2), null)
         }
     }
 
-    private void recordEventArgArray(Level level, Marker marker, String msg, Object[] args) {
-        Throwable throwableCandidate = MessageFormatter.getThrowableCandidate(args);
+    private fun recordEventArgArray(level: Level, marker: Marker?, msg: String, args: Array<out Any>) {
+        val throwableCandidate: Throwable? = MessageFormatter.getThrowableCandidate(args)
         if (throwableCandidate != null) {
-            Object[] trimmedCopy = MessageFormatter.trimmedCopy(args);
-            recordEvent(level, marker, msg, trimmedCopy, throwableCandidate);
+            val trimmedCopy: Array<Any> = MessageFormatter.trimmedCopy(args)
+            recordEvent(level, marker, msg, trimmedCopy, throwableCandidate)
         } else {
-            recordEvent(level, marker, msg, args, null);
+            recordEvent(level, marker, msg, args, null)
         }
     }
-
 
     // WARNING: this method assumes that any throwable is properly extracted
-    private void recordEvent(Level level, Marker marker, String msg, Object[] args, Throwable throwable) {
-        SubstituteLoggingEvent loggingEvent = new SubstituteLoggingEvent();
-        loggingEvent.setTimeStamp(System.currentTimeMillis());
-        loggingEvent.setLevel(level);
-        loggingEvent.setLogger(logger);
-        loggingEvent.setLoggerName(name);
-        loggingEvent.setMarker(marker);
-        loggingEvent.setMessage(msg);
-        loggingEvent.setThreadName(Thread.currentThread().getName());
+    private fun recordEvent(level: Level, marker: Marker?, msg: String, args: Array<out Any>?, throwable: Throwable?) {
+        val loggingEvent = SubstituteLoggingEvent()
+//        loggingEvent.timeStamp = java.lang.System.currentTimeMillis()
+        loggingEvent.timeStamp = kotlin.system.getTimeMillis()
+        loggingEvent.level = level
+        loggingEvent.setLogger(logger)
+        loggingEvent.loggerName = name
+        loggingEvent.marker = marker
+        loggingEvent.message = msg
+        loggingEvent.threadName = java.lang.Thread.currentThread().getName()
+        loggingEvent.argumentArray = args!!
+        loggingEvent.throwable = throwable
+        eventQueue.add(loggingEvent)
+    }
 
-        loggingEvent.setArgumentArray(args);
-        loggingEvent.setThrowable(throwable);
-
-        eventQueue.add(loggingEvent);
+    companion object {
+        // as an event recording logger we have no choice but to record all events
+        const val RECORD_ALL_EVENTS = true
     }
 }

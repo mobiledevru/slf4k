@@ -22,36 +22,37 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.slf4j.spi;
+package ru.mobiledev.slf4k.spi
 
-import org.slf4j.IMarkerFactory;
+import ru.mobiledev.slf4k.IMarkerFactory
 
 /**
- * An internal interface which helps the static {@link org.slf4j.MarkerFactory} 
- * class bind with the appropriate {@link IMarkerFactory} instance. 
- * 
+ * An internal interface which helps the static [org.slf4j.MarkerFactory]
+ * class bind with the appropriate [IMarkerFactory] instance.
+ *
  * @author Ceki G&uuml;lc&uuml;
  */
-public interface MarkerFactoryBinder {
+interface MarkerFactoryBinder {
 
     /**
-     * Return the instance of {@link IMarkerFactory} that 
-     * {@link org.slf4j.MarkerFactory} class should bind to.
-     * 
-     * @return the instance of {@link IMarkerFactory} that 
-     * {@link org.slf4j.MarkerFactory} class should bind to.
+     * Return the instance of [IMarkerFactory] that
+     * [org.slf4j.MarkerFactory] class should bind to.
+     *
+     * @return the instance of [IMarkerFactory] that
+     * [org.slf4j.MarkerFactory] class should bind to.
      */
-    public IMarkerFactory getMarkerFactory();
+    val markerFactory: IMarkerFactory
 
     /**
-     * The String form of the {@link IMarkerFactory} object that this 
-     * <code>MarkerFactoryBinder</code> instance is <em>intended</em> to return. 
-     * 
-     * <p>This method allows the developer to interrogate this binder's intention
-     * which may be different from the {@link IMarkerFactory} instance it is able to 
+     * The String form of the [IMarkerFactory] object that this
+     * `MarkerFactoryBinder` instance is *intended* to return.
+     *
+     *
+     * This method allows the developer to interrogate this binder's intention
+     * which may be different from the [IMarkerFactory] instance it is able to
      * return. Such a discrepancy should only occur in case of errors.
-     * 
-     * @return the class name of the intended {@link IMarkerFactory} instance
+     *
+     * @return the class name of the intended [IMarkerFactory] instance
      */
-    public String getMarkerFactoryClassStr();
+    val markerFactoryClassStr: String
 }

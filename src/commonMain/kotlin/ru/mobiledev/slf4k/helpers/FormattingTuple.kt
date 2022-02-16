@@ -22,41 +22,22 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.slf4j.helpers;
+package ru.mobiledev.slf4k.helpers
+
+import kotlin.jvm.JvmOverloads
 
 /**
- * Holds the results of formatting done by {@link MessageFormatter}.
- * 
+ * Holds the results of formatting done by [MessageFormatter].
+ *
  * @author Joern Huxhorn
  */
-public class FormattingTuple {
+class FormattingTuple @JvmOverloads constructor(
+    val message: String?,
+    val argArray: Array<Any>? = null,
+    val throwable: Throwable? = null
+) {
 
-    static public FormattingTuple NULL = new FormattingTuple(null);
-
-    private String message;
-    private Throwable throwable;
-    private Object[] argArray;
-
-    public FormattingTuple(String message) {
-        this(message, null, null);
+    companion object {
+        var NULL = FormattingTuple(null)
     }
-
-    public FormattingTuple(String message, Object[] argArray, Throwable throwable) {
-        this.message = message;
-        this.throwable = throwable;
-        this.argArray = argArray;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public Object[] getArgArray() {
-        return argArray;
-    }
-
-    public Throwable getThrowable() {
-        return throwable;
-    }
-
 }

@@ -1,13 +1,12 @@
-package org.slf4j.event;
+package ru.mobiledev.slf4k.event
 
-import org.slf4j.spi.LocationAwareLogger;
+import ru.mobiledev.slf4k.spi.LocationAwareLogger
 
-public class EventConstants {
-    public static final int ERROR_INT = LocationAwareLogger.ERROR_INT;
-    public static final int WARN_INT = LocationAwareLogger.WARN_INT;
-    public static final int INFO_INT = LocationAwareLogger.INFO_INT;
-    public static final int DEBUG_INT = LocationAwareLogger.DEBUG_INT;
-    public static final int TRACE_INT = LocationAwareLogger.TRACE_INT;
-    public static final String NA_SUBST = "NA/SubstituteLogger";
-
+object EventConstants {
+    val ERROR_INT: Int = LocationAwareLogger.ERROR_INT
+    val WARN_INT: Int = LocationAwareLogger.WARN_INT
+    val INFO_INT: Int = LocationAwareLogger.INFO_INT
+    val DEBUG_INT: Int = LocationAwareLogger.DEBUG_INT
+    val TRACE_INT: Int = LocationAwareLogger.TRACE_INT
+    const val NA_SUBST = "NA/SubstituteLogger"
 }

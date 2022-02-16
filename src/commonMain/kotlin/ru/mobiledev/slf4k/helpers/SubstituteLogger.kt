@@ -22,369 +22,352 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.slf4j.helpers;
+package ru.mobiledev.slf4k.helpers
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Queue;
-
-import org.slf4j.Logger;
-import org.slf4j.Marker;
-import org.slf4j.event.EventRecodingLogger;
-import org.slf4j.event.LoggingEvent;
-import org.slf4j.event.SubstituteLoggingEvent;
+import ru.mobiledev.slf4k.Logger
+import ru.mobiledev.slf4k.Marker
+import ru.mobiledev.slf4k.event.SubstituteLoggingEvent
+import ru.mobiledev.slf4k.event.EventRecodingLogger
+import ru.mobiledev.slf4k.helpers.NOPLogger
+import ru.mobiledev.slf4k.event.LoggingEvent
+import java.lang.NoSuchMethodException
+import java.lang.IllegalAccessException
+import java.lang.IllegalArgumentException
+import java.lang.reflect.InvocationTargetException
+import kotlin.jvm.Volatile
 
 /**
  * A logger implementation which logs via a delegate logger. By default, the delegate is a
- * {@link NOPLogger}. However, a different delegate can be set at any time.
- * <p/>
- * See also the <a href="http://www.slf4j.org/codes.html#substituteLogger">relevant
- * error code</a> documentation.
+ * [NOPLogger]. However, a different delegate can be set at any time.
+ *
+ *
+ * See also the [relevant
+ * error code](http://www.slf4j.org/codes.html#substituteLogger) documentation.
  *
  * @author Chetan Mehrotra
  * @author Ceki Gulcu
  */
-public class SubstituteLogger implements Logger {
+class SubstituteLogger(
+    override val name: String,
+    eventQueue: ArrayDeque<SubstituteLoggingEvent>,
+    createdPostInitialization: Boolean
+) : Logger {
 
-    private final String name;
-    private volatile Logger _delegate;
-    private Boolean delegateEventAware;
-    private Method logMethodCache;
-    private EventRecodingLogger eventRecodingLogger;
-    private Queue<SubstituteLoggingEvent> eventQueue;
+    @Volatile
+    private var _delegate: Logger? = null
+    var isDelegateEventAware: Boolean? = null
+        get() {
+            if (field != null) return field
+            try {
+                logMethodCache = _delegate.javaClass.getMethod("log", LoggingEvent::class.java)
+                field = true
+            } catch (e: NoSuchMethodException) {
+                field = false
+            }
+            return field
+        }
+        private set
+    private var logMethodCache: java.lang.reflect.Method? = null
+    private var eventRecodingLogger: EventRecodingLogger? = null
+    private val eventQueue: ArrayDeque<SubstituteLoggingEvent>
+    private val createdPostInitialization: Boolean
 
-    private final boolean createdPostInitialization;
-    
-    public SubstituteLogger(String name, Queue<SubstituteLoggingEvent> eventQueue, boolean createdPostInitialization) {
-        this.name = name;
-        this.eventQueue = eventQueue;
-        this.createdPostInitialization = createdPostInitialization;
+    init {
+        this.eventQueue = eventQueue
+        this.createdPostInitialization = createdPostInitialization
     }
 
-    public String getName() {
-        return name;
+    override val isTraceEnabled: Boolean
+        get() = delegate().isTraceEnabled
+
+    override fun trace(msg: String) {
+        delegate().trace(msg)
     }
 
-    public boolean isTraceEnabled() {
-        return delegate().isTraceEnabled();
+    override fun trace(format: String, arg: Any) {
+        delegate().trace(format, arg)
     }
 
-    public void trace(String msg) {
-        delegate().trace(msg);
+    override fun trace(format: String, arg1: Any, arg2: Any) {
+        delegate().trace(format, arg1, arg2)
     }
 
-    public void trace(String format, Object arg) {
-        delegate().trace(format, arg);
+    override fun trace(format: String, vararg arguments: Any) {
+        delegate().trace(format, *arguments)
     }
 
-    public void trace(String format, Object arg1, Object arg2) {
-        delegate().trace(format, arg1, arg2);
+    override fun trace(msg: String, t: Throwable?) {
+        delegate().trace(msg, t)
     }
 
-    public void trace(String format, Object... arguments) {
-        delegate().trace(format, arguments);
+    override fun isTraceEnabled(marker: Marker?): Boolean {
+        return delegate().isTraceEnabled(marker)
     }
 
-    public void trace(String msg, Throwable t) {
-        delegate().trace(msg, t);
+    override fun trace(marker: Marker?, msg: String) {
+        delegate().trace(marker, msg)
     }
 
-    public boolean isTraceEnabled(Marker marker) {
-        return delegate().isTraceEnabled(marker);
+    override fun trace(marker: Marker?, format: String, arg: Any) {
+        delegate().trace(marker, format, arg)
     }
 
-    public void trace(Marker marker, String msg) {
-        delegate().trace(marker, msg);
+    override fun trace(marker: Marker?, format: String, arg1: Any, arg2: Any) {
+        delegate().trace(marker, format, arg1, arg2)
     }
 
-    public void trace(Marker marker, String format, Object arg) {
-        delegate().trace(marker, format, arg);
+    override fun trace(marker: Marker?, format: String, vararg arguments: Any) {
+        delegate().trace(marker, format, *arguments)
     }
 
-    public void trace(Marker marker, String format, Object arg1, Object arg2) {
-        delegate().trace(marker, format, arg1, arg2);
+    override fun trace(marker: Marker?, msg: String, t: Throwable?) {
+        delegate().trace(marker, msg, t)
     }
 
-    public void trace(Marker marker, String format, Object... arguments) {
-        delegate().trace(marker, format, arguments);
+    override val isDebugEnabled: Boolean
+        get() = delegate().isDebugEnabled
+
+    override fun debug(msg: String) {
+        delegate().debug(msg)
     }
 
-    public void trace(Marker marker, String msg, Throwable t) {
-        delegate().trace(marker, msg, t);
+    override fun debug(format: String, arg: Any) {
+        delegate().debug(format, arg)
     }
 
-    public boolean isDebugEnabled() {
-        return delegate().isDebugEnabled();
+    override fun debug(format: String, arg1: Any, arg2: Any) {
+        delegate().debug(format, arg1, arg2)
     }
 
-    public void debug(String msg) {
-        delegate().debug(msg);
+    override fun debug(format: String, vararg arguments: Any) {
+        delegate().debug(format, *arguments)
     }
 
-    public void debug(String format, Object arg) {
-        delegate().debug(format, arg);
+    override fun debug(msg: String, t: Throwable?) {
+        delegate().debug(msg, t)
     }
 
-    public void debug(String format, Object arg1, Object arg2) {
-        delegate().debug(format, arg1, arg2);
+    override fun isDebugEnabled(marker: Marker?): Boolean {
+        return delegate().isDebugEnabled(marker)
     }
 
-    public void debug(String format, Object... arguments) {
-        delegate().debug(format, arguments);
+    override fun debug(marker: Marker?, msg: String) {
+        delegate().debug(marker, msg)
     }
 
-    public void debug(String msg, Throwable t) {
-        delegate().debug(msg, t);
+    override fun debug(marker: Marker?, format: String, arg: Any) {
+        delegate().debug(marker, format, arg)
     }
 
-    public boolean isDebugEnabled(Marker marker) {
-        return delegate().isDebugEnabled(marker);
+    override fun debug(marker: Marker?, format: String, arg1: Any, arg2: Any) {
+        delegate().debug(marker, format, arg1, arg2)
     }
 
-    public void debug(Marker marker, String msg) {
-        delegate().debug(marker, msg);
+    override fun debug(marker: Marker?, format: String, vararg arguments: Any) {
+        delegate().debug(marker, format, *arguments)
     }
 
-    public void debug(Marker marker, String format, Object arg) {
-        delegate().debug(marker, format, arg);
+    override fun debug(marker: Marker?, msg: String, t: Throwable?) {
+        delegate().debug(marker, msg, t)
     }
 
-    public void debug(Marker marker, String format, Object arg1, Object arg2) {
-        delegate().debug(marker, format, arg1, arg2);
+    override val isInfoEnabled: Boolean
+        get() = delegate().isInfoEnabled
+
+    override fun info(msg: String) {
+        delegate().info(msg)
     }
 
-    public void debug(Marker marker, String format, Object... arguments) {
-        delegate().debug(marker, format, arguments);
+    override fun info(format: String, arg: Any) {
+        delegate().info(format, arg)
     }
 
-    public void debug(Marker marker, String msg, Throwable t) {
-        delegate().debug(marker, msg, t);
+    override fun info(format: String, arg1: Any, arg2: Any) {
+        delegate().info(format, arg1, arg2)
     }
 
-    public boolean isInfoEnabled() {
-        return delegate().isInfoEnabled();
+    override fun info(format: String, vararg arguments: Any) {
+        delegate().info(format, *arguments)
     }
 
-    public void info(String msg) {
-        delegate().info(msg);
+    override fun info(msg: String, t: Throwable?) {
+        delegate().info(msg, t)
     }
 
-    public void info(String format, Object arg) {
-        delegate().info(format, arg);
+    override fun isInfoEnabled(marker: Marker?): Boolean {
+        return delegate().isInfoEnabled(marker)
     }
 
-    public void info(String format, Object arg1, Object arg2) {
-        delegate().info(format, arg1, arg2);
+    override fun info(marker: Marker?, msg: String) {
+        delegate().info(marker, msg)
     }
 
-    public void info(String format, Object... arguments) {
-        delegate().info(format, arguments);
+    override fun info(marker: Marker?, format: String, arg: Any) {
+        delegate().info(marker, format, arg)
     }
 
-    public void info(String msg, Throwable t) {
-        delegate().info(msg, t);
+    override fun info(marker: Marker?, format: String, arg1: Any, arg2: Any) {
+        delegate().info(marker, format, arg1, arg2)
     }
 
-    public boolean isInfoEnabled(Marker marker) {
-        return delegate().isInfoEnabled(marker);
+    override fun info(marker: Marker?, format: String, vararg arguments: Any) {
+        delegate().info(marker, format, *arguments)
     }
 
-    public void info(Marker marker, String msg) {
-        delegate().info(marker, msg);
+    override fun info(marker: Marker?, msg: String, t: Throwable?) {
+        delegate().info(marker, msg, t)
     }
 
-    public void info(Marker marker, String format, Object arg) {
-        delegate().info(marker, format, arg);
+    override val isWarnEnabled: Boolean
+        get() = delegate().isWarnEnabled
+
+    override fun warn(msg: String) {
+        delegate().warn(msg)
     }
 
-    public void info(Marker marker, String format, Object arg1, Object arg2) {
-        delegate().info(marker, format, arg1, arg2);
+    override fun warn(format: String, arg: Any) {
+        delegate().warn(format, arg)
     }
 
-    public void info(Marker marker, String format, Object... arguments) {
-        delegate().info(marker, format, arguments);
+    override fun warn(format: String, arg1: Any, arg2: Any) {
+        delegate().warn(format, arg1, arg2)
     }
 
-    public void info(Marker marker, String msg, Throwable t) {
-        delegate().info(marker, msg, t);
+    override fun warn(format: String, vararg arguments: Any) {
+        delegate().warn(format, *arguments)
     }
 
-    public boolean isWarnEnabled() {
-        return delegate().isWarnEnabled();
+    override fun warn(msg: String, t: Throwable?) {
+        delegate().warn(msg, t)
     }
 
-    public void warn(String msg) {
-        delegate().warn(msg);
+    override fun isWarnEnabled(marker: Marker?): Boolean {
+        return delegate().isWarnEnabled(marker)
     }
 
-    public void warn(String format, Object arg) {
-        delegate().warn(format, arg);
+    override fun warn(marker: Marker?, msg: String) {
+        delegate().warn(marker, msg)
     }
 
-    public void warn(String format, Object arg1, Object arg2) {
-        delegate().warn(format, arg1, arg2);
+    override fun warn(marker: Marker?, format: String, arg: Any) {
+        delegate().warn(marker, format, arg)
     }
 
-    public void warn(String format, Object... arguments) {
-        delegate().warn(format, arguments);
+    override fun warn(marker: Marker?, format: String, arg1: Any, arg2: Any) {
+        delegate().warn(marker, format, arg1, arg2)
     }
 
-    public void warn(String msg, Throwable t) {
-        delegate().warn(msg, t);
+    override fun warn(marker: Marker?, format: String, vararg arguments: Any) {
+        delegate().warn(marker, format, *arguments)
     }
 
-    public boolean isWarnEnabled(Marker marker) {
-        return delegate().isWarnEnabled(marker);
+    override fun warn(marker: Marker?, msg: String, t: Throwable?) {
+        delegate().warn(marker, msg, t)
     }
 
-    public void warn(Marker marker, String msg) {
-        delegate().warn(marker, msg);
+    override val isErrorEnabled: Boolean
+        get() = delegate().isErrorEnabled
+
+    override fun error(msg: String) {
+        delegate().error(msg)
     }
 
-    public void warn(Marker marker, String format, Object arg) {
-        delegate().warn(marker, format, arg);
+    override fun error(format: String, arg: Any) {
+        delegate().error(format, arg)
     }
 
-    public void warn(Marker marker, String format, Object arg1, Object arg2) {
-        delegate().warn(marker, format, arg1, arg2);
+    override fun error(format: String, arg1: Any, arg2: Any) {
+        delegate().error(format, arg1, arg2)
     }
 
-    public void warn(Marker marker, String format, Object... arguments) {
-        delegate().warn(marker, format, arguments);
+    override fun error(format: String, vararg arguments: Any) {
+        delegate().error(format, *arguments)
     }
 
-    public void warn(Marker marker, String msg, Throwable t) {
-        delegate().warn(marker, msg, t);
+    override fun error(msg: String, t: Throwable?) {
+        delegate().error(msg, t)
     }
 
-    public boolean isErrorEnabled() {
-        return delegate().isErrorEnabled();
+    override fun isErrorEnabled(marker: Marker?): Boolean {
+        return delegate().isErrorEnabled(marker)
     }
 
-    public void error(String msg) {
-        delegate().error(msg);
+    override fun error(marker: Marker?, msg: String) {
+        delegate().error(marker, msg)
     }
 
-    public void error(String format, Object arg) {
-        delegate().error(format, arg);
+    override fun error(marker: Marker?, format: String, arg: Any) {
+        delegate().error(marker, format, arg)
     }
 
-    public void error(String format, Object arg1, Object arg2) {
-        delegate().error(format, arg1, arg2);
+    override fun error(marker: Marker?, format: String, arg1: Any, arg2: Any) {
+        delegate().error(marker, format, arg1, arg2)
     }
 
-    public void error(String format, Object... arguments) {
-        delegate().error(format, arguments);
+    override fun error(marker: Marker?, format: String, vararg arguments: Any) {
+        delegate().error(marker, format, *arguments)
     }
 
-    public void error(String msg, Throwable t) {
-        delegate().error(msg, t);
+    override fun error(marker: Marker?, msg: String, t: Throwable?) {
+        delegate().error(marker, msg, t)
     }
 
-    public boolean isErrorEnabled(Marker marker) {
-        return delegate().isErrorEnabled(marker);
+    override fun equals(o: Any?): Boolean {
+        if (this === o) return true
+        if (o == null || javaClass != o.javaClass) return false
+        val that = o as SubstituteLogger
+        return if (name != that.name) false else true
     }
 
-    public void error(Marker marker, String msg) {
-        delegate().error(marker, msg);
-    }
-
-    public void error(Marker marker, String format, Object arg) {
-        delegate().error(marker, format, arg);
-    }
-
-    public void error(Marker marker, String format, Object arg1, Object arg2) {
-        delegate().error(marker, format, arg1, arg2);
-    }
-
-    public void error(Marker marker, String format, Object... arguments) {
-        delegate().error(marker, format, arguments);
-    }
-
-    public void error(Marker marker, String msg, Throwable t) {
-        delegate().error(marker, msg, t);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-
-        SubstituteLogger that = (SubstituteLogger) o;
-
-        if (!name.equals(that.name))
-            return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return name.hashCode();
+    override fun hashCode(): Int {
+        return name.hashCode()
     }
 
     /**
-     * Return the delegate logger instance if set. Otherwise, return a {@link NOPLogger}
+     * Return the delegate logger instance if set. Otherwise, return a [NOPLogger]
      * instance.
      */
-    Logger delegate() {
-        if(_delegate != null) {
-            return _delegate;
+    fun delegate(): Logger {
+        val delegate = _delegate
+        if (delegate != null) {
+            return delegate
         }
-        if(createdPostInitialization) {
-            return NOPLogger.NOP_LOGGER;
+        return if (createdPostInitialization) {
+            NOPLogger.NOP_LOGGER
         } else {
-            return getEventRecordingLogger();
+            eventRecordingLogger
         }
     }
 
-    private Logger getEventRecordingLogger() {
-        if (eventRecodingLogger == null) {
-            eventRecodingLogger = new EventRecodingLogger(this, eventQueue);
+    private val eventRecordingLogger: Logger
+        private get() {
+            if (eventRecodingLogger == null) {
+                eventRecodingLogger = EventRecodingLogger(this, eventQueue)
+            }
+            return eventRecodingLogger!!
         }
-        return eventRecodingLogger;
-    }
 
     /**
-     * Typically called after the {@link org.slf4j.LoggerFactory} initialization phase is completed.
+     * Typically called after the [org.slf4j.LoggerFactory] initialization phase is completed.
      * @param delegate
      */
-    public void setDelegate(Logger delegate) {
-        this._delegate = delegate;
+    fun setDelegate(delegate: Logger?) {
+        _delegate = delegate
     }
 
-    public boolean isDelegateEventAware() {
-        if (delegateEventAware != null)
-            return delegateEventAware;
-
-        try {
-            logMethodCache = _delegate.getClass().getMethod("log", LoggingEvent.class);
-            delegateEventAware = Boolean.TRUE;
-        } catch (NoSuchMethodException e) {
-            delegateEventAware = Boolean.FALSE;
-        }
-        return delegateEventAware;
-    }
-
-    public void log(LoggingEvent event) {
-        if (isDelegateEventAware()) {
+    fun log(event: LoggingEvent?) {
+        if (isDelegateEventAware!!) {
             try {
-                logMethodCache.invoke(_delegate, event);
-            } catch (IllegalAccessException e) {
-            } catch (IllegalArgumentException e) {
-            } catch (InvocationTargetException e) {
+                logMethodCache.invoke(_delegate, event)
+            } catch (e: IllegalAccessException) {
+            } catch (e: IllegalArgumentException) {
+            } catch (e: InvocationTargetException) {
             }
         }
     }
 
-
-    public boolean isDelegateNull() {
-        return _delegate == null;
-    }
-
-    public boolean isDelegateNOP() {
-        return _delegate instanceof NOPLogger;
-    }
+    val isDelegateNull: Boolean
+        get() = _delegate == null
+    val isDelegateNOP: Boolean
+        get() = _delegate is NOPLogger
 }

@@ -22,46 +22,46 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.slf4j.impl;
+package ru.mobiledev.slf4k.impl
 
-import org.slf4j.spi.MDCAdapter;
+import ru.mobiledev.slf4k.spi.MDCAdapter
 
 /**
- * This class is only a stub. Real implementations are found in 
+ * This class is only a stub. Real implementations are found in
  * each SLF4J binding project, e.g. slf4j-nop, slf4j-log4j12 etc.
  *
  * @author Ceki G&uuml;lc&uuml;
  */
-public class StaticMDCBinder {
+class StaticMDCBinder private constructor() {
 
-    /**
-     * The unique instance of this class.
-     */
-    public static final StaticMDCBinder SINGLETON = new StaticMDCBinder();
-
-    private StaticMDCBinder() {
-        throw new UnsupportedOperationException("This code should never make it into the jar");
+    init {
+        throw UnsupportedOperationException("This code should never make it into the jar")
     }
 
     /**
-     * Return the singleton of this class.
-     * 
-     * @return the StaticMDCBinder singleton
-     * @since 1.7.14
+     * Currently this method always returns an instance of
+     * [StaticMDCBinder].
      */
-    public static final StaticMDCBinder getSingleton() {
-        return SINGLETON;
-    }
+    val mDCA: MDCAdapter
+        get() = throw UnsupportedOperationException("This code should never make it into the jar")
 
-    /**
-     * Currently this method always returns an instance of 
-     * {@link StaticMDCBinder}.
-     */
-    public MDCAdapter getMDCA() {
-        throw new UnsupportedOperationException("This code should never make it into the jar");
-    }
+    val mDCAdapterClassStr: String
+        get() = throw UnsupportedOperationException("This code should never make it into the jar")
 
-    public String getMDCAdapterClassStr() {
-        throw new UnsupportedOperationException("This code should never make it into the jar");
+    companion object {
+        /**
+         * Return the singleton of this class.
+         *
+         * @return the StaticMDCBinder singleton
+         * @since 1.7.14
+         */
+        /**
+         * The unique instance of this class.
+         */
+        private val SINGLETON = StaticMDCBinder()
+
+        fun getSingleton(): StaticMDCBinder {
+            return SINGLETON
+        }
     }
 }

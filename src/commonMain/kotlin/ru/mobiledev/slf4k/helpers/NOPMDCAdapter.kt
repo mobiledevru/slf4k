@@ -22,42 +22,31 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.slf4j.helpers;
+package ru.mobiledev.slf4k.helpers
 
-import java.util.Map;
-
-import org.slf4j.spi.MDCAdapter;
+import ru.mobiledev.slf4k.spi.MDCAdapter
 
 /**
- * This adapter is an empty implementation of the {@link MDCAdapter} interface.
+ * This adapter is an empty implementation of the [MDCAdapter] interface.
  * It is used for all logging systems which do not support mapped
- * diagnostic contexts such as JDK14, simple and NOP. 
- * 
+ * diagnostic contexts such as JDK14, simple and NOP.
+ *
  * @author Ceki G&uuml;lc&uuml;
- * 
+ *
  * @since 1.4.1
  */
-public class NOPMDCAdapter implements MDCAdapter {
-
-    public void clear() {
+class NOPMDCAdapter : MDCAdapter {
+    override fun clear() {}
+    override operator fun get(key: String): String? {
+        return null
     }
 
-    public String get(String key) {
-        return null;
-    }
+    override fun put(key: String, `val`: String?) {}
+    override fun remove(key: String) {}
+    override val copyOfContextMap: Map<String, String>?
+        get() = null
 
-    public void put(String key, String val) {
-    }
-
-    public void remove(String key) {
-    }
-
-    public Map<String, String> getCopyOfContextMap() {
-        return null;
-    }
-
-    public void setContextMap(Map<String, String> contextMap) {
+    override fun setContextMap(contextMap: Map<String, String>?) {
         // NOP
     }
-
 }

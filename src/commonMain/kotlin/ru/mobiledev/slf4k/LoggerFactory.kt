@@ -22,414 +22,416 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.slf4j;
+package ru.mobiledev.slf4k
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.LinkedBlockingQueue;
-
-import org.slf4j.event.SubstituteLoggingEvent;
-import org.slf4j.helpers.NOPLoggerFactory;
-import org.slf4j.helpers.SubstituteLogger;
-import org.slf4j.helpers.SubstituteLoggerFactory;
-import org.slf4j.helpers.Util;
-import org.slf4j.impl.StaticLoggerBinder;
+import ru.mobiledev.slf4k.helpers.Util.safeGetBooleanSystemProperty
+import ru.mobiledev.slf4k.helpers.Util.report
+import ru.mobiledev.slf4k.helpers.Util.safeGetSystemProperty
+import ru.mobiledev.slf4k.helpers.Util.callingClass
+import ru.mobiledev.slf4k.helpers.SubstituteLoggerFactory
+import ru.mobiledev.slf4k.helpers.NOPLoggerFactory
+import ru.mobiledev.slf4k.impl.StaticLoggerBinder
+import java.lang.NoClassDefFoundError
+import java.lang.NoSuchMethodError
+import java.lang.IllegalStateException
+import ru.mobiledev.slf4k.helpers.SubstituteLogger
+import java.util.concurrent.LinkedBlockingQueue
+import ru.mobiledev.slf4k.event.SubstituteLoggingEvent
+import java.util.Arrays
+import java.lang.NoSuchFieldError
+import java.util.LinkedHashSet
+import java.util.Enumeration
+import java.io.IOException
+import java.util.Locale
+import ru.mobiledev.slf4k.ILoggerFactory
+import kotlin.jvm.Volatile
+import kotlin.reflect.KClass
 
 /**
- * The <code>LoggerFactory</code> is a utility class producing Loggers for
+ * The `LoggerFactory` is a utility class producing Loggers for
  * various logging APIs, most notably for log4j, logback and JDK 1.4 logging.
- * Other implementations such as {@link org.slf4j.impl.NOPLogger NOPLogger} and
- * {@link org.slf4j.impl.SimpleLogger SimpleLogger} are also supported.
- * <p/>
- * <p/>
- * <code>LoggerFactory</code> is essentially a wrapper around an
- * {@link ILoggerFactory} instance bound with <code>LoggerFactory</code> at
+ * Other implementations such as [NOPLogger][org.slf4j.impl.NOPLogger] and
+ * [SimpleLogger][org.slf4j.impl.SimpleLogger] are also supported.
+ *
+ *
+ *
+ *
+ * `LoggerFactory` is essentially a wrapper around an
+ * [ILoggerFactory] instance bound with `LoggerFactory` at
  * compile time.
- * <p/>
- * <p/>
- * Please note that all methods in <code>LoggerFactory</code> are static.
- * 
- * 
+ *
+ *
+ *
+ *
+ * Please note that all methods in `LoggerFactory` are static.
+ *
+ *
  * @author Alexander Dorokhine
  * @author Robert Elliot
  * @author Ceki G&uuml;lc&uuml;
- * 
  */
-public final class LoggerFactory {
+object LoggerFactory {
+    const val CODES_PREFIX = "http://www.slf4j.org/codes.html"
+    const val NO_STATICLOGGERBINDER_URL = CODES_PREFIX + "#StaticLoggerBinder"
+    const val MULTIPLE_BINDINGS_URL = CODES_PREFIX + "#multiple_bindings"
+    const val NULL_LF_URL = CODES_PREFIX + "#null_LF"
+    const val VERSION_MISMATCH = CODES_PREFIX + "#version_mismatch"
+    const val SUBSTITUTE_LOGGER_URL = CODES_PREFIX + "#substituteLogger"
+    const val LOGGER_NAME_MISMATCH_URL = CODES_PREFIX + "#loggerNameMismatch"
+    const val REPLAY_URL = CODES_PREFIX + "#replay"
+    const val UNSUCCESSFUL_INIT_URL = CODES_PREFIX + "#unsuccessfulInit"
+    const val UNSUCCESSFUL_INIT_MSG =
+        "org.slf4j.LoggerFactory in failed state. Original exception was thrown EARLIER. See also " + UNSUCCESSFUL_INIT_URL
+    const val UNINITIALIZED = 0
+    const val ONGOING_INITIALIZATION = 1
+    const val FAILED_INITIALIZATION = 2
+    const val SUCCESSFUL_INITIALIZATION = 3
+    const val NOP_FALLBACK_INITIALIZATION = 4
 
-    static final String CODES_PREFIX = "http://www.slf4j.org/codes.html";
-
-    static final String NO_STATICLOGGERBINDER_URL = CODES_PREFIX + "#StaticLoggerBinder";
-    static final String MULTIPLE_BINDINGS_URL = CODES_PREFIX + "#multiple_bindings";
-    static final String NULL_LF_URL = CODES_PREFIX + "#null_LF";
-    static final String VERSION_MISMATCH = CODES_PREFIX + "#version_mismatch";
-    static final String SUBSTITUTE_LOGGER_URL = CODES_PREFIX + "#substituteLogger";
-    static final String LOGGER_NAME_MISMATCH_URL = CODES_PREFIX + "#loggerNameMismatch";
-    static final String REPLAY_URL = CODES_PREFIX + "#replay";
-
-    static final String UNSUCCESSFUL_INIT_URL = CODES_PREFIX + "#unsuccessfulInit";
-    static final String UNSUCCESSFUL_INIT_MSG = "org.slf4j.LoggerFactory in failed state. Original exception was thrown EARLIER. See also " + UNSUCCESSFUL_INIT_URL;
-
-    static final int UNINITIALIZED = 0;
-    static final int ONGOING_INITIALIZATION = 1;
-    static final int FAILED_INITIALIZATION = 2;
-    static final int SUCCESSFUL_INITIALIZATION = 3;
-    static final int NOP_FALLBACK_INITIALIZATION = 4;
-
-    static volatile int INITIALIZATION_STATE = UNINITIALIZED;
-    static final SubstituteLoggerFactory SUBST_FACTORY = new SubstituteLoggerFactory();
-    static final NOPLoggerFactory NOP_FALLBACK_FACTORY = new NOPLoggerFactory();
+    @Volatile
+    var INITIALIZATION_STATE = UNINITIALIZED
+    val SUBST_FACTORY = SubstituteLoggerFactory()
+    val NOP_FALLBACK_FACTORY = NOPLoggerFactory()
 
     // Support for detecting mismatched logger names.
-    static final String DETECT_LOGGER_NAME_MISMATCH_PROPERTY = "slf4j.detectLoggerNameMismatch";
-    static final String JAVA_VENDOR_PROPERTY = "java.vendor.url";
-
-    static boolean DETECT_LOGGER_NAME_MISMATCH = Util.safeGetBooleanSystemProperty(DETECT_LOGGER_NAME_MISMATCH_PROPERTY);
+    const val DETECT_LOGGER_NAME_MISMATCH_PROPERTY = "slf4j.detectLoggerNameMismatch"
+    const val JAVA_VENDOR_PROPERTY = "java.vendor.url"
+    var DETECT_LOGGER_NAME_MISMATCH = safeGetBooleanSystemProperty(DETECT_LOGGER_NAME_MISMATCH_PROPERTY)
 
     /**
      * It is LoggerFactory's responsibility to track version changes and manage
      * the compatibility list.
-     * <p/>
-     * <p/>
+     *
+     *
+     *
+     *
      * It is assumed that all versions in the 1.6 are mutually compatible.
      */
-    static private final String[] API_COMPATIBILITY_LIST = new String[] { "1.6", "1.7" };
-
-    // private constructor prevents instantiation
-    private LoggerFactory() {
-    }
+    private val API_COMPATIBILITY_LIST = arrayOf("1.6", "1.7")
 
     /**
      * Force LoggerFactory to consider itself uninitialized.
-     * <p/>
-     * <p/>
+     *
+     *
+     *
+     *
      * This method is intended to be called by classes (in the same package) for
      * testing purposes. This method is internal. It can be modified, renamed or
      * removed at any time without notice.
-     * <p/>
-     * <p/>
+     *
+     *
+     *
+     *
      * You are strongly discouraged from calling this method in production code.
      */
-    static void reset() {
-        INITIALIZATION_STATE = UNINITIALIZED;
+    fun reset() {
+        INITIALIZATION_STATE = UNINITIALIZED
     }
 
-    private final static void performInitialization() {
-        bind();
+    private fun performInitialization() {
+        bind()
         if (INITIALIZATION_STATE == SUCCESSFUL_INITIALIZATION) {
-            versionSanityCheck();
+            versionSanityCheck()
         }
     }
 
-    private static boolean messageContainsOrgSlf4jImplStaticLoggerBinder(String msg) {
-        if (msg == null)
-            return false;
-        if (msg.contains("org/slf4j/impl/StaticLoggerBinder"))
-            return true;
-        if (msg.contains("org.slf4j.impl.StaticLoggerBinder"))
-            return true;
-        return false;
+    private fun messageContainsOrgSlf4jImplStaticLoggerBinder(msg: String?): Boolean {
+        if (msg == null) return false
+        if (msg.contains("org/slf4j/impl/StaticLoggerBinder")) return true
+        return if (msg.contains("org.slf4j.impl.StaticLoggerBinder")) true else false
     }
 
-    private final static void bind() {
+    private fun bind() {
         try {
-            Set<URL> staticLoggerBinderPathSet = null;
+            var staticLoggerBinderPathSet: Set<java.net.URL?>? = null
             // skip check under android, see also
             // http://jira.qos.ch/browse/SLF4J-328
-            if (!isAndroid()) {
-                staticLoggerBinderPathSet = findPossibleStaticLoggerBinderPathSet();
-                reportMultipleBindingAmbiguity(staticLoggerBinderPathSet);
+            if (!isAndroid) {
+                staticLoggerBinderPathSet = findPossibleStaticLoggerBinderPathSet()
+                reportMultipleBindingAmbiguity(staticLoggerBinderPathSet)
             }
             // the next line does the binding
-            StaticLoggerBinder.getSingleton();
-            INITIALIZATION_STATE = SUCCESSFUL_INITIALIZATION;
-            reportActualBinding(staticLoggerBinderPathSet);
-        } catch (NoClassDefFoundError ncde) {
-            String msg = ncde.getMessage();
+            StaticLoggerBinder.singleton()
+            INITIALIZATION_STATE = SUCCESSFUL_INITIALIZATION
+            reportActualBinding(staticLoggerBinderPathSet)
+        } catch (ncde: NoClassDefFoundError) {
+            val msg: String = ncde.message
             if (messageContainsOrgSlf4jImplStaticLoggerBinder(msg)) {
-                INITIALIZATION_STATE = NOP_FALLBACK_INITIALIZATION;
-                Util.report("Failed to load class \"org.slf4j.impl.StaticLoggerBinder\".");
-                Util.report("Defaulting to no-operation (NOP) logger implementation");
-                Util.report("See " + NO_STATICLOGGERBINDER_URL + " for further details.");
+                INITIALIZATION_STATE = NOP_FALLBACK_INITIALIZATION
+                report("Failed to load class \"org.slf4j.impl.StaticLoggerBinder\".")
+                report("Defaulting to no-operation (NOP) logger implementation")
+                report("See " + NO_STATICLOGGERBINDER_URL + " for further details.")
             } else {
-                failedBinding(ncde);
-                throw ncde;
+                failedBinding(ncde)
+                throw ncde
             }
-        } catch (java.lang.NoSuchMethodError nsme) {
-            String msg = nsme.getMessage();
+        } catch (nsme: NoSuchMethodError) {
+            val msg: String = nsme.message
             if (msg != null && msg.contains("org.slf4j.impl.StaticLoggerBinder.getSingleton()")) {
-                INITIALIZATION_STATE = FAILED_INITIALIZATION;
-                Util.report("slf4j-api 1.6.x (or later) is incompatible with this binding.");
-                Util.report("Your binding is version 1.5.5 or earlier.");
-                Util.report("Upgrade your binding to version 1.6.x.");
+                INITIALIZATION_STATE = FAILED_INITIALIZATION
+                report("slf4j-api 1.6.x (or later) is incompatible with this binding.")
+                report("Your binding is version 1.5.5 or earlier.")
+                report("Upgrade your binding to version 1.6.x.")
             }
-            throw nsme;
-        } catch (Exception e) {
-            failedBinding(e);
-            throw new IllegalStateException("Unexpected initialization failure", e);
+            throw nsme
+        } catch (e: Exception) {
+            failedBinding(e)
+            throw IllegalStateException("Unexpected initialization failure", e)
         } finally {
-            postBindCleanUp();
+            postBindCleanUp()
         }
     }
 
-	private static void postBindCleanUp() {
-		fixSubstituteLoggers();
-		replayEvents();
-		// release all resources in SUBST_FACTORY
-		SUBST_FACTORY.clear();
-	}
+    private fun postBindCleanUp() {
+        fixSubstituteLoggers()
+        replayEvents()
+        // release all resources in SUBST_FACTORY
+        SUBST_FACTORY.clear()
+    }
 
-    private static void fixSubstituteLoggers() {
-        synchronized (SUBST_FACTORY) {
-            SUBST_FACTORY.postInitialization();
-            for (SubstituteLogger substLogger : SUBST_FACTORY.getLoggers()) {
-                Logger logger = getLogger(substLogger.getName());
-                substLogger.setDelegate(logger);
+    private fun fixSubstituteLoggers() {
+        synchronized(SUBST_FACTORY) {
+            SUBST_FACTORY.postInitialization()
+            for (substLogger in SUBST_FACTORY.getLoggers()) {
+                val logger: Logger = getLogger(substLogger.name)
+                substLogger.setDelegate(logger)
             }
         }
-
     }
 
-    static void failedBinding(Throwable t) {
-        INITIALIZATION_STATE = FAILED_INITIALIZATION;
-        Util.report("Failed to instantiate SLF4J LoggerFactory", t);
+    fun failedBinding(t: Throwable?) {
+        INITIALIZATION_STATE = FAILED_INITIALIZATION
+        report("Failed to instantiate SLF4J LoggerFactory", t!!)
     }
 
-    private static void replayEvents() {
-        final LinkedBlockingQueue<SubstituteLoggingEvent> queue = SUBST_FACTORY.getEventQueue();
-        final int queueSize = queue.size();
-        int count = 0;
-        final int maxDrain = 128;
-        List<SubstituteLoggingEvent> eventList = new ArrayList<SubstituteLoggingEvent>(maxDrain);
+    private fun replayEvents() {
+        val queue: LinkedBlockingQueue<SubstituteLoggingEvent> = SUBST_FACTORY.getEventQueue()
+        val queueSize: Int = queue.size
+        var count = 0
+        val maxDrain = 128
+        val eventList: MutableList<SubstituteLoggingEvent> = ArrayList<SubstituteLoggingEvent>(maxDrain)
         while (true) {
-            int numDrained = queue.drainTo(eventList, maxDrain);
-            if (numDrained == 0)
-                break;
-            for (SubstituteLoggingEvent event : eventList) {
-                replaySingleEvent(event);
-                if (count++ == 0)
-                    emitReplayOrSubstituionWarning(event, queueSize);
+            val numDrained: Int = queue.drainTo(eventList, maxDrain)
+            if (numDrained == 0) break
+            for (event in eventList) {
+                replaySingleEvent(event)
+                if (count++ == 0) emitReplayOrSubstituionWarning(event, queueSize)
             }
-            eventList.clear();
+            eventList.clear()
         }
     }
 
-    private static void emitReplayOrSubstituionWarning(SubstituteLoggingEvent event, int queueSize) {
-        if (event.getLogger().isDelegateEventAware()) {
-            emitReplayWarning(queueSize);
-        } else if (event.getLogger().isDelegateNOP()) {
+    private fun emitReplayOrSubstituionWarning(event: SubstituteLoggingEvent, queueSize: Int) {
+        if (event.getLogger()!!.isDelegateEventAware!!) {
+            emitReplayWarning(queueSize)
+        } else if (event.getLogger()!!.isDelegateNOP) {
             // nothing to do
         } else {
-            emitSubstitutionWarning();
+            emitSubstitutionWarning()
         }
     }
 
-    private static void replaySingleEvent(SubstituteLoggingEvent event) {
-        if (event == null)
-            return;
-
-        SubstituteLogger substLogger = event.getLogger();
-        String loggerName = substLogger.getName();
-        if (substLogger.isDelegateNull()) {
-            throw new IllegalStateException("Delegate logger cannot be null at this state.");
-        }
-
-        if (substLogger.isDelegateNOP()) {
+    private fun replaySingleEvent(event: SubstituteLoggingEvent?) {
+        if (event == null) return
+        val substLogger = event.getLogger()
+        val loggerName = substLogger!!.name
+        check(!substLogger.isDelegateNull) { "Delegate logger cannot be null at this state." }
+        if (substLogger.isDelegateNOP) {
             // nothing to do
-        } else if (substLogger.isDelegateEventAware()) {
-            substLogger.log(event);
+        } else if (substLogger.isDelegateEventAware!!) {
+            substLogger.log(event)
         } else {
-            Util.report(loggerName);
+            report(loggerName)
         }
     }
 
-    private static void emitSubstitutionWarning() {
-        Util.report("The following set of substitute loggers may have been accessed");
-        Util.report("during the initialization phase. Logging calls during this");
-        Util.report("phase were not honored. However, subsequent logging calls to these");
-        Util.report("loggers will work as normally expected.");
-        Util.report("See also " + SUBSTITUTE_LOGGER_URL);
+    private fun emitSubstitutionWarning() {
+        report("The following set of substitute loggers may have been accessed")
+        report("during the initialization phase. Logging calls during this")
+        report("phase were not honored. However, subsequent logging calls to these")
+        report("loggers will work as normally expected.")
+        report("See also " + SUBSTITUTE_LOGGER_URL)
     }
 
-    private static void emitReplayWarning(int eventCount) {
-        Util.report("A number (" + eventCount + ") of logging calls during the initialization phase have been intercepted and are");
-        Util.report("now being replayed. These are subject to the filtering rules of the underlying logging system.");
-        Util.report("See also " + REPLAY_URL);
+    private fun emitReplayWarning(eventCount: Int) {
+        report("A number ($eventCount) of logging calls during the initialization phase have been intercepted and are")
+        report("now being replayed. These are subject to the filtering rules of the underlying logging system.")
+        report("See also " + REPLAY_URL)
     }
 
-    private final static void versionSanityCheck() {
+    private fun versionSanityCheck() {
         try {
-            String requested = StaticLoggerBinder.REQUESTED_API_VERSION;
-
-            boolean match = false;
-            for (String aAPI_COMPATIBILITY_LIST : API_COMPATIBILITY_LIST) {
+            val requested = StaticLoggerBinder.REQUESTED_API_VERSION
+            var match = false
+            for (aAPI_COMPATIBILITY_LIST in API_COMPATIBILITY_LIST) {
                 if (requested.startsWith(aAPI_COMPATIBILITY_LIST)) {
-                    match = true;
+                    match = true
                 }
             }
             if (!match) {
-                Util.report("The requested version " + requested + " by your slf4j binding is not compatible with "
-                                + Arrays.asList(API_COMPATIBILITY_LIST).toString());
-                Util.report("See " + VERSION_MISMATCH + " for further details.");
+                report(
+                    "The requested version " + requested + " by your slf4j binding is not compatible with "
+                            + Arrays.asList<String>(*API_COMPATIBILITY_LIST).toString()
+                )
+                report("See " + VERSION_MISMATCH + " for further details.")
             }
-        } catch (java.lang.NoSuchFieldError nsfe) {
+        } catch (nsfe: NoSuchFieldError) {
             // given our large user base and SLF4J's commitment to backward
             // compatibility, we cannot cry here. Only for implementations
             // which willingly declare a REQUESTED_API_VERSION field do we
             // emit compatibility warnings.
-        } catch (Throwable e) {
+        } catch (e: Throwable) {
             // we should never reach here
-            Util.report("Unexpected problem occured during version sanity check", e);
+            report("Unexpected problem occured during version sanity check", e)
         }
     }
 
     // We need to use the name of the StaticLoggerBinder class, but we can't
     // reference
     // the class itself.
-    private static String STATIC_LOGGER_BINDER_PATH = "org/slf4j/impl/StaticLoggerBinder.class";
-
-    static Set<URL> findPossibleStaticLoggerBinderPathSet() {
+    private const val STATIC_LOGGER_BINDER_PATH = "org/slf4j/impl/StaticLoggerBinder.class"
+    fun findPossibleStaticLoggerBinderPathSet(): Set<java.net.URL?> {
         // use Set instead of list in order to deal with bug #138
         // LinkedHashSet appropriate here because it preserves insertion order
         // during iteration
-        Set<URL> staticLoggerBinderPathSet = new LinkedHashSet<URL>();
+        val staticLoggerBinderPathSet: MutableSet<java.net.URL?> = LinkedHashSet<java.net.URL?>()
         try {
-            ClassLoader loggerFactoryClassLoader = LoggerFactory.class.getClassLoader();
-            Enumeration<URL> paths;
-            if (loggerFactoryClassLoader == null) {
-                paths = ClassLoader.getSystemResources(STATIC_LOGGER_BINDER_PATH);
+            val loggerFactoryClassLoader: java.lang.ClassLoader = LoggerFactory::class.java.getClassLoader()
+            val paths: Enumeration<java.net.URL>
+            paths = if (loggerFactoryClassLoader == null) {
+                java.lang.ClassLoader.getSystemResources(STATIC_LOGGER_BINDER_PATH)
             } else {
-                paths = loggerFactoryClassLoader.getResources(STATIC_LOGGER_BINDER_PATH);
+                loggerFactoryClassLoader.getResources(STATIC_LOGGER_BINDER_PATH)
             }
             while (paths.hasMoreElements()) {
-                URL path = paths.nextElement();
-                staticLoggerBinderPathSet.add(path);
+                val path: java.net.URL = paths.nextElement()
+                staticLoggerBinderPathSet.add(path)
             }
-        } catch (IOException ioe) {
-            Util.report("Error getting resources from path", ioe);
+        } catch (ioe: IOException) {
+            report("Error getting resources from path", ioe)
         }
-        return staticLoggerBinderPathSet;
+        return staticLoggerBinderPathSet
     }
 
-    private static boolean isAmbiguousStaticLoggerBinderPathSet(Set<URL> binderPathSet) {
-        return binderPathSet.size() > 1;
+    private fun isAmbiguousStaticLoggerBinderPathSet(binderPathSet: Set<java.net.URL?>?): Boolean {
+        return binderPathSet!!.size > 1
     }
 
     /**
      * Prints a warning message on the console if multiple bindings were found
      * on the class path. No reporting is done otherwise.
-     * 
+     *
      */
-    private static void reportMultipleBindingAmbiguity(Set<URL> binderPathSet) {
+    private fun reportMultipleBindingAmbiguity(binderPathSet: Set<java.net.URL?>?) {
         if (isAmbiguousStaticLoggerBinderPathSet(binderPathSet)) {
-            Util.report("Class path contains multiple SLF4J bindings.");
-            for (URL path : binderPathSet) {
-                Util.report("Found binding in [" + path + "]");
+            report("Class path contains multiple SLF4J bindings.")
+            for (path in binderPathSet) {
+                report("Found binding in [$path]")
             }
-            Util.report("See " + MULTIPLE_BINDINGS_URL + " for an explanation.");
+            report("See " + MULTIPLE_BINDINGS_URL + " for an explanation.")
         }
     }
 
-    private static boolean isAndroid() {
-        String vendor = Util.safeGetSystemProperty(JAVA_VENDOR_PROPERTY);
-        if (vendor == null)
-            return false;
-        return vendor.toLowerCase().contains("android");
-    }
+    private val isAndroid: Boolean
+        private get() {
+            val vendor = safeGetSystemProperty(JAVA_VENDOR_PROPERTY)
+                ?: return false
+            return vendor.lowercase(Locale.getDefault()).contains("android")
+        }
 
-    private static void reportActualBinding(Set<URL> binderPathSet) {
+    private fun reportActualBinding(binderPathSet: Set<java.net.URL?>?) {
         // binderPathSet can be null under Android
         if (binderPathSet != null && isAmbiguousStaticLoggerBinderPathSet(binderPathSet)) {
-            Util.report("Actual binding is of type [" + StaticLoggerBinder.getSingleton().getLoggerFactoryClassStr() + "]");
+            report(
+                "Actual binding is of type [" + StaticLoggerBinder.singleton.getLoggerFactoryClassStr()
+                    .toString() + "]"
+            )
         }
     }
 
     /**
      * Return a logger named according to the name parameter using the
-     * statically bound {@link ILoggerFactory} instance.
-     * 
+     * statically bound [ILoggerFactory] instance.
+     *
      * @param name
-     *            The name of the logger.
+     * The name of the logger.
      * @return logger
      */
-    public static Logger getLogger(String name) {
-        ILoggerFactory iLoggerFactory = getILoggerFactory();
-        return iLoggerFactory.getLogger(name);
+    fun getLogger(name: String?): Logger {
+        val iLoggerFactory = iLoggerFactory
+        return iLoggerFactory.getLogger(name!!)
     }
 
     /**
      * Return a logger named corresponding to the class passed as parameter,
-     * using the statically bound {@link ILoggerFactory} instance.
-     * 
-     * <p>
-     * In case the the <code>clazz</code> parameter differs from the name of the
+     * using the statically bound [ILoggerFactory] instance.
+     *
+     *
+     *
+     * In case the the `clazz` parameter differs from the name of the
      * caller as computed internally by SLF4J, a logger name mismatch warning
      * will be printed but only if the
-     * <code>slf4j.detectLoggerNameMismatch</code> system property is set to
+     * `slf4j.detectLoggerNameMismatch` system property is set to
      * true. By default, this property is not set and no warnings will be
      * printed even in case of a logger name mismatch.
-     * 
+     *
      * @param clazz
-     *            the returned logger will be named after clazz
+     * the returned logger will be named after clazz
      * @return logger
-     * 
-     * 
-     * @see <a
-     *      href="http://www.slf4j.org/codes.html#loggerNameMismatch">Detected
-     *      logger name mismatch</a>
+     *
+     *
+     * @see [Detected
+     * logger name mismatch](http://www.slf4j.org/codes.html.loggerNameMismatch)
      */
-    public static Logger getLogger(Class<?> clazz) {
-        Logger logger = getLogger(clazz.getName());
+    fun getLogger(clazz: KClass<*>): Logger {
+        val logger: Logger = getLogger(clazz.getName())
         if (DETECT_LOGGER_NAME_MISMATCH) {
-            Class<?> autoComputedCallingClass = Util.getCallingClass();
+            val autoComputedCallingClass: java.lang.Class<*>? = callingClass
             if (autoComputedCallingClass != null && nonMatchingClasses(clazz, autoComputedCallingClass)) {
-                Util.report(String.format("Detected logger name mismatch. Given name: \"%s\"; computed name: \"%s\".", logger.getName(),
-                                autoComputedCallingClass.getName()));
-                Util.report("See " + LOGGER_NAME_MISMATCH_URL + " for an explanation");
+                report(
+                    String.format(
+                        "Detected logger name mismatch. Given name: \"%s\"; computed name: \"%s\".", logger.name,
+                        autoComputedCallingClass.getName()
+                    )
+                )
+                report("See " + LOGGER_NAME_MISMATCH_URL + " for an explanation")
             }
         }
-        return logger;
+        return logger
     }
 
-    private static boolean nonMatchingClasses(Class<?> clazz, Class<?> autoComputedCallingClass) {
-        return !autoComputedCallingClass.isAssignableFrom(clazz);
-    }
-
+    private fun nonMatchingClasses(clazz: java.lang.Class<*>, autoComputedCallingClass: java.lang.Class<*>): Boolean {
+        return !autoComputedCallingClass.isAssignableFrom(clazz)
+    }// support re-entrant behavior.
+    // See also http://jira.qos.ch/browse/SLF4J-97
     /**
-     * Return the {@link ILoggerFactory} instance in use.
-     * <p/>
-     * <p/>
+     * Return the [ILoggerFactory] instance in use.
+     *
+     *
+     *
+     *
      * ILoggerFactory instance is bound with this class at compile time.
-     * 
+     *
      * @return the ILoggerFactory instance in use
      */
-    public static ILoggerFactory getILoggerFactory() {
-        if (INITIALIZATION_STATE == UNINITIALIZED) {
-            synchronized (LoggerFactory.class) {
-                if (INITIALIZATION_STATE == UNINITIALIZED) {
-                    INITIALIZATION_STATE = ONGOING_INITIALIZATION;
-                    performInitialization();
+    val iLoggerFactory: ILoggerFactory
+        get() {
+            if (INITIALIZATION_STATE == UNINITIALIZED) {
+                synchronized(LoggerFactory::class.java) {
+                    if (INITIALIZATION_STATE == UNINITIALIZED) {
+                        INITIALIZATION_STATE = ONGOING_INITIALIZATION
+                        performInitialization()
+                    }
                 }
             }
+            when (INITIALIZATION_STATE) {
+                SUCCESSFUL_INITIALIZATION -> return StaticLoggerBinder.singleton.getLoggerFactory()
+                NOP_FALLBACK_INITIALIZATION -> return NOP_FALLBACK_FACTORY
+                FAILED_INITIALIZATION -> throw IllegalStateException(UNSUCCESSFUL_INIT_MSG)
+                ONGOING_INITIALIZATION ->             // support re-entrant behavior.
+                    // See also http://jira.qos.ch/browse/SLF4J-97
+                    return SUBST_FACTORY
+            }
+            throw IllegalStateException("Unreachable code")
         }
-        switch (INITIALIZATION_STATE) {
-        case SUCCESSFUL_INITIALIZATION:
-            return StaticLoggerBinder.getSingleton().getLoggerFactory();
-        case NOP_FALLBACK_INITIALIZATION:
-            return NOP_FALLBACK_FACTORY;
-        case FAILED_INITIALIZATION:
-            throw new IllegalStateException(UNSUCCESSFUL_INIT_MSG);
-        case ONGOING_INITIALIZATION:
-            // support re-entrant behavior.
-            // See also http://jira.qos.ch/browse/SLF4J-97
-            return SUBST_FACTORY;
-        }
-        throw new IllegalStateException("Unreachable code");
-    }
 }

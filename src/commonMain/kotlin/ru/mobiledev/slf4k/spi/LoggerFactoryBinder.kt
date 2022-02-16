@@ -22,36 +22,37 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.slf4j.spi;
+package ru.mobiledev.slf4k.spi
 
-import org.slf4j.ILoggerFactory;
+import ru.mobiledev.slf4k.ILoggerFactory
 
 /**
- * An internal interface which helps the static {@link org.slf4j.LoggerFactory} 
- * class bind with the appropriate {@link ILoggerFactory} instance. 
- * 
+ * An internal interface which helps the static [org.slf4j.LoggerFactory]
+ * class bind with the appropriate [ILoggerFactory] instance.
+ *
  * @author Ceki G&uuml;lc&uuml;
  */
-public interface LoggerFactoryBinder {
+interface LoggerFactoryBinder {
 
     /**
-     * Return the instance of {@link ILoggerFactory} that 
-     * {@link org.slf4j.LoggerFactory} class should bind to.
-     * 
-     * @return the instance of {@link ILoggerFactory} that 
-     * {@link org.slf4j.LoggerFactory} class should bind to.
+     * Return the instance of [ILoggerFactory] that
+     * [org.slf4j.LoggerFactory] class should bind to.
+     *
+     * @return the instance of [ILoggerFactory] that
+     * [org.slf4j.LoggerFactory] class should bind to.
      */
-    public ILoggerFactory getLoggerFactory();
+    val loggerFactory: ILoggerFactory
 
     /**
-     * The String form of the {@link ILoggerFactory} object that this 
-     * <code>LoggerFactoryBinder</code> instance is <em>intended</em> to return. 
-     * 
-     * <p>This method allows the developer to interrogate this binder's intention
-     * which may be different from the {@link ILoggerFactory} instance it is able to 
+     * The String form of the [ILoggerFactory] object that this
+     * `LoggerFactoryBinder` instance is *intended* to return.
+     *
+     *
+     * This method allows the developer to interrogate this binder's intention
+     * which may be different from the [ILoggerFactory] instance it is able to
      * yield in practice. The discrepancy should only occur in case of errors.
-     * 
-     * @return the class name of the intended {@link ILoggerFactory} instance
+     *
+     * @return the class name of the intended [ILoggerFactory] instance
      */
-    public String getLoggerFactoryClassStr();
+    val loggerFactoryClassStr: String
 }

@@ -22,10 +22,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.slf4j;
-
-import java.io.Serializable;
-import java.util.Iterator;
+package ru.mobiledev.slf4k
 
 /**
  * Markers are named objects used to enrich log statements. Conforming logging
@@ -39,24 +36,14 @@ import java.util.Iterator;
  * 
  * @author Ceki G&uuml;lc&uuml;
  */
-public interface Marker extends Serializable {
-
-    /**
-     * This constant represents any marker, including a null marker.
-     */
-    public final String ANY_MARKER = "*";
-
-    /**
-     * This constant represents any non-null marker.
-     */
-    public final String ANY_NON_NULL_MARKER = "+";
-
+@Serializable
+interface Marker : java.io.Serializable {
     /**
      * Get the name of this Marker.
      * 
      * @return name of marker
      */
-    public String getName();
+    val name: String
 
     /**
      * Add a reference to another Marker.
@@ -66,7 +53,7 @@ public interface Marker extends Serializable {
      * @throws IllegalArgumentException
      *                 if 'reference' is null
      */
-    public void add(Marker reference);
+    fun add(reference: Marker)
 
     /**
      * Remove a marker reference.
@@ -75,27 +62,28 @@ public interface Marker extends Serializable {
      *                the marker reference to remove
      * @return true if reference could be found and removed, false otherwise.
      */
-    public boolean remove(Marker reference);
+    fun remove(reference: Marker): Boolean
 
     /**
      * @deprecated Replaced by {@link #hasReferences()}.
      */
-    public boolean hasChildren();
+    @Deprecated("Replaced by {@link #hasReferences()}.")
+    fun hasChildren(): Boolean
 
     /**
      * Does this marker have any references?
      * 
      * @return true if this marker has one or more references, false otherwise.
      */
-    public boolean hasReferences();
+    fun hasReferences(): Boolean
 
     /**
      * Returns an Iterator which can be used to iterate over the references of this
      * marker. An empty iterator is returned when this marker has no references.
-     * 
+     *
      * @return Iterator over the references of this marker
      */
-    public Iterator<Marker> iterator();
+    operator fun iterator(): Iterator<Marker>
 
     /**
      * Does this marker contain a reference to the 'other' marker? Marker A is defined 
@@ -108,27 +96,27 @@ public interface Marker extends Serializable {
      *                 if 'other' is null
      * @return Whether this marker contains the other marker.
      */
-    public boolean contains(Marker other);
+    operator fun contains(other: Marker): Boolean
 
     /**
      * Does this marker contain the marker named 'name'?
-     * 
+     *
      * If 'name' is null the returned value is always false.
-     * 
+     *
      * @param name The marker name to test for inclusion.
      * @return Whether this marker contains the other marker.
      */
-    public boolean contains(String name);
+    operator fun contains(name: String): Boolean
 
     /**
      * Markers are considered equal if they have the same name.
      *
-     * @param o
+     * @param other
      * @return true, if this.name equals o.name
      *
      * @since 1.5.1
      */
-    public boolean equals(Object o);
+    override fun equals(other: Any?): Boolean
 
     /**
      * Compute the hash code based on the name of this marker.
@@ -137,6 +125,17 @@ public interface Marker extends Serializable {
      * @return the computed hashCode
      * @since 1.5.1
      */
-    public int hashCode();
+    override fun hashCode(): Int
 
+    companion object {
+        /**
+         * This constant represents any marker, including a null marker.
+         */
+        const val ANY_MARKER = "*"
+
+        /**
+         * This constant represents any non-null marker.
+         */
+        const val ANY_NON_NULL_MARKER = "+"
+    }
 }

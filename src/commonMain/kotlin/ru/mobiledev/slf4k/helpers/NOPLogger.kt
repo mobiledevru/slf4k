@@ -22,102 +22,60 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.slf4j.helpers;
+package ru.mobiledev.slf4k.helpers
 
-import org.slf4j.Logger;
-import org.slf4j.helpers.MarkerIgnoringBase;
+import ru.mobiledev.slf4k.helpers.MarkerIgnoringBase
+import kotlin.jvm.JvmField
 
 /**
- * A direct NOP (no operation) implementation of {@link Logger}.
+ * A direct NOP (no operation) implementation of [Logger].
  *
  * @author Ceki G&uuml;lc&uuml;
  */
-public class NOPLogger extends MarkerIgnoringBase {
-
-    private static final long serialVersionUID = -517220405410904473L;
-
-    /**
-     * The unique instance of NOPLogger.
-     */
-    public static final NOPLogger NOP_LOGGER = new NOPLogger();
-
-    /**
-     * There is no point in creating multiple instances of NOPLogger,
-     * except by derived classes, hence the protected  access for the constructor.
-     */
-    protected NOPLogger() {
-    }
-
+class NOPLogger
+/**
+ * There is no point in creating multiple instances of NOPLogger,
+ * except by derived classes, hence the protected  access for the constructor.
+ */
+protected constructor() : MarkerIgnoringBase() {
     /**
      * Always returns the string value "NOP".
      */
-    public String getName() {
-        return "NOP";
-    }
+    override var name: String?
+        get() = "NOP"
+        set(name) {
+            super.name = name
+        }
 
     /**
      * Always returns false.
      * @return always false
      */
-    final public boolean isTraceEnabled() {
-        return false;
+    override val isTraceEnabled: Boolean
+        get() = false
+
+    /** A NOP implementation.  */
+    override fun trace(msg: String) {
+        // NOP
     }
 
-    /** A NOP implementation. */
-    final public void trace(String msg) {
+    /** A NOP implementation.   */
+    override fun trace(format: String, arg: Any) {
+        // NOP
+    }
+
+    /** A NOP implementation.   */
+    override fun trace(format: String, arg1: Any, arg2: Any) {
+        // NOP
+    }
+
+    /** A NOP implementation.   */
+    override fun trace(format: String, vararg argArray: Any) {
         // NOP
     }
 
     /** A NOP implementation.  */
-    final public void trace(String format, Object arg) {
-        // NOP
-    }
-
-    /** A NOP implementation.  */
-    public final void trace(String format, Object arg1, Object arg2) {
-        // NOP
-    }
-
-    /** A NOP implementation.  */
-    public final void trace(String format, Object... argArray) {
-        // NOP
-    }
-
-    /** A NOP implementation. */
-    final public void trace(String msg, Throwable t) {
-        // NOP
-    }
-
-    /**
-     * Always returns false.
-     * @return always false
-     */
-    final public boolean isDebugEnabled() {
-        return false;
-    }
-
-    /** A NOP implementation. */
-    final public void debug(String msg) {
-        // NOP
-    }
-
-    /** A NOP implementation.  */
-    final public void debug(String format, Object arg) {
-        // NOP
-    }
-
-    /** A NOP implementation.  */
-    public final void debug(String format, Object arg1, Object arg2) {
-        // NOP
-    }
-
-    /** A NOP implementation.  */
-    public final void debug(String format, Object... argArray) {
-        // NOP
-    }
-
-    /** A NOP implementation. */
-    final public void debug(String msg, Throwable t) {
+    override fun trace(msg: String, t: Throwable?) {
         // NOP
     }
 
@@ -125,33 +83,64 @@ public class NOPLogger extends MarkerIgnoringBase {
      * Always returns false.
      * @return always false
      */
-    final public boolean isInfoEnabled() {
-        // NOP
-        return false;
-    }
+    override val isDebugEnabled: Boolean
+        get() = false
 
-    /** A NOP implementation. */
-    final public void info(String msg) {
+    /** A NOP implementation.  */
+    override fun debug(msg: String) {
         // NOP
     }
 
-    /** A NOP implementation. */
-    final public void info(String format, Object arg1) {
+    /** A NOP implementation.   */
+    override fun debug(format: String, arg: Any) {
         // NOP
     }
 
-    /** A NOP implementation. */
-    final public void info(String format, Object arg1, Object arg2) {
+    /** A NOP implementation.   */
+    override fun debug(format: String, arg1: Any, arg2: Any) {
+        // NOP
+    }
+
+    /** A NOP implementation.   */
+    override fun debug(format: String, vararg argArray: Any) {
         // NOP
     }
 
     /** A NOP implementation.  */
-    public final void info(String format, Object... argArray) {
+    override fun debug(msg: String, t: Throwable?) {
+        // NOP
+    }// NOP
+
+    /**
+     * Always returns false.
+     * @return always false
+     */
+    override val isInfoEnabled: Boolean
+        get() =// NOP
+            false
+
+    /** A NOP implementation.  */
+    override fun info(msg: String) {
         // NOP
     }
 
-    /** A NOP implementation. */
-    final public void info(String msg, Throwable t) {
+    /** A NOP implementation.  */
+    override fun info(format: String, arg1: Any) {
+        // NOP
+    }
+
+    /** A NOP implementation.  */
+    override fun info(format: String, arg1: Any, arg2: Any) {
+        // NOP
+    }
+
+    /** A NOP implementation.   */
+    override fun info(format: String, vararg argArray: Any) {
+        // NOP
+    }
+
+    /** A NOP implementation.  */
+    override fun info(msg: String, t: Throwable?) {
         // NOP
     }
 
@@ -159,62 +148,70 @@ public class NOPLogger extends MarkerIgnoringBase {
      * Always returns false.
      * @return always false
      */
-    final public boolean isWarnEnabled() {
-        return false;
-    }
+    override val isWarnEnabled: Boolean
+        get() = false
 
-    /** A NOP implementation. */
-    final public void warn(String msg) {
-        // NOP
-    }
-
-    /** A NOP implementation. */
-    final public void warn(String format, Object arg1) {
-        // NOP
-    }
-
-    /** A NOP implementation. */
-    final public void warn(String format, Object arg1, Object arg2) {
+    /** A NOP implementation.  */
+    override fun warn(msg: String) {
         // NOP
     }
 
     /** A NOP implementation.  */
-    public final void warn(String format, Object... argArray) {
-        // NOP
-    }
-
-    /** A NOP implementation. */
-    final public void warn(String msg, Throwable t) {
-        // NOP
-    }
-
-    /** A NOP implementation. */
-    final public boolean isErrorEnabled() {
-        return false;
-    }
-
-    /** A NOP implementation. */
-    final public void error(String msg) {
-        // NOP
-    }
-
-    /** A NOP implementation. */
-    final public void error(String format, Object arg1) {
-        // NOP
-    }
-
-    /** A NOP implementation. */
-    final public void error(String format, Object arg1, Object arg2) {
+    override fun warn(format: String, arg1: Any) {
         // NOP
     }
 
     /** A NOP implementation.  */
-    public final void error(String format, Object... argArray) {
+    override fun warn(format: String, arg1: Any, arg2: Any) {
         // NOP
     }
 
-    /** A NOP implementation. */
-    final public void error(String msg, Throwable t) {
+    /** A NOP implementation.   */
+    override fun warn(format: String, vararg argArray: Any) {
         // NOP
+    }
+
+    /** A NOP implementation.  */
+    override fun warn(msg: String, t: Throwable?) {
+        // NOP
+    }
+
+    /** A NOP implementation.  */
+    override val isErrorEnabled: Boolean
+        get() = false
+
+    /** A NOP implementation.  */
+    override fun error(msg: String) {
+        // NOP
+    }
+
+    /** A NOP implementation.  */
+    override fun error(format: String, arg1: Any) {
+        // NOP
+    }
+
+    /** A NOP implementation.  */
+    override fun error(format: String, arg1: Any, arg2: Any) {
+        // NOP
+    }
+
+    /** A NOP implementation.   */
+    override fun error(format: String, vararg argArray: Any) {
+        // NOP
+    }
+
+    /** A NOP implementation.  */
+    override fun error(msg: String, t: Throwable?) {
+        // NOP
+    }
+
+    companion object {
+        private const val serialVersionUID = -517220405410904473L
+
+        /**
+         * The unique instance of NOPLogger.
+         */
+        @JvmField
+        val NOP_LOGGER = NOPLogger()
     }
 }

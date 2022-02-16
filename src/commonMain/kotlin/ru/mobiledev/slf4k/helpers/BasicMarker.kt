@@ -22,148 +22,123 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.slf4j.helpers;
+package ru.mobiledev.slf4k.helpers
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
-import org.slf4j.Marker;
+import ru.mobiledev.slf4k.Marker
 
 /**
- * A simple implementation of the {@link Marker} interface.
- * 
+ * A simple implementation of the [Marker] interface.
+ *
  * @author Ceki G&uuml;lc&uuml;
  * @author Joern Huxhorn
  */
-public class BasicMarker implements Marker {
+class BasicMarker internal constructor(name: String) : Marker {
 
-    private static final long serialVersionUID = -2849567615646933777L;
-    private final String name;
-    private List<Marker> referenceList = new CopyOnWriteArrayList<Marker>();
+    override val name: String
+    private val referenceList: MutableList<Marker> = java.util.concurrent.CopyOnWriteArrayList<Marker>()
 
-    BasicMarker(String name) {
-        if (name == null) {
-            throw new IllegalArgumentException("A marker name cannot be null");
-        }
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void add(Marker reference) {
-        if (reference == null) {
-            throw new IllegalArgumentException("A null value cannot be added to a Marker as reference.");
-        }
+    override fun add(reference: Marker) {
+        requireNotNull(reference) { "A null value cannot be added to a Marker as reference." }
 
         // no point in adding the reference multiple times
         if (this.contains(reference)) {
-            return;
-
+            return
         } else if (reference.contains(this)) { // avoid recursion
             // a potential reference should not hold its future "parent" as a reference
-            return;
+            return
         } else {
-            referenceList.add(reference);
+            referenceList.add(reference)
         }
     }
 
-    public boolean hasReferences() {
-        return (referenceList.size() > 0);
+    override fun hasReferences(): Boolean {
+        return referenceList.size > 0
     }
 
-    public boolean hasChildren() {
-        return hasReferences();
+    override fun hasChildren(): Boolean {
+        return hasReferences()
     }
 
-    public Iterator<Marker> iterator() {
-      return referenceList.iterator();
+    override fun iterator(): Iterator<Marker> {
+        return referenceList.iterator()
     }
 
-    public boolean remove(Marker referenceToRemove) {
-        return referenceList.remove(referenceToRemove);
+    override fun remove(referenceToRemove: Marker): Boolean {
+        return referenceList.remove(referenceToRemove)
     }
 
-    public boolean contains(Marker other) {
-        if (other == null) {
-            throw new IllegalArgumentException("Other cannot be null");
+    override operator fun contains(other: Marker): Boolean {
+        requireNotNull(other) { "Other cannot be null" }
+        if (this == other) {
+            return true
         }
-
-        if (this.equals(other)) {
-            return true;
-        }
-
         if (hasReferences()) {
-            for (Marker ref : referenceList) {
+            for (ref in referenceList) {
                 if (ref.contains(other)) {
-                    return true;
+                    return true
                 }
             }
         }
-        return false;
+        return false
     }
 
     /**
      * This method is mainly used with Expression Evaluators.
      */
-    public boolean contains(String name) {
-        if (name == null) {
-            throw new IllegalArgumentException("Other cannot be null");
+    override fun contains(name: String): Boolean {
+        requireNotNull(name) { "Other cannot be null" }
+        if (this.name == name) {
+            return true
         }
-
-        if (this.name.equals(name)) {
-            return true;
-        }
-
         if (hasReferences()) {
-            for (Marker ref : referenceList) {
+            for (ref in referenceList) {
                 if (ref.contains(name)) {
-                    return true;
+                    return true
                 }
             }
         }
-        return false;
+        return false
     }
 
-    private static String OPEN = "[ ";
-    private static String CLOSE = " ]";
-    private static String SEP = ", ";
-
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (!(obj instanceof Marker))
-            return false;
-
-        final Marker other = (Marker) obj;
-        return name.equals(other.getName());
+    init {
+        requireNotNull(name) { "A marker name cannot be null" }
+        this.name = name
     }
 
-    public int hashCode() {
-        return name.hashCode();
+    override fun equals(obj: Any?): Boolean {
+        if (this === obj) return true
+        if (obj == null) return false
+        if (obj !is Marker) return false
+        return name == obj.name
     }
 
-    public String toString() {
-        if (!this.hasReferences()) {
-            return this.getName();
+    override fun hashCode(): Int {
+        return name.hashCode()
+    }
+
+    override fun toString(): String {
+        if (!hasReferences()) {
+            return name
         }
-        Iterator<Marker> it = this.iterator();
-        Marker reference;
-        StringBuilder sb = new StringBuilder(this.getName());
-        sb.append(' ').append(OPEN);
+        val it = this.iterator()
+        var reference: Marker
+        val sb = StringBuilder(name)
+        sb.append(' ').append(OPEN)
         while (it.hasNext()) {
-            reference = it.next();
-            sb.append(reference.getName());
+            reference = it.next()
+            sb.append(reference.name)
             if (it.hasNext()) {
-                sb.append(SEP);
+                sb.append(SEP)
             }
         }
-        sb.append(CLOSE);
+        sb.append(CLOSE)
+        return sb.toString()
+    }
 
-        return sb.toString();
+    companion object {
+        private const val serialVersionUID = -2849567615646933777L
+        private const val OPEN = "[ "
+        private const val CLOSE = " ]"
+        private const val SEP = ", "
     }
 }

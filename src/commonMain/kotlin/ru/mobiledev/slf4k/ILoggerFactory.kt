@@ -22,36 +22,39 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.slf4j;
+package ru.mobiledev.slf4k
 
 /**
- * <code>ILoggerFactory</code> instances manufacture {@link Logger}
+ * `ILoggerFactory` instances manufacture [Logger]
  * instances by name.
- * 
- * <p>Most users retrieve {@link Logger} instances through the static
- * {@link LoggerFactory#getLogger(String)} method. An instance of of this
- * interface is bound internally with {@link LoggerFactory} class at 
- * compile time. 
- * 
+ *
+ *
+ * Most users retrieve [Logger] instances through the static
+ * [LoggerFactory.getLogger] method. An instance of of this
+ * interface is bound internally with [LoggerFactory] class at
+ * compile time.
+ *
  * @author Ceki G&uuml;lc&uuml;
  */
-public interface ILoggerFactory {
-
+interface ILoggerFactory {
     /**
-     * Return an appropriate {@link Logger} instance as specified by the
-     * <code>name</code> parameter.
-     * 
-     * <p>If the name parameter is equal to {@link Logger#ROOT_LOGGER_NAME}, that is 
-     * the string value "ROOT" (case insensitive), then the root logger of the 
-     * underlying logging system is returned.
-     * 
-     * <p>Null-valued name arguments are considered invalid.
+     * Return an appropriate [Logger] instance as specified by the
+     * `name` parameter.
      *
-     * <p>Certain extremely simple logging systems, e.g. NOP, may always
+     *
+     * If the name parameter is equal to [Logger.ROOT_LOGGER_NAME], that is
+     * the string value "ROOT" (case insensitive), then the root logger of the
+     * underlying logging system is returned.
+     *
+     *
+     * Null-valued name arguments are considered invalid.
+     *
+     *
+     * Certain extremely simple logging systems, e.g. NOP, may always
      * return the same logger instance regardless of the requested name.
-     * 
+     *
      * @param name the name of the Logger to return
-     * @return a Logger instance 
+     * @return a Logger instance
      */
-    public Logger getLogger(String name);
+    fun getLogger(name: String): Logger
 }

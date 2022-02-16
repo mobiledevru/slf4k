@@ -22,145 +22,157 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.slf4j.helpers;
+package ru.mobiledev.slf4k.helpers
 
-import org.slf4j.Logger;
-import org.slf4j.Marker;
+import ru.mobiledev.slf4k.Logger
+import ru.mobiledev.slf4k.Logger.isTraceEnabled
+import ru.mobiledev.slf4k.Logger.trace
+import ru.mobiledev.slf4k.Logger.isDebugEnabled
+import ru.mobiledev.slf4k.Logger.debug
+import ru.mobiledev.slf4k.Logger.isInfoEnabled
+import ru.mobiledev.slf4k.Logger.info
+import ru.mobiledev.slf4k.Logger.isWarnEnabled
+import ru.mobiledev.slf4k.Logger.warn
+import ru.mobiledev.slf4k.Logger.isErrorEnabled
+import ru.mobiledev.slf4k.Logger.error
+import ru.mobiledev.slf4k.Logger.name
+import ru.mobiledev.slf4k.Marker
 
 /**
- * This class serves as base for adapters or native implementations of logging systems 
- * lacking Marker support. In this implementation, methods taking marker data 
- * simply invoke the corresponding method without the Marker argument, discarding 
+ * This class serves as base for adapters or native implementations of logging systems
+ * lacking Marker support. In this implementation, methods taking marker data
+ * simply invoke the corresponding method without the Marker argument, discarding
  * any marker data passed as argument.
- * 
+ *
  * @author Ceki Gulcu
  */
-public abstract class MarkerIgnoringBase extends NamedLoggerBase implements Logger {
-
-    private static final long serialVersionUID = 9044267456635152283L;
-
-    public boolean isTraceEnabled(Marker marker) {
-        return isTraceEnabled();
+abstract class MarkerIgnoringBase : NamedLoggerBase(), Logger {
+    override fun isTraceEnabled(marker: Marker?): Boolean {
+        return isTraceEnabled
     }
 
-    public void trace(Marker marker, String msg) {
-        trace(msg);
+    override fun trace(marker: Marker?, msg: String) {
+        trace(msg)
     }
 
-    public void trace(Marker marker, String format, Object arg) {
-        trace(format, arg);
+    override fun trace(marker: Marker?, format: String, arg: Any) {
+        trace(format, arg)
     }
 
-    public void trace(Marker marker, String format, Object arg1, Object arg2) {
-        trace(format, arg1, arg2);
+    override fun trace(marker: Marker?, format: String, arg1: Any, arg2: Any) {
+        trace(format, arg1, arg2)
     }
 
-    public void trace(Marker marker, String format, Object... arguments) {
-        trace(format, arguments);
+    override fun trace(marker: Marker?, format: String, vararg arguments: Any) {
+        trace(format, *arguments)
     }
 
-    public void trace(Marker marker, String msg, Throwable t) {
-        trace(msg, t);
+    override fun trace(marker: Marker?, msg: String, t: Throwable?) {
+        trace(msg, t)
     }
 
-    public boolean isDebugEnabled(Marker marker) {
-        return isDebugEnabled();
+    override fun isDebugEnabled(marker: Marker?): Boolean {
+        return isDebugEnabled
     }
 
-    public void debug(Marker marker, String msg) {
-        debug(msg);
+    override fun debug(marker: Marker?, msg: String) {
+        debug(msg)
     }
 
-    public void debug(Marker marker, String format, Object arg) {
-        debug(format, arg);
+    override fun debug(marker: Marker?, format: String, arg: Any) {
+        debug(format, arg)
     }
 
-    public void debug(Marker marker, String format, Object arg1, Object arg2) {
-        debug(format, arg1, arg2);
+    override fun debug(marker: Marker?, format: String, arg1: Any, arg2: Any) {
+        debug(format, arg1, arg2)
     }
 
-    public void debug(Marker marker, String format, Object... arguments) {
-        debug(format, arguments);
+    override fun debug(marker: Marker?, format: String, vararg arguments: Any) {
+        debug(format, *arguments)
     }
 
-    public void debug(Marker marker, String msg, Throwable t) {
-        debug(msg, t);
+    override fun debug(marker: Marker?, msg: String, t: Throwable?) {
+        debug(msg, t)
     }
 
-    public boolean isInfoEnabled(Marker marker) {
-        return isInfoEnabled();
+    override fun isInfoEnabled(marker: Marker?): Boolean {
+        return isInfoEnabled
     }
 
-    public void info(Marker marker, String msg) {
-        info(msg);
+    override fun info(marker: Marker?, msg: String) {
+        info(msg)
     }
 
-    public void info(Marker marker, String format, Object arg) {
-        info(format, arg);
+    override fun info(marker: Marker?, format: String, arg: Any) {
+        info(format, arg)
     }
 
-    public void info(Marker marker, String format, Object arg1, Object arg2) {
-        info(format, arg1, arg2);
+    override fun info(marker: Marker?, format: String, arg1: Any, arg2: Any) {
+        info(format, arg1, arg2)
     }
 
-    public void info(Marker marker, String format, Object... arguments) {
-        info(format, arguments);
+    override fun info(marker: Marker?, format: String, vararg arguments: Any) {
+        info(format, *arguments)
     }
 
-    public void info(Marker marker, String msg, Throwable t) {
-        info(msg, t);
+    override fun info(marker: Marker?, msg: String, t: Throwable?) {
+        info(msg, t)
     }
 
-    public boolean isWarnEnabled(Marker marker) {
-        return isWarnEnabled();
+    override fun isWarnEnabled(marker: Marker?): Boolean {
+        return isWarnEnabled
     }
 
-    public void warn(Marker marker, String msg) {
-        warn(msg);
+    override fun warn(marker: Marker?, msg: String) {
+        warn(msg)
     }
 
-    public void warn(Marker marker, String format, Object arg) {
-        warn(format, arg);
+    override fun warn(marker: Marker?, format: String, arg: Any) {
+        warn(format, arg)
     }
 
-    public void warn(Marker marker, String format, Object arg1, Object arg2) {
-        warn(format, arg1, arg2);
+    override fun warn(marker: Marker?, format: String, arg1: Any, arg2: Any) {
+        warn(format, arg1, arg2)
     }
 
-    public void warn(Marker marker, String format, Object... arguments) {
-        warn(format, arguments);
+    override fun warn(marker: Marker?, format: String, vararg arguments: Any) {
+        warn(format, *arguments)
     }
 
-    public void warn(Marker marker, String msg, Throwable t) {
-        warn(msg, t);
+    override fun warn(marker: Marker?, msg: String, t: Throwable?) {
+        warn(msg, t)
     }
 
-    public boolean isErrorEnabled(Marker marker) {
-        return isErrorEnabled();
+    override fun isErrorEnabled(marker: Marker?): Boolean {
+        return isErrorEnabled
     }
 
-    public void error(Marker marker, String msg) {
-        error(msg);
+    override fun error(marker: Marker?, msg: String) {
+        error(msg)
     }
 
-    public void error(Marker marker, String format, Object arg) {
-        error(format, arg);
+    override fun error(marker: Marker?, format: String, arg: Any) {
+        error(format, arg)
     }
 
-    public void error(Marker marker, String format, Object arg1, Object arg2) {
-        error(format, arg1, arg2);
+    override fun error(marker: Marker?, format: String, arg1: Any, arg2: Any) {
+        error(format, arg1, arg2)
     }
 
-    public void error(Marker marker, String format, Object... arguments) {
-        error(format, arguments);
+    override fun error(marker: Marker?, format: String, vararg arguments: Any) {
+        error(format, *arguments)
     }
 
-    public void error(Marker marker, String msg, Throwable t) {
-        error(msg, t);
+    override fun error(marker: Marker?, msg: String, t: Throwable?) {
+        error(msg, t)
     }
 
-    public String toString() {
-        return this.getClass().getName() + "(" + getName() + ")";
+    override fun toString(): String {
+//        return (this::class.qualifiedName?:"noName") + "(" + name + ")"
+        return this.javaClass.getName() + "(" + name + ")"
     }
 
+    companion object {
+        private const val serialVersionUID = 9044267456635152283L
+    }
 }

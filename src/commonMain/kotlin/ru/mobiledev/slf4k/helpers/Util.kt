@@ -22,7 +22,11 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.slf4j.helpers;
+package ru.mobiledev.slf4k.helpers
+
+import java.lang.IllegalArgumentException
+import java.lang.SecurityException
+import java.lang.IllegalStateException
 
 /**
  * An internal utility class.
@@ -30,104 +34,83 @@ package org.slf4j.helpers;
  * @author Alexander Dorokhine
  * @author Ceki G&uuml;lc&uuml;
  */
-public final class Util {
+object Util {
 
-	
-    private Util() {
-    }
-
-    public static String safeGetSystemProperty(String key) {
-        if (key == null)
-            throw new IllegalArgumentException("null input");
-
-        String result = null;
+    fun safeGetSystemProperty(key: String): String? {
+        requireNotNull(key) { "null input" }
+        var result: String? = null
         try {
-            result = System.getProperty(key);
-        } catch (java.lang.SecurityException sm) {
-            ; // ignore
+            result = java.lang.System.getProperty(key)
+        } catch (sm: SecurityException) {
+            // ignore
         }
-        return result;
+        return result
     }
 
-    public static boolean safeGetBooleanSystemProperty(String key) {
-        String value = safeGetSystemProperty(key);
-        if (value == null)
-            return false;
-        else
-            return value.equalsIgnoreCase("true");
+    fun safeGetBooleanSystemProperty(key: String?): Boolean {
+        val value = safeGetSystemProperty(key)
+        return value?.equals("true", ignoreCase = true) ?: false
     }
 
-    /**
-     * In order to call {@link SecurityManager#getClassContext()}, which is a
-     * protected method, we add this wrapper which allows the method to be visible
-     * inside this package.
-     */
-    private static final class ClassContextSecurityManager extends SecurityManager {
-        protected Class<?>[] getClassContext() {
-            return super.getClassContext();
+    private var SECURITY_MANAGER: ClassContextSecurityManager? = null
+    private var SECURITY_MANAGER_CREATION_ALREADY_ATTEMPTED = false
+    private val securityManager: ClassContextSecurityManager?
+        private get() = if (SECURITY_MANAGER != null) SECURITY_MANAGER else if (SECURITY_MANAGER_CREATION_ALREADY_ATTEMPTED) null else {
+            SECURITY_MANAGER = safeCreateSecurityManager()
+            SECURITY_MANAGER_CREATION_ALREADY_ATTEMPTED = true
+            SECURITY_MANAGER
         }
-    }
 
-    private static ClassContextSecurityManager SECURITY_MANAGER;
-    private static boolean SECURITY_MANAGER_CREATION_ALREADY_ATTEMPTED = false;
-
-    private static ClassContextSecurityManager getSecurityManager() {
-        if (SECURITY_MANAGER != null)
-            return SECURITY_MANAGER;
-        else if (SECURITY_MANAGER_CREATION_ALREADY_ATTEMPTED)
-            return null;
-        else {
-            SECURITY_MANAGER = safeCreateSecurityManager();
-            SECURITY_MANAGER_CREATION_ALREADY_ATTEMPTED = true;
-            return SECURITY_MANAGER;
+    private fun safeCreateSecurityManager(): ClassContextSecurityManager? {
+        return try {
+            ClassContextSecurityManager()
+        } catch (sm: SecurityException) {
+            null
         }
-    }
+    }// Advance until Util is found
 
-    private static ClassContextSecurityManager safeCreateSecurityManager() {
-        try {
-            return new ClassContextSecurityManager();
-        } catch (java.lang.SecurityException sm) {
-            return null;
-        }
-    }
-
+    // trace[i] = Util; trace[i+1] = caller; trace[i+2] = caller's caller
     /**
      * Returns the name of the class which called the invoking method.
      *
      * @return the name of the class which called the invoking method.
      */
-    public static Class<?> getCallingClass() {
-        ClassContextSecurityManager securityManager = getSecurityManager();
-        if (securityManager == null)
-            return null;
-        Class<?>[] trace = securityManager.getClassContext();
-        String thisClassName = Util.class.getName();
+    val callingClass: java.lang.Class<*>?
+        get() {
+            val securityManager = securityManager ?: return null
+            val trace: Array<java.lang.Class<*>> = securityManager.getClassContext()
+            val thisClassName: String = Util::class.java.getName()
 
-        // Advance until Util is found
-        int i;
-        for (i = 0; i < trace.length; i++) {
-            if (thisClassName.equals(trace[i].getName()))
-                break;
+            // Advance until Util is found
+            var i: Int
+            i = 0
+            while (i < trace.size) {
+                if (thisClassName == trace[i].getName()) break
+                i++
+            }
+
+            // trace[i] = Util; trace[i+1] = caller; trace[i+2] = caller's caller
+            check(!(i >= trace.size || i + 2 >= trace.size)) { "Failed to find org.slf4j.helpers.Util or its caller in the stack; " + "this should not happen" }
+            return trace[i + 2]
         }
 
-        // trace[i] = Util; trace[i+1] = caller; trace[i+2] = caller's caller
-        if (i >= trace.length || i + 2 >= trace.length) {
-            throw new IllegalStateException("Failed to find org.slf4j.helpers.Util or its caller in the stack; " + "this should not happen");
-        }
-
-        return trace[i + 2];
+    fun report(msg: String?, t: Throwable) {
+        java.lang.System.err.println(msg)
+        java.lang.System.err.println("Reported exception:")
+        t.printStackTrace()
     }
 
-    static final public void report(String msg, Throwable t) {
-        System.err.println(msg);
-        System.err.println("Reported exception:");
-        t.printStackTrace();
+    fun report(msg: String) {
+        java.lang.System.err.println("SLF4J: $msg")
     }
 
-    static final public void report(String msg) {
-        System.err.println("SLF4J: " + msg);
+    /**
+     * In order to call [SecurityManager.getClassContext], which is a
+     * protected method, we add this wrapper which allows the method to be visible
+     * inside this package.
+     */
+    private class ClassContextSecurityManager : java.lang.SecurityManager() {
+        val classContext: Array<Any>
+            get() = super.getClassContext()
     }
-    
-	
-
 }

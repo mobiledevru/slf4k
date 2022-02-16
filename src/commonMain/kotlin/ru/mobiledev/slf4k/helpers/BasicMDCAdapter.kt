@@ -22,12 +22,9 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.slf4j.helpers;
+package ru.mobiledev.slf4k.helpers
 
-import org.slf4j.spi.MDCAdapter;
-
-import java.util.*;
-import java.util.Map;
+import ru.mobiledev.slf4k.spi.MDCAdapter
 
 /**
  * Basic MDC implementation, which can be used with logging systems that lack
@@ -39,108 +36,108 @@ import java.util.Map;
  * @author Ceki Gulcu
  * @author Maarten Bosteels
  * @author Lukasz Cwik
- * 
+ *
  * @since 1.5.0
  */
-public class BasicMDCAdapter implements MDCAdapter {
-
-    private InheritableThreadLocal<Map<String, String>> inheritableThreadLocal = new InheritableThreadLocal<Map<String, String>>() {
-        @Override
-        protected Map<String, String> childValue(Map<String, String> parentValue) {
-            if (parentValue == null) {
-                return null;
+class BasicMDCAdapter : MDCAdapter {
+    private val inheritableThreadLocal: InheritableThreadLocal<Map<String, String>?> =
+        object : InheritableThreadLocal<Map<String, String>?>() {
+            protected override fun childValue(parentValue: Map<String, String>?): Map<String, String>? {
+                return if (parentValue == null) {
+                    null
+                } else HashMap(parentValue)
             }
-            return new HashMap<String, String>(parentValue);
         }
-    };
 
     /**
-     * Put a context value (the <code>val</code> parameter) as identified with
-     * the <code>key</code> parameter into the current thread's context map.
-     * Note that contrary to log4j, the <code>val</code> parameter can be null.
+     * Put a context value (the `val` parameter) as identified with
+     * the `key` parameter into the current thread's context map.
+     * Note that contrary to log4j, the `val` parameter can be null.
      *
-     * <p>
+     *
+     *
      * If the current thread does not have a context map it is created as a side
      * effect of this call.
      *
      * @throws IllegalArgumentException
-     *                 in case the "key" parameter is null
+     * in case the "key" parameter is null
      */
-    public void put(String key, String val) {
-        if (key == null) {
-            throw new IllegalArgumentException("key cannot be null");
-        }
-        Map<String, String> map = inheritableThreadLocal.get();
+    override fun put(key: String, `val`: String?) {
+        requireNotNull(key) { "key cannot be null" }
+        var map: MutableMap<String?, String?> = inheritableThreadLocal.get()
         if (map == null) {
-            map = new HashMap<String, String>();
-            inheritableThreadLocal.set(map);
+            map = HashMap()
+            inheritableThreadLocal.set(map)
         }
-        map.put(key, val);
+        map[key] = `val`
     }
 
     /**
-     * Get the context identified by the <code>key</code> parameter.
+     * Get the context identified by the `key` parameter.
      */
-    public String get(String key) {
-        Map<String, String> map = inheritableThreadLocal.get();
-        if ((map != null) && (key != null)) {
-            return map.get(key);
+    override operator fun get(key: String): String? {
+        val map: Map<String, String> = inheritableThreadLocal.get()
+        return if (map != null && key != null) {
+            map[key]
         } else {
-            return null;
+            null
         }
     }
 
     /**
-     * Remove the the context identified by the <code>key</code> parameter.
+     * Remove the the context identified by the `key` parameter.
      */
-    public void remove(String key) {
-        Map<String, String> map = inheritableThreadLocal.get();
+    override fun remove(key: String) {
+        val map: MutableMap<String, String> = inheritableThreadLocal.get()
         if (map != null) {
-            map.remove(key);
+            map.remove(key)
         }
     }
 
     /**
      * Clear all entries in the MDC.
      */
-    public void clear() {
-        Map<String, String> map = inheritableThreadLocal.get();
+    override fun clear() {
+        val map: MutableMap<String, String> = inheritableThreadLocal.get()
         if (map != null) {
-            map.clear();
-            inheritableThreadLocal.remove();
+            map.clear()
+            inheritableThreadLocal.remove()
         }
     }
 
     /**
-     * Returns the keys in the MDC as a {@link Set} of {@link String}s The
+     * Returns the keys in the MDC as a [Set] of [String]s The
      * returned value can be null.
      *
      * @return the keys in the MDC
      */
-    public Set<String> getKeys() {
-        Map<String, String> map = inheritableThreadLocal.get();
-        if (map != null) {
-            return map.keySet();
-        } else {
-            return null;
+    val keys: Set<String>?
+        get() {
+            val map: Map<String, String> = inheritableThreadLocal.get()
+            return if (map != null) {
+                map.keys
+            } else {
+                null
+            }
         }
-    }
 
     /**
      * Return a copy of the current thread's context map.
      * Returned value may be null.
      *
      */
-    public Map<String, String> getCopyOfContextMap() {
-        Map<String, String> oldMap = inheritableThreadLocal.get();
-        if (oldMap != null) {
-            return new HashMap<String, String>(oldMap);
-        } else {
-            return null;
+    override val copyOfContextMap: Map<String, String>?
+        get() {
+            val oldMap: Map<String, String> = inheritableThreadLocal.get()
+            return if (oldMap != null) {
+                HashMap(oldMap)
+            } else {
+                null
+            }
         }
-    }
 
-    public void setContextMap(Map<String, String> contextMap) {
-        inheritableThreadLocal.set(new HashMap<String, String>(contextMap));
+    override fun setContextMap(contextMap: Map<String, String>?) {
+//        inheritableThreadLocal.set(HashMap(contextMap))
+        inheritableThreadLocal.set(HashMap(contextMap ?: emptyMap()))
     }
 }
