@@ -26,6 +26,7 @@ package ru.mobiledev.slf4k
 
 import ru.mobiledev.slf4k.helpers.BasicMarkerFactory
 import ru.mobiledev.slf4k.helpers.Util
+import ru.mobiledev.slf4k.impl.StaticMarkerBinder
 
 /**
  * MarkerFactory is a utility class producing [Marker] instances as
@@ -43,7 +44,7 @@ import ru.mobiledev.slf4k.helpers.Util
  * @author Ceki G&uuml;lc&uuml;
  */
 object MarkerFactory {
-    var MARKER_FACTORY: ru.mobiledev.slf4k.IMarkerFactory? = null
+    var MARKER_FACTORY: IMarkerFactory? = null
 
     /**
      * As of SLF4J version 1.7.14, StaticMarkerBinder classes shipping in various bindings
@@ -54,22 +55,23 @@ object MarkerFactory {
      * @throws NoClassDefFoundError in case no binding is available
      * @since 1.7.14
      */
-    @Throws(NoClassDefFoundError::class)
-    private fun bwCompatibleGetMarkerFactoryFromBinder(): ru.mobiledev.slf4k.IMarkerFactory {
-        return try {
-            StaticMarkerBinder.getSingleton().getMarkerFactory()
+    // @Throws(NoClassDefFoundError::class)
+    private fun bwCompatibleGetMarkerFactoryFromBinder(): IMarkerFactory {
+        return StaticMarkerBinder.getSingleton().markerFactory
+        /*return try {
+            StaticMarkerBinder.getSingleton().markerFactory
         } catch (nsme: NoSuchMethodError) {
             // binding is probably a version of SLF4J older than 1.7.14
-            StaticMarkerBinder.SINGLETON.getMarkerFactory()
-        }
+            StaticMarkerBinder.SINGLETON.markerFactory
+        }*/
     }
 
     // this is where the binding happens
     init {
         try {
             MARKER_FACTORY = bwCompatibleGetMarkerFactoryFromBinder()
-        } catch (e: NoClassDefFoundError) {
-            MARKER_FACTORY = BasicMarkerFactory()
+//        } catch (e: NoClassDefFoundError) {
+//            MARKER_FACTORY = BasicMarkerFactory()
         } catch (e: Exception) {
             // we should never get here
             Util.report("Unexpected failure while binding MarkerFactory", e)
@@ -84,8 +86,8 @@ object MarkerFactory {
      * The name of the [Marker] object to return.
      * @return marker
      */
-    fun getMarker(name: String?): Marker {
-        return MARKER_FACTORY.getMarker(name)
+    fun getMarker(name: String): Marker? {
+        return MARKER_FACTORY?.getMarker(name)
     }
 
     /**
@@ -95,8 +97,8 @@ object MarkerFactory {
      * @return a dangling marker
      * @since 1.5.1
      */
-    fun getDetachedMarker(name: String?): Marker {
-        return MARKER_FACTORY.getDetachedMarker(name)
+    fun getDetachedMarker(name: String): Marker? {
+        return MARKER_FACTORY?.getDetachedMarker(name)
     }
 
     /**

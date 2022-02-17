@@ -1,5 +1,6 @@
 package ru.mobiledev.slf4k.event
 
+import ru.mobiledev.slf4k.Adapter
 import ru.mobiledev.slf4k.Logger
 import ru.mobiledev.slf4k.Marker
 import ru.mobiledev.slf4k.helpers.MessageFormatter
@@ -15,9 +16,11 @@ import ru.mobiledev.slf4k.helpers.SubstituteLogger
  * @author Wessel van Norel
  */
 class EventRecodingLogger(logger: SubstituteLogger, eventQueue: ArrayDeque<SubstituteLoggingEvent>) : Logger {
+
     override var name: String? = logger.name
     var logger: SubstituteLogger
     var eventQueue: ArrayDeque<SubstituteLoggingEvent>
+    private val adapter = Adapter()
 
     init {
         this.logger = logger
@@ -284,14 +287,13 @@ class EventRecodingLogger(logger: SubstituteLogger, eventQueue: ArrayDeque<Subst
     // WARNING: this method assumes that any throwable is properly extracted
     private fun recordEvent(level: Level, marker: Marker?, msg: String, args: Array<out Any>?, throwable: Throwable?) {
         val loggingEvent = SubstituteLoggingEvent()
-//        loggingEvent.timeStamp = java.lang.System.currentTimeMillis()
-        loggingEvent.timeStamp = kotlin.system.getTimeMillis()
+        loggingEvent.timeStamp = adapter.timeStamp()
         loggingEvent.level = level
         loggingEvent.setLogger(logger)
         loggingEvent.loggerName = name
         loggingEvent.marker = marker
         loggingEvent.message = msg
-        loggingEvent.threadName = java.lang.Thread.currentThread().getName()
+        loggingEvent.threadName = adapter.threadName()
         loggingEvent.argumentArray = args!!
         loggingEvent.throwable = throwable
         eventQueue.add(loggingEvent)

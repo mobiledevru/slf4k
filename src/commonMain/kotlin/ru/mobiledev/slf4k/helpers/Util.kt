@@ -27,6 +27,7 @@ package ru.mobiledev.slf4k.helpers
 import java.lang.IllegalArgumentException
 import java.lang.SecurityException
 import java.lang.IllegalStateException
+import kotlin.reflect.KClass
 
 /**
  * An internal utility class.
@@ -75,10 +76,10 @@ object Util {
      *
      * @return the name of the class which called the invoking method.
      */
-    val callingClass: java.lang.Class<*>?
+    val callingClass: KClass<*>?
         get() {
             val securityManager = securityManager ?: return null
-            val trace: Array<java.lang.Class<*>> = securityManager.getClassContext()
+            val trace: Array<KClass<*>> = securityManager.getClassContext()
             val thisClassName: String = Util::class.java.getName()
 
             // Advance until Util is found

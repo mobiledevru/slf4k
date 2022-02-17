@@ -33,17 +33,13 @@ import ru.mobiledev.slf4k.helpers.NOPLoggerFactory
 import ru.mobiledev.slf4k.impl.StaticLoggerBinder
 import java.lang.NoClassDefFoundError
 import java.lang.NoSuchMethodError
-import java.lang.IllegalStateException
-import ru.mobiledev.slf4k.helpers.SubstituteLogger
 import java.util.concurrent.LinkedBlockingQueue
 import ru.mobiledev.slf4k.event.SubstituteLoggingEvent
 import java.util.Arrays
 import java.lang.NoSuchFieldError
-import java.util.LinkedHashSet
 import java.util.Enumeration
 import java.io.IOException
 import java.util.Locale
-import ru.mobiledev.slf4k.ILoggerFactory
 import kotlin.jvm.Volatile
 import kotlin.reflect.KClass
 
@@ -151,7 +147,7 @@ object LoggerFactory {
                 reportMultipleBindingAmbiguity(staticLoggerBinderPathSet)
             }
             // the next line does the binding
-            StaticLoggerBinder.singleton()
+            StaticLoggerBinder.singleton
             INITIALIZATION_STATE = SUCCESSFUL_INITIALIZATION
             reportActualBinding(staticLoggerBinderPathSet)
         } catch (ncde: NoClassDefFoundError) {
@@ -199,9 +195,9 @@ object LoggerFactory {
         }
     }
 
-    fun failedBinding(t: Throwable?) {
+    fun failedBinding(t: Throwable) {
         INITIALIZATION_STATE = FAILED_INITIALIZATION
-        report("Failed to instantiate SLF4J LoggerFactory", t!!)
+        report("Failed to instantiate SLF4J LoggerFactory", t)
     }
 
     private fun replayEvents() {
@@ -357,9 +353,9 @@ object LoggerFactory {
      * The name of the logger.
      * @return logger
      */
-    fun getLogger(name: String?): Logger {
+    fun getLogger(name: String): Logger {
         val iLoggerFactory = iLoggerFactory
-        return iLoggerFactory.getLogger(name!!)
+        return iLoggerFactory.getLogger(name)
     }
 
     /**
@@ -384,9 +380,9 @@ object LoggerFactory {
      * logger name mismatch](http://www.slf4j.org/codes.html.loggerNameMismatch)
      */
     fun getLogger(clazz: KClass<*>): Logger {
-        val logger: Logger = getLogger(clazz.getName())
+        val logger: Logger = getLogger(clazz.qualifiedName ?: Logger.ROOT_LOGGER_NAME)
         if (DETECT_LOGGER_NAME_MISMATCH) {
-            val autoComputedCallingClass: java.lang.Class<*>? = callingClass
+            val autoComputedCallingClass: KClass<*>? = callingClass
             if (autoComputedCallingClass != null && nonMatchingClasses(clazz, autoComputedCallingClass)) {
                 report(
                     String.format(
@@ -400,10 +396,13 @@ object LoggerFactory {
         return logger
     }
 
-    private fun nonMatchingClasses(clazz: java.lang.Class<*>, autoComputedCallingClass: java.lang.Class<*>): Boolean {
+    private fun nonMatchingClasses(clazz: KClass<*>, autoComputedCallingClass: KClass<*>): Boolean {
         return !autoComputedCallingClass.isAssignableFrom(clazz)
-    }// support re-entrant behavior.
+    }
+
+    // support re-entrant behavior.
     // See also http://jira.qos.ch/browse/SLF4J-97
+
     /**
      * Return the [ILoggerFactory] instance in use.
      *
@@ -425,7 +424,7 @@ object LoggerFactory {
                 }
             }
             when (INITIALIZATION_STATE) {
-                SUCCESSFUL_INITIALIZATION -> return StaticLoggerBinder.singleton.getLoggerFactory()
+                SUCCESSFUL_INITIALIZATION -> return StaticLoggerBinder.singleton.loggerFactory
                 NOP_FALLBACK_INITIALIZATION -> return NOP_FALLBACK_FACTORY
                 FAILED_INITIALIZATION -> throw IllegalStateException(UNSUCCESSFUL_INIT_MSG)
                 ONGOING_INITIALIZATION ->             // support re-entrant behavior.

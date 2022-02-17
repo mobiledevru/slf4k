@@ -68,6 +68,10 @@ class StaticMarkerBinder private constructor() : MarkerFactoryBinder {
         /**
          * The unique instance of this class.
          */
-        val singleton = StaticMarkerBinder()
+        val SINGLETON = StaticMarkerBinder()
+
+        fun getSingleton() : StaticMarkerBinder {
+            return SINGLETON
+        }
     }
 }

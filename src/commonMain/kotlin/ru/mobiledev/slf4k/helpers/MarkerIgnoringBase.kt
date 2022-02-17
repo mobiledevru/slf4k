@@ -168,7 +168,7 @@ abstract class MarkerIgnoringBase : NamedLoggerBase(), Logger {
     }
 
     override fun toString(): String {
-//        return (this::class.qualifiedName?:"noName") + "(" + name + ")"
+//        return (this::class.qualifiedName ?: "noName") + "(" + name + ")"
         return this.javaClass.getName() + "(" + name + ")"
     }
 
