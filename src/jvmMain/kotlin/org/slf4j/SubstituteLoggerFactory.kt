@@ -25,6 +25,7 @@
 package org.slf4j
 
 import org.slf4j.event.SubstituteLoggingEvent
+import org.slf4j.helpers.SubstituteLogger
 import java.util.concurrent.LinkedBlockingQueue
 import kotlin.jvm.Synchronized
 
@@ -36,7 +37,7 @@ import kotlin.jvm.Synchronized
  */
 class SubstituteLoggerFactory : ILoggerFactory {
     var postInitialization = false
-    val loggers: MutableMap<String, SubstituteLogger> = HashMap()
+    private val loggers: MutableMap<String, SubstituteLogger> = HashMap()
     private val eventQueue: LinkedBlockingQueue<SubstituteLoggingEvent> = LinkedBlockingQueue<SubstituteLoggingEvent>()
     
     @Synchronized

@@ -26,6 +26,7 @@ package org.slf4j.helpers
 
 import ru.mobiledev.slf4k.Adapter
 import org.slf4j.Util
+import kotlin.jvm.JvmStatic
 
 // contributors: lizongbo: proposed special treatment of array parameter values
 // Joern Huxhorn: pointed out double[] omission, suggested deep array copy
@@ -128,6 +129,7 @@ object MessageFormatter {
      * The argument to be substituted in place of the formatting anchor
      * @return The formatted message
      */
+    @JvmStatic
     fun format(messagePattern: String, arg: Any): FormattingTuple {
         return arrayFormat(messagePattern, arrayOf(arg))
     }
@@ -156,10 +158,12 @@ object MessageFormatter {
      * anchor
      * @return The formatted message
      */
+    @JvmStatic
     fun format(messagePattern: String, arg1: Any, arg2: Any): FormattingTuple {
         return arrayFormat(messagePattern, arrayOf(arg1, arg2))
     }
 
+    @JvmStatic
     fun arrayFormat(messagePattern: String?, argArray: Array<Any?>): FormattingTuple {
         val throwableCandidate = getThrowableCandidate(argArray)
         var args = argArray
@@ -169,6 +173,7 @@ object MessageFormatter {
         return arrayFormat(messagePattern, args, throwableCandidate)
     }
 
+    @JvmStatic
     fun arrayFormat(messagePattern: String?, argArray: Array<Any?>?, throwable: Throwable?): FormattingTuple {
         if (messagePattern == null) {
             return FormattingTuple(null, argArray, throwable)

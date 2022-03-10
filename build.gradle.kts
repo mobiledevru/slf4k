@@ -18,7 +18,8 @@ kotlin {
         }
         withJava()
         testRuns["test"].executionTask.configure {
-            useJUnitPlatform()
+//            useJUnitPlatform()
+            useJUnit()
         }
     }
     js(BOTH) {
@@ -49,24 +50,32 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-//                implementation(kotlin("org.jetbrains.kotlin:kotlin-stdlib-common:${kotlinVersion}"))
+//                implementation(kotlin("stdlib-common"))
                 implementation("org.jetbrains.kotlin:kotlin-stdlib-common:${kotlinVersion}")
             }
         }
         val commonTest by getting {
             dependencies {
-                implementation(kotlin("test"))
+                implementation(kotlin("test-common"))
+                implementation(kotlin("test-annotations-common"))
             }
         }
         val jvmMain by getting {
             dependencies {
 //                implementation(kotlin("org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}"))
-                implementation("org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}")
+//                implementation("org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}")
+                implementation(kotlin("stdlib-jdk8"))
             }
         }
         val jvmTest by getting {
             dependencies {
-                implementation("ch.qos.logback:logback-classic:1.2.10")
+                implementation("ch.qos.logback:logback-classic:1.2.10") {
+                    exclude("org.slf4j", "slf4j-api")
+                }
+                implementation("junit:junit:4.13")
+                implementation(kotlin("test"))
+                implementation(kotlin("test-junit"))
+
             }
         }
         val jsMain by getting {

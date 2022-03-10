@@ -28,6 +28,7 @@ import org.slf4j.Util.report
 import org.slf4j.helpers.NOPMDCAdapter
 import org.slf4j.impl.StaticMDCBinder
 import org.slf4j.spi.MDCAdapter
+import kotlin.jvm.JvmStatic
 
 /**
  * This class hides and serves as a substitute for the underlying logging
@@ -124,6 +125,7 @@ object MDC {
      * @throws IllegalArgumentException
      * in case the "key" parameter is null
      */
+    @JvmStatic
     @Throws(IllegalArgumentException::class)
     fun put(key: String, `val`: String?) {
         requireNotNull(key) { "key parameter cannot be null" }
@@ -144,6 +146,7 @@ object MDC {
      * @throws IllegalArgumentException
      * in case the "key" parameter is null
      */
+    @JvmStatic
     @Throws(IllegalArgumentException::class)
     operator fun get(key: String): String? {
         requireNotNull(key) { "key parameter cannot be null" }

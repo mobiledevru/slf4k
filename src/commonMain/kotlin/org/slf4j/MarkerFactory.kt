@@ -25,6 +25,7 @@
 package org.slf4j
 
 import org.slf4j.impl.StaticMarkerBinder
+import kotlin.jvm.JvmStatic
 
 /**
  * MarkerFactory is a utility class producing [Marker] instances as
@@ -54,6 +55,7 @@ object MarkerFactory {
      * @since 1.7.14
      */
     // @Throws(NoClassDefFoundError::class)
+    @JvmStatic
     private fun bwCompatibleGetMarkerFactoryFromBinder(): IMarkerFactory {
         return StaticMarkerBinder.getSingleton().markerFactory
         /*return try {
@@ -84,6 +86,7 @@ object MarkerFactory {
      * The name of the [Marker] object to return.
      * @return marker
      */
+    @JvmStatic
     fun getMarker(name: String): Marker? {
         return MARKER_FACTORY?.getMarker(name)
     }
@@ -95,6 +98,7 @@ object MarkerFactory {
      * @return a dangling marker
      * @since 1.5.1
      */
+    @JvmStatic
     fun getDetachedMarker(name: String): Marker? {
         return MARKER_FACTORY?.getDetachedMarker(name)
     }
@@ -108,6 +112,7 @@ object MarkerFactory {
      *
      * @return the IMarkerFactory instance in use
      */
+    @JvmStatic
     val iMarkerFactory: IMarkerFactory?
         get() = MARKER_FACTORY
 }

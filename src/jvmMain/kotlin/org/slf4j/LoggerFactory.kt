@@ -342,6 +342,7 @@ actual object LoggerFactory {
      * The name of the logger.
      * @return logger
      */
+    @JvmStatic
     actual fun getLogger(name: String): Logger {
         val iLoggerFactory = iLoggerFactory
         return iLoggerFactory.getLogger(name)
@@ -368,6 +369,7 @@ actual object LoggerFactory {
      * @see [Detected
      * logger name mismatch](http://www.slf4j.org/codes.html.loggerNameMismatch)
      */
+    @JvmStatic
     fun getLogger(clazz: Class<*>): Logger {
         val logger: Logger = getLogger(clazz.name)
         if (DETECT_LOGGER_NAME_MISMATCH) {

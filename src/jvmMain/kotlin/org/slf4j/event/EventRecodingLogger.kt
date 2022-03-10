@@ -1,11 +1,10 @@
-package org.slf4j.helpers
+package org.slf4j.event
 
 import ru.mobiledev.slf4k.Adapter
 import org.slf4j.Logger
 import org.slf4j.Marker
-import org.slf4j.SubstituteLogger
-import org.slf4j.event.Level
-import org.slf4j.event.SubstituteLoggingEvent
+import org.slf4j.helpers.MessageFormatter
+import org.slf4j.helpers.SubstituteLogger
 import java.util.*
 
 /**
@@ -17,11 +16,11 @@ import java.util.*
  * @author Ceki G&uuml;lc&uuml;
  * @author Wessel van Norel
  */
-class EventRecodingLogger(logger: SubstituteLogger, eventQueue: AbstractQueue<SubstituteLoggingEvent>) : Logger {
+class EventRecodingLogger(logger: SubstituteLogger, eventQueue: Queue<SubstituteLoggingEvent>) : Logger {
 
     override var name: String = logger.name
     var logger: SubstituteLogger
-    var eventQueue: AbstractQueue<SubstituteLoggingEvent>
+    var eventQueue: Queue<SubstituteLoggingEvent>
 
     init {
         this.logger = logger

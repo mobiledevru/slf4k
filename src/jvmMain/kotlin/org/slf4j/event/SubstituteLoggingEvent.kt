@@ -1,7 +1,7 @@
 package org.slf4j.event
 
 import org.slf4j.Marker
-import org.slf4j.SubstituteLogger
+import org.slf4j.helpers.SubstituteLogger
 
 class SubstituteLoggingEvent : LoggingEvent {
     override var level: Level? = null

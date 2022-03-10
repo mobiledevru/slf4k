@@ -22,11 +22,12 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.slf4j
+package org.slf4j.helpers
 
+import org.slf4j.Logger
+import org.slf4j.Marker
+import org.slf4j.event.EventRecodingLogger
 import org.slf4j.event.SubstituteLoggingEvent
-import org.slf4j.helpers.EventRecodingLogger
-import org.slf4j.helpers.NOPLogger
 import org.slf4j.event.LoggingEvent
 import java.util.*
 import kotlin.jvm.Volatile
@@ -44,7 +45,7 @@ import kotlin.jvm.Volatile
  */
 class SubstituteLogger(
     override val name: String,
-    eventQueue: AbstractQueue<SubstituteLoggingEvent>,
+    eventQueue: Queue<SubstituteLoggingEvent>,
     createdPostInitialization: Boolean
 ) : Logger {
 
@@ -68,7 +69,7 @@ class SubstituteLogger(
 
     private var eventRecodingLogger: EventRecodingLogger? = null
 
-    private val eventQueue: AbstractQueue<SubstituteLoggingEvent>
+    private val eventQueue: Queue<SubstituteLoggingEvent>
     
     private val createdPostInitialization: Boolean
 
