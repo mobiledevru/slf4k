@@ -36,8 +36,7 @@ package ru.mobiledev.slf4k
  * 
  * @author Ceki G&uuml;lc&uuml;
  */
-@Serializable
-interface Marker : java.io.Serializable {
+interface Marker : SerializableAdapter {
     /**
      * Get the name of this Marker.
      * 

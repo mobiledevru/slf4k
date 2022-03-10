@@ -22,12 +22,10 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package ru.mobiledev.slf4k.helpers
+package ru.mobiledev.slf4k
 
-import ru.mobiledev.slf4k.ILoggerFactory
-import ru.mobiledev.slf4k.Logger
-import
 import ru.mobiledev.slf4k.event.SubstituteLoggingEvent
+import java.util.concurrent.LinkedBlockingQueue
 import kotlin.jvm.Synchronized
 
 /**
@@ -39,7 +37,8 @@ import kotlin.jvm.Synchronized
 class SubstituteLoggerFactory : ILoggerFactory {
     var postInitialization = false
     val loggers: MutableMap<String, SubstituteLogger> = HashMap()
-    val eventQueue: LinkedBlockingQueue<SubstituteLoggingEvent> = LinkedBlockingQueue<SubstituteLoggingEvent>()
+    private val eventQueue: LinkedBlockingQueue<SubstituteLoggingEvent> = LinkedBlockingQueue<SubstituteLoggingEvent>()
+    
     @Synchronized
     override fun getLogger(name: String): Logger {
         var logger = loggers[name]

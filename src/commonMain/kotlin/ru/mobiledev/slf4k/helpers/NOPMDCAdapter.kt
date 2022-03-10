@@ -37,16 +37,16 @@ import ru.mobiledev.slf4k.spi.MDCAdapter
  */
 class NOPMDCAdapter : MDCAdapter {
     override fun clear() {}
-    override operator fun get(key: String): String? {
+    override operator fun get(key: String?): String? {
         return null
     }
 
     override fun put(key: String, `val`: String?) {}
-    override fun remove(key: String) {}
-    override val copyOfContextMap: Map<String, String>?
+    override fun remove(key: String?) {}
+    override val copyOfContextMap: Map<String?, String?>?
         get() = null
 
-    override fun setContextMap(contextMap: Map<String, String>?) {
+    override fun setContextMap(contextMap: Map<String?, String?>?) {
         // NOP
     }
 }

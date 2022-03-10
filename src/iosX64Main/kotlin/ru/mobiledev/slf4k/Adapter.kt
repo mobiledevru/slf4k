@@ -1,14 +1,15 @@
 package ru.mobiledev.slf4k
 
-actual class Adapter {
-    actual val platform: String
-        get() = "iOS x64"
+actual interface SerializableAdapter
 
-    actual fun timeStamp(): Long {
-        return kotlin.system.getTimeMillis()
-    }
+actual object Adapter {
+    actual val platform: String get() = "iOS x64"
+
+    actual fun timeStamp(): Long = kotlin.system.getTimeMillis()
 
     actual fun threadName(): String? {
         TODO("Not yet implemented")
     }
+
+    actual fun className(obj: Any): String = this::class.qualifiedName ?: "NIL"
 }

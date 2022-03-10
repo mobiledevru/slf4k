@@ -26,6 +26,7 @@ package ru.mobiledev.slf4k.helpers
 
 import ru.mobiledev.slf4k.Logger
 import ru.mobiledev.slf4k.LoggerFactory
+import ru.mobiledev.slf4k.SerializableAdapter
 
 /**
  * Serves as base class for named logger implementation. More significantly, this
@@ -36,31 +37,9 @@ import ru.mobiledev.slf4k.LoggerFactory
  *
  * @since 1.5.3
  */
-abstract class NamedLoggerBase : Logger, java.io.Serializable {
-    override var name: String? = null
+abstract class NamedLoggerBase : Logger, SerializableAdapter {
+    override lateinit var name: String
         protected set
-
-    /**
-     * Replace this instance with a homonymous (same name) logger returned
-     * by LoggerFactory. Note that this method is only called during
-     * deserialization.
-     *
-     *
-     *
-     * This approach will work well if the desired ILoggerFactory is the one
-     * references by LoggerFactory. However, if the user manages its logger hierarchy
-     * through a different (non-static) mechanism, e.g. dependency injection, then
-     * this approach would be mostly counterproductive.
-     *
-     * @return logger with same name as returned by LoggerFactory
-     * @throws ObjectStreamException
-     */
-    @Throws(ObjectStreamException::class)
-    protected fun readResolve(): Any {
-        // using getName() instead of this.name works even for
-        // NOPLogger
-        return LoggerFactory.getLogger(name)
-    }
 
     companion object {
         private const val serialVersionUID = 7535258609338176893L

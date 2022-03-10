@@ -48,22 +48,33 @@ kotlin {
     
     sourceSets {
         val commonMain by getting {
-//            dependencies {
-//                implementation(kotlin("org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}"))
-//            }
+            dependencies {
+//                implementation(kotlin("org.jetbrains.kotlin:kotlin-stdlib-common:${kotlinVersion}"))
+                implementation("org.jetbrains.kotlin:kotlin-stdlib-common:${kotlinVersion}")
+            }
         }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
             }
         }
-        val jvmMain by getting
+        val jvmMain by getting {
+            dependencies {
+//                implementation(kotlin("org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}"))
+                implementation("org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}")
+            }
+        }
         val jvmTest by getting {
             dependencies {
                 implementation("ch.qos.logback:logback-classic:1.2.10")
             }
         }
-        val jsMain by getting
+        val jsMain by getting {
+            dependencies {
+//                implementation(kotlin("org.jetbrains.kotlin:kotlin-stdlib-js:${kotlinVersion}"))
+                implementation("org.jetbrains.kotlin:kotlin-stdlib-js:${kotlinVersion}")
+            }
+        }
         val jsTest by getting
 //        val nativeMain by getting
 //        val nativeTest by getting

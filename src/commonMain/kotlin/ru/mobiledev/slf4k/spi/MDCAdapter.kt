@@ -51,7 +51,7 @@ interface MDCAdapter {
      *
      * @return the string value identified by the `key` parameter.
      */
-    operator fun get(key: String): String?
+    operator fun get(key: String?): String?
 
     /**
      * Remove the the context identified by the `key` parameter.
@@ -62,7 +62,7 @@ interface MDCAdapter {
      * This method does nothing if there is no previous value
      * associated with `key`.
      */
-    fun remove(key: String)
+    fun remove(key: String?)
 
     /**
      * Clear all entries in the MDC.
@@ -76,7 +76,7 @@ interface MDCAdapter {
      * @return A copy of the current thread's context map. May be null.
      * @since 1.5.1
      */
-    val copyOfContextMap: Map<String, String>?
+    val copyOfContextMap: Map<String?, String?>?
 
     /**
      * Set the current thread's context map by first clearing any existing
@@ -87,5 +87,5 @@ interface MDCAdapter {
      *
      * @since 1.5.1
      */
-    fun setContextMap(contextMap: Map<String, String>?)
+    fun setContextMap(contextMap: Map<String?, String?>?)
 }

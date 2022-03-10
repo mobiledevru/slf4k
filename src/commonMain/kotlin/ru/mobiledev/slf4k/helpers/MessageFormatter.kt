@@ -24,6 +24,9 @@
  */
 package ru.mobiledev.slf4k.helpers
 
+import ru.mobiledev.slf4k.Adapter
+import ru.mobiledev.slf4k.Util
+
 // contributors: lizongbo: proposed special treatment of array parameter values
 // Joern Huxhorn: pointed out double[] omission, suggested deep array copy
 /**
@@ -157,7 +160,7 @@ object MessageFormatter {
         return arrayFormat(messagePattern, arrayOf(arg1, arg2))
     }
 
-    fun arrayFormat(messagePattern: String?, argArray: Array<Any>): FormattingTuple {
+    fun arrayFormat(messagePattern: String?, argArray: Array<Any?>): FormattingTuple {
         val throwableCandidate = getThrowableCandidate(argArray)
         var args = argArray
         if (throwableCandidate != null) {
@@ -166,7 +169,7 @@ object MessageFormatter {
         return arrayFormat(messagePattern, args, throwableCandidate)
     }
 
-    fun arrayFormat(messagePattern: String?, argArray: Array<Any>?, throwable: Throwable?): FormattingTuple {
+    fun arrayFormat(messagePattern: String?, argArray: Array<Any?>?, throwable: Throwable?): FormattingTuple {
         if (messagePattern == null) {
             return FormattingTuple(null, argArray, throwable)
         }
@@ -232,7 +235,7 @@ object MessageFormatter {
     }
 
     // special treatment of array values was suggested by 'lizongbo'
-    private fun deeplyAppendParameter(sbuf: StringBuilder, o: Any?, seenMap: MutableMap<Array<Any>, Any?>) {
+    private fun deeplyAppendParameter(sbuf: StringBuilder, o: Any?, seenMap: MutableMap<Array<*>, Any?>) {
         when(o) {
             null -> sbuf.append("null")
             is BooleanArray -> booleanArrayAppend(sbuf, o)
@@ -243,7 +246,7 @@ object MessageFormatter {
             is LongArray -> longArrayAppend(sbuf, o)
             is FloatArray -> floatArrayAppend(sbuf, o)
             is DoubleArray -> doubleArrayAppend(sbuf, o)
-            is Array<*> -> objectArrayAppend(sbuf, o as Array<Any>, seenMap)
+            is Array<*> -> objectArrayAppend(sbuf, o, seenMap)
             else -> safeObjectAppend(sbuf, o)
         }
     }
@@ -253,15 +256,15 @@ object MessageFormatter {
             val oAsString = o.toString()
             sbuf.append(oAsString)
         } catch (t: Throwable) {
-            ru.mobiledev.slf4k.helpers.Util.report(
-                "SLF4J: Failed toString() invocation on an object of type [" + o.javaClass.getName() + "]",
+            Util.report(
+                "SLF4J: Failed toString() invocation on an object of type [" + Adapter.className(o) + "]",
                 t
             )
             sbuf.append("[FAILED toString()]")
         }
     }
 
-    private fun objectArrayAppend(sbuf: StringBuilder, a: Array<Any>, seenMap: MutableMap<Array<Any>, Any?>) {
+    private fun objectArrayAppend(sbuf: StringBuilder, a: Array<*>, seenMap: MutableMap<Array<*>, Any?>) {
         sbuf.append('[')
         if (!seenMap.containsKey(a)) {
             seenMap[a] = null
@@ -366,8 +369,8 @@ object MessageFormatter {
      * @return if the last [Object] in argArray is a [Throwable] this method will return it,
      * otherwise it returns null
      */
-    fun getThrowableCandidate(argArray: Array<out Any>): Throwable? {
-        if (argArray == null || argArray.size == 0) {
+    fun getThrowableCandidate(argArray: Array<out Any?>?): Throwable? {
+        if (argArray == null || argArray.isEmpty()) {
             return null
         }
         val lastEntry = argArray[argArray.size - 1]
@@ -384,13 +387,14 @@ object MessageFormatter {
      *
      * @return a copy of the array without the last element
      */
-    fun trimmedCopy(argArray: Array<out Any>): Array<Any> {
-        check(!(argArray == null || argArray.size == 0)) { "non-sensical empty or null argument array" }
+    fun trimmedCopy(argArray: Array<out Any?>?): Array<Any?> {
+        check(!(argArray == null || argArray.isEmpty())) { "non-sensical empty or null argument array" }
         val trimmedLen = argArray.size - 1
-        val trimmed = arrayOfNulls<Any>(trimmedLen)
         if (trimmedLen > 0) {
-            java.lang.System.arraycopy(argArray, 0, trimmed, 0, trimmedLen)
+            // todo is arrayOf necessary?
+            return arrayOf(*argArray).copyOf(trimmedLen)
+        } else {
+            return arrayOf()
         }
-        return trimmed
     }
 }

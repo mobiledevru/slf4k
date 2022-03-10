@@ -59,7 +59,7 @@ class BasicMarkerFactory
         var marker: Marker? = markerMap.get(name)
         if (marker == null) {
             marker = BasicMarker(name)
-            val oldMarker: Marker = markerMap.putIfAbsent(name, marker)
+            val oldMarker: Marker? = markerMap.putIfAbsent(name, marker)
             if (oldMarker != null) {
                 marker = oldMarker
             }

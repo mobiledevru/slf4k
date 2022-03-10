@@ -40,9 +40,9 @@ import ru.mobiledev.slf4k.spi.MDCAdapter
  * @since 1.5.0
  */
 class BasicMDCAdapter : MDCAdapter {
-    private val inheritableThreadLocal: InheritableThreadLocal<Map<String, String>?> =
-        object : InheritableThreadLocal<Map<String, String>?>() {
-            protected override fun childValue(parentValue: Map<String, String>?): Map<String, String>? {
+    private val inheritableThreadLocal: InheritableThreadLocal<MutableMap<String?, String?>?> =
+        object : InheritableThreadLocal<MutableMap<String?, String?>?>() {
+            protected override fun childValue(parentValue: MutableMap<String?, String?>?): MutableMap<String?, String?>? {
                 return if (parentValue == null) {
                     null
                 } else HashMap(parentValue)
@@ -64,7 +64,7 @@ class BasicMDCAdapter : MDCAdapter {
      */
     override fun put(key: String, `val`: String?) {
         requireNotNull(key) { "key cannot be null" }
-        var map: MutableMap<String?, String?> = inheritableThreadLocal.get()
+        var map: MutableMap<String?, String?>? = inheritableThreadLocal.get()
         if (map == null) {
             map = HashMap()
             inheritableThreadLocal.set(map)
@@ -75,8 +75,8 @@ class BasicMDCAdapter : MDCAdapter {
     /**
      * Get the context identified by the `key` parameter.
      */
-    override operator fun get(key: String): String? {
-        val map: Map<String, String> = inheritableThreadLocal.get()
+    override operator fun get(key: String?): String? {
+        val map: Map<String?, String?>? = inheritableThreadLocal.get()
         return if (map != null && key != null) {
             map[key]
         } else {
@@ -87,8 +87,8 @@ class BasicMDCAdapter : MDCAdapter {
     /**
      * Remove the the context identified by the `key` parameter.
      */
-    override fun remove(key: String) {
-        val map: MutableMap<String, String> = inheritableThreadLocal.get()
+    override fun remove(key: String?) {
+        val map: MutableMap<String?, String?>? = inheritableThreadLocal.get()
         if (map != null) {
             map.remove(key)
         }
@@ -98,7 +98,7 @@ class BasicMDCAdapter : MDCAdapter {
      * Clear all entries in the MDC.
      */
     override fun clear() {
-        val map: MutableMap<String, String> = inheritableThreadLocal.get()
+        val map: MutableMap<String?, String?>? = inheritableThreadLocal.get()
         if (map != null) {
             map.clear()
             inheritableThreadLocal.remove()
@@ -111,14 +111,9 @@ class BasicMDCAdapter : MDCAdapter {
      *
      * @return the keys in the MDC
      */
-    val keys: Set<String>?
+    val keys: Set<String?>?
         get() {
-            val map: Map<String, String> = inheritableThreadLocal.get()
-            return if (map != null) {
-                map.keys
-            } else {
-                null
-            }
+            return inheritableThreadLocal.get()?.keys
         }
 
     /**
@@ -126,9 +121,9 @@ class BasicMDCAdapter : MDCAdapter {
      * Returned value may be null.
      *
      */
-    override val copyOfContextMap: Map<String, String>?
+    override val copyOfContextMap: Map<String?, String?>?
         get() {
-            val oldMap: Map<String, String> = inheritableThreadLocal.get()
+            val oldMap: Map<String?, String?>? = inheritableThreadLocal.get()
             return if (oldMap != null) {
                 HashMap(oldMap)
             } else {
@@ -136,7 +131,7 @@ class BasicMDCAdapter : MDCAdapter {
             }
         }
 
-    override fun setContextMap(contextMap: Map<String, String>?) {
+    override fun setContextMap(contextMap: Map<String?, String?>?) {
 //        inheritableThreadLocal.set(HashMap(contextMap))
         inheritableThreadLocal.set(HashMap(contextMap ?: emptyMap()))
     }

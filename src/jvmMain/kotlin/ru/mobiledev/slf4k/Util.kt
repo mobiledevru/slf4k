@@ -22,11 +22,8 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package ru.mobiledev.slf4k.helpers
+package ru.mobiledev.slf4k
 
-import java.lang.IllegalArgumentException
-import java.lang.SecurityException
-import java.lang.IllegalStateException
 import kotlin.reflect.KClass
 
 /**
@@ -35,7 +32,7 @@ import kotlin.reflect.KClass
  * @author Alexander Dorokhine
  * @author Ceki G&uuml;lc&uuml;
  */
-object Util {
+actual object Util {
 
     fun safeGetSystemProperty(key: String): String? {
         requireNotNull(key) { "null input" }
@@ -48,24 +45,26 @@ object Util {
         return result
     }
 
-    fun safeGetBooleanSystemProperty(key: String?): Boolean {
+    fun safeGetBooleanSystemProperty(key: String): Boolean {
         val value = safeGetSystemProperty(key)
         return value?.equals("true", ignoreCase = true) ?: false
     }
 
     private var SECURITY_MANAGER: ClassContextSecurityManager? = null
     private var SECURITY_MANAGER_CREATION_ALREADY_ATTEMPTED = false
-    private val securityManager: ClassContextSecurityManager?
-        private get() = if (SECURITY_MANAGER != null) SECURITY_MANAGER else if (SECURITY_MANAGER_CREATION_ALREADY_ATTEMPTED) null else {
-            SECURITY_MANAGER = safeCreateSecurityManager()
-            SECURITY_MANAGER_CREATION_ALREADY_ATTEMPTED = true
-            SECURITY_MANAGER
-        }
+    private fun getSecurityManager() : ClassContextSecurityManager? {
+        return if (SECURITY_MANAGER != null) SECURITY_MANAGER else
+            if (SECURITY_MANAGER_CREATION_ALREADY_ATTEMPTED) null else {
+                SECURITY_MANAGER = safeCreateSecurityManager()
+                SECURITY_MANAGER_CREATION_ALREADY_ATTEMPTED = true
+                SECURITY_MANAGER
+            }
+    }
 
     private fun safeCreateSecurityManager(): ClassContextSecurityManager? {
         return try {
             ClassContextSecurityManager()
-        } catch (sm: SecurityException) {
+        } catch (sm: java.lang.SecurityException) {
             null
         }
     }// Advance until Util is found
@@ -76,32 +75,49 @@ object Util {
      *
      * @return the name of the class which called the invoking method.
      */
-    val callingClass: KClass<*>?
-        get() {
-            val securityManager = securityManager ?: return null
-            val trace: Array<KClass<*>> = securityManager.getClassContext()
-            val thisClassName: String = Util::class.java.getName()
+    fun getCallingClass(): Class<*>? {
+        val securityManager : ClassContextSecurityManager = getSecurityManager() ?: return null
+        val trace: Array<Class<*>> = securityManager.getClassContext()
+        val thisClassName: String = Util::class.java.getName()
 
-            // Advance until Util is found
-            var i: Int
-            i = 0
-            while (i < trace.size) {
-                if (thisClassName == trace[i].getName()) break
-                i++
-            }
-
-            // trace[i] = Util; trace[i+1] = caller; trace[i+2] = caller's caller
-            check(!(i >= trace.size || i + 2 >= trace.size)) { "Failed to find org.slf4j.helpers.Util or its caller in the stack; " + "this should not happen" }
-            return trace[i + 2]
+        // Advance until Util is found
+        var i: Int
+        i = 0
+        while (i < trace.size) {
+            if (thisClassName == trace[i].getName()) break
+            i++
         }
 
-    fun report(msg: String?, t: Throwable) {
+        // trace[i] = Util; trace[i+1] = caller; trace[i+2] = caller's caller
+        check(!(i >= trace.size || i + 2 >= trace.size)) { "Failed to find org.slf4j.helpers.Util or its caller in the stack; " + "this should not happen" }
+        return trace[i + 2]
+    }
+
+    /*fun getCallingKlass(): KClass<*>? {
+        val securityManager = securityManager ?: return null
+        val trace: Array<KClass<*>> = securityManager.getClassContext()
+        val thisClassName: String = Util::class.java.getName()
+
+        // Advance until Util is found
+        var i: Int
+        i = 0
+        while (i < trace.size) {
+            if (thisClassName == trace[i].qualifiedName) break
+            i++
+        }
+
+        // trace[i] = Util; trace[i+1] = caller; trace[i+2] = caller's caller
+        check(!(i >= trace.size || i + 2 >= trace.size)) { "Failed to find org.slf4j.helpers.Util or its caller in the stack; " + "this should not happen" }
+        return trace[i + 2]
+    }*/
+
+    actual fun report(msg: String?, t: Throwable) {
         java.lang.System.err.println(msg)
         java.lang.System.err.println("Reported exception:")
         t.printStackTrace()
     }
 
-    fun report(msg: String) {
+    actual fun report(msg: String) {
         java.lang.System.err.println("SLF4J: $msg")
     }
 
@@ -111,7 +127,8 @@ object Util {
      * inside this package.
      */
     private class ClassContextSecurityManager : java.lang.SecurityManager() {
-        val classContext: Array<Any>
-            get() = super.getClassContext()
+        public override fun getClassContext(): Array<Class<*>> {
+            return super.getClassContext()
+        }
     }
 }

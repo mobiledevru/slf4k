@@ -24,7 +24,6 @@
  */
 package ru.mobiledev.slf4k.helpers
 
-import ru.mobiledev.slf4k.helpers.MarkerIgnoringBase
 import kotlin.jvm.JvmField
 
 /**
@@ -41,11 +40,8 @@ protected constructor() : MarkerIgnoringBase() {
     /**
      * Always returns the string value "NOP".
      */
-    override var name: String?
-        get() = "NOP"
-        set(name) {
-            super.name = name
-        }
+    override var name: String = "NOP"
+
 
     /**
      * Always returns false.
@@ -60,17 +56,17 @@ protected constructor() : MarkerIgnoringBase() {
     }
 
     /** A NOP implementation.   */
-    override fun trace(format: String, arg: Any) {
+    override fun trace(format: String, arg: Any?) {
         // NOP
     }
 
     /** A NOP implementation.   */
-    override fun trace(format: String, arg1: Any, arg2: Any) {
+    override fun trace(format: String, arg1: Any?, arg2: Any?) {
         // NOP
     }
 
     /** A NOP implementation.   */
-    override fun trace(format: String, vararg argArray: Any) {
+    override fun trace(format: String, vararg arguments: Any?) {
         // NOP
     }
 
@@ -92,17 +88,17 @@ protected constructor() : MarkerIgnoringBase() {
     }
 
     /** A NOP implementation.   */
-    override fun debug(format: String, arg: Any) {
+    override fun debug(format: String, arg: Any?) {
         // NOP
     }
 
     /** A NOP implementation.   */
-    override fun debug(format: String, arg1: Any, arg2: Any) {
+    override fun debug(format: String, arg1: Any?, arg2: Any?) {
         // NOP
     }
 
     /** A NOP implementation.   */
-    override fun debug(format: String, vararg argArray: Any) {
+    override fun debug(format: String, vararg arguments: Any?) {
         // NOP
     }
 
@@ -125,17 +121,17 @@ protected constructor() : MarkerIgnoringBase() {
     }
 
     /** A NOP implementation.  */
-    override fun info(format: String, arg1: Any) {
+    override fun info(format: String, arg: Any?) {
         // NOP
     }
 
     /** A NOP implementation.  */
-    override fun info(format: String, arg1: Any, arg2: Any) {
+    override fun info(format: String, arg1: Any?, arg2: Any?) {
         // NOP
     }
 
     /** A NOP implementation.   */
-    override fun info(format: String, vararg argArray: Any) {
+    override fun info(format: String, vararg arguments: Any?) {
         // NOP
     }
 
@@ -157,17 +153,17 @@ protected constructor() : MarkerIgnoringBase() {
     }
 
     /** A NOP implementation.  */
-    override fun warn(format: String, arg1: Any) {
+    override fun warn(format: String, arg: Any?) {
         // NOP
     }
 
     /** A NOP implementation.  */
-    override fun warn(format: String, arg1: Any, arg2: Any) {
+    override fun warn(format: String, arg1: Any?, arg2: Any?) {
         // NOP
     }
 
     /** A NOP implementation.   */
-    override fun warn(format: String, vararg argArray: Any) {
+    override fun warn(format: String, vararg arguments: Any?) {
         // NOP
     }
 
@@ -186,17 +182,17 @@ protected constructor() : MarkerIgnoringBase() {
     }
 
     /** A NOP implementation.  */
-    override fun error(format: String, arg1: Any) {
+    override fun error(format: String, arg: Any?) {
         // NOP
     }
 
     /** A NOP implementation.  */
-    override fun error(format: String, arg1: Any, arg2: Any) {
+    override fun error(format: String, arg1: Any?, arg2: Any?) {
         // NOP
     }
 
     /** A NOP implementation.   */
-    override fun error(format: String, vararg argArray: Any) {
+    override fun error(format: String, vararg arguments: Any?) {
         // NOP
     }
 

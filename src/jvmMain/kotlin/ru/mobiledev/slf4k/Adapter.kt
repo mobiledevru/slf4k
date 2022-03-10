@@ -1,6 +1,9 @@
 package ru.mobiledev.slf4k
 
-actual class Adapter {
+
+actual interface SerializableAdapter : java.io.Serializable
+
+actual object Adapter {
     actual val platform: String
         get() = "JVM"
 
@@ -9,7 +12,9 @@ actual class Adapter {
 //        return kotlin.system.getTimeMillis()
     }
 
-    actual fun threadName(): String? = Thread.currentThread().name
+    actual fun threadName(): String? {
+        TODO("Not yet implemented")
+    }
 
-
+    actual fun className(obj: Any): String = obj.javaClass.name
 }

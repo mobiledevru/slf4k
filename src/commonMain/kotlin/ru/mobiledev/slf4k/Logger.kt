@@ -67,7 +67,7 @@ interface Logger {
      * Return the name of this `Logger` instance.
      * @return name of this logger instance
      */
-    val name: String?
+    val name: String
 
     /**
      * Is the logger instance enabled for the TRACE level?
@@ -99,7 +99,7 @@ interface Logger {
      * @param arg    the argument
      * @since 1.4
      */
-    fun trace(format: String, arg: Any)
+    fun trace(format: String, arg: Any?)
 
     /**
      * Log a message at the TRACE level according to the specified format
@@ -115,7 +115,7 @@ interface Logger {
      * @param arg2   the second argument
      * @since 1.4
      */
-    fun trace(format: String, arg1: Any, arg2: Any)
+    fun trace(format: String, arg1: Any?, arg2: Any?)
 
     /**
      * Log a message at the TRACE level according to the specified format
@@ -133,7 +133,7 @@ interface Logger {
      * @param arguments a list of 3 or more arguments
      * @since 1.4
      */
-    fun trace(format: String, vararg arguments: Any)
+    fun trace(format: String, vararg arguments: Any?)
 
     /**
      * Log an exception (throwable) at the TRACE level with an
@@ -175,7 +175,7 @@ interface Logger {
      * @param arg    the argument
      * @since 1.4
      */
-    fun trace(marker: Marker?, format: String, arg: Any)
+    fun trace(marker: Marker?, format: String, arg: Any?)
 
     /**
      * This method is similar to [.trace]
@@ -188,19 +188,19 @@ interface Logger {
      * @param arg2   the second argument
      * @since 1.4
      */
-    fun trace(marker: Marker?, format: String, arg1: Any, arg2: Any)
+    fun trace(marker: Marker?, format: String, arg1: Any?, arg2: Any?)
 
     /**
      * This method is similar to [.trace]
      * method except that the marker data is also taken into
      * consideration.
      *
-     * @param marker   the marker data specific to this log statement
-     * @param format   the format string
-     * @param argArray an array of arguments
+     * @param marker    the marker data specific to this log statement
+     * @param format    the format string
+     * @param arguments an array of arguments
      * @since 1.4
      */
-    fun trace(marker: Marker?, format: String, vararg argArray: Any)
+    fun trace(marker: Marker?, format: String, vararg arguments: Any?)
 
     /**
      * This method is similar to [.trace] method except that the
@@ -240,7 +240,7 @@ interface Logger {
      * @param format the format string
      * @param arg    the argument
      */
-    fun debug(format: String, arg: Any)
+    fun debug(format: String, arg: Any?)
 
     /**
      * Log a message at the DEBUG level according to the specified format
@@ -255,7 +255,7 @@ interface Logger {
      * @param arg1   the first argument
      * @param arg2   the second argument
      */
-    fun debug(format: String, arg1: Any, arg2: Any)
+    fun debug(format: String, arg1: Any?, arg2: Any?)
 
     /**
      * Log a message at the DEBUG level according to the specified format
@@ -273,7 +273,7 @@ interface Logger {
      * @param format    the format string
      * @param arguments a list of 3 or more arguments
      */
-    fun debug(format: String, vararg arguments: Any)
+    fun debug(format: String, vararg arguments: Any?)
 
     /**
      * Log an exception (throwable) at the DEBUG level with an
@@ -310,7 +310,7 @@ interface Logger {
      * @param format the format string
      * @param arg    the argument
      */
-    fun debug(marker: Marker?, format: String, arg: Any)
+    fun debug(marker: Marker?, format: String, arg: Any?)
 
     /**
      * This method is similar to [.debug]
@@ -322,7 +322,7 @@ interface Logger {
      * @param arg1   the first argument
      * @param arg2   the second argument
      */
-    fun debug(marker: Marker?, format: String, arg1: Any, arg2: Any)
+    fun debug(marker: Marker?, format: String, arg1: Any?, arg2: Any?)
 
     /**
      * This method is similar to [.debug]
@@ -333,7 +333,7 @@ interface Logger {
      * @param format    the format string
      * @param arguments a list of 3 or more arguments
      */
-    fun debug(marker: Marker?, format: String, vararg arguments: Any)
+    fun debug(marker: Marker?, format: String, vararg arguments: Any?)
 
     /**
      * This method is similar to [.debug] method except that the
@@ -372,7 +372,7 @@ interface Logger {
      * @param format the format string
      * @param arg    the argument
      */
-    fun info(format: String, arg: Any)
+    fun info(format: String, arg: Any?)
 
     /**
      * Log a message at the INFO level according to the specified format
@@ -387,7 +387,7 @@ interface Logger {
      * @param arg1   the first argument
      * @param arg2   the second argument
      */
-    fun info(format: String, arg1: Any, arg2: Any)
+    fun info(format: String, arg1: Any?, arg2: Any?)
 
     /**
      * Log a message at the INFO level according to the specified format
@@ -405,7 +405,7 @@ interface Logger {
      * @param format    the format string
      * @param arguments a list of 3 or more arguments
      */
-    fun info(format: String, vararg arguments: Any)
+    fun info(format: String, vararg arguments: Any?)
 
     /**
      * Log an exception (throwable) at the INFO level with an
@@ -441,7 +441,7 @@ interface Logger {
      * @param format the format string
      * @param arg    the argument
      */
-    fun info(marker: Marker?, format: String, arg: Any)
+    fun info(marker: Marker?, format: String, arg: Any?)
 
     /**
      * This method is similar to [.info]
@@ -453,7 +453,7 @@ interface Logger {
      * @param arg1   the first argument
      * @param arg2   the second argument
      */
-    fun info(marker: Marker?, format: String, arg1: Any, arg2: Any)
+    fun info(marker: Marker?, format: String, arg1: Any?, arg2: Any?)
 
     /**
      * This method is similar to [.info]
@@ -464,7 +464,7 @@ interface Logger {
      * @param format    the format string
      * @param arguments a list of 3 or more arguments
      */
-    fun info(marker: Marker?, format: String, vararg arguments: Any)
+    fun info(marker: Marker?, format: String, vararg arguments: Any?)
 
     /**
      * This method is similar to [.info] method
@@ -503,7 +503,7 @@ interface Logger {
      * @param format the format string
      * @param arg    the argument
      */
-    fun warn(format: String, arg: Any)
+    fun warn(format: String, arg: Any?)
 
     /**
      * Log a message at the WARN level according to the specified format
@@ -521,7 +521,7 @@ interface Logger {
      * @param format    the format string
      * @param arguments a list of 3 or more arguments
      */
-    fun warn(format: String, vararg arguments: Any)
+    fun warn(format: String, vararg arguments: Any?)
 
     /**
      * Log a message at the WARN level according to the specified format
@@ -536,7 +536,7 @@ interface Logger {
      * @param arg1   the first argument
      * @param arg2   the second argument
      */
-    fun warn(format: String, arg1: Any, arg2: Any)
+    fun warn(format: String, arg1: Any?, arg2: Any?)
 
     /**
      * Log an exception (throwable) at the WARN level with an
@@ -573,7 +573,7 @@ interface Logger {
      * @param format the format string
      * @param arg    the argument
      */
-    fun warn(marker: Marker?, format: String, arg: Any)
+    fun warn(marker: Marker?, format: String, arg: Any?)
 
     /**
      * This method is similar to [.warn]
@@ -585,7 +585,7 @@ interface Logger {
      * @param arg1   the first argument
      * @param arg2   the second argument
      */
-    fun warn(marker: Marker?, format: String, arg1: Any, arg2: Any)
+    fun warn(marker: Marker?, format: String, arg1: Any?, arg2: Any?)
 
     /**
      * This method is similar to [.warn]
@@ -596,7 +596,7 @@ interface Logger {
      * @param format    the format string
      * @param arguments a list of 3 or more arguments
      */
-    fun warn(marker: Marker?, format: String, vararg arguments: Any)
+    fun warn(marker: Marker?, format: String, vararg arguments: Any?)
 
     /**
      * This method is similar to [.warn] method
@@ -635,7 +635,7 @@ interface Logger {
      * @param format the format string
      * @param arg    the argument
      */
-    fun error(format: String, arg: Any)
+    fun error(format: String, arg: Any?)
 
     /**
      * Log a message at the ERROR level according to the specified format
@@ -650,7 +650,7 @@ interface Logger {
      * @param arg1   the first argument
      * @param arg2   the second argument
      */
-    fun error(format: String, arg1: Any, arg2: Any)
+    fun error(format: String, arg1: Any?, arg2: Any?)
 
     /**
      * Log a message at the ERROR level according to the specified format
@@ -668,7 +668,7 @@ interface Logger {
      * @param format    the format string
      * @param arguments a list of 3 or more arguments
      */
-    fun error(format: String, vararg arguments: Any)
+    fun error(format: String, vararg arguments: Any?)
 
     /**
      * Log an exception (throwable) at the ERROR level with an
@@ -705,7 +705,7 @@ interface Logger {
      * @param format the format string
      * @param arg    the argument
      */
-    fun error(marker: Marker?, format: String, arg: Any)
+    fun error(marker: Marker?, format: String, arg: Any?)
 
     /**
      * This method is similar to [.error]
@@ -717,7 +717,7 @@ interface Logger {
      * @param arg1   the first argument
      * @param arg2   the second argument
      */
-    fun error(marker: Marker?, format: String, arg1: Any, arg2: Any)
+    fun error(marker: Marker?, format: String, arg1: Any?, arg2: Any?)
 
     /**
      * This method is similar to [.error]
@@ -728,7 +728,7 @@ interface Logger {
      * @param format    the format string
      * @param arguments a list of 3 or more arguments
      */
-    fun error(marker: Marker?, format: String, vararg arguments: Any)
+    fun error(marker: Marker?, format: String, vararg arguments: Any?)
 
     /**
      * This method is similar to [.error]

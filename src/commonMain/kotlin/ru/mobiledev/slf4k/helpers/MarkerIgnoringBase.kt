@@ -24,18 +24,8 @@
  */
 package ru.mobiledev.slf4k.helpers
 
+import ru.mobiledev.slf4k.Adapter
 import ru.mobiledev.slf4k.Logger
-import ru.mobiledev.slf4k.Logger.isTraceEnabled
-import ru.mobiledev.slf4k.Logger.trace
-import ru.mobiledev.slf4k.Logger.isDebugEnabled
-import ru.mobiledev.slf4k.Logger.debug
-import ru.mobiledev.slf4k.Logger.isInfoEnabled
-import ru.mobiledev.slf4k.Logger.info
-import ru.mobiledev.slf4k.Logger.isWarnEnabled
-import ru.mobiledev.slf4k.Logger.warn
-import ru.mobiledev.slf4k.Logger.isErrorEnabled
-import ru.mobiledev.slf4k.Logger.error
-import ru.mobiledev.slf4k.Logger.name
 import ru.mobiledev.slf4k.Marker
 
 /**
@@ -55,15 +45,15 @@ abstract class MarkerIgnoringBase : NamedLoggerBase(), Logger {
         trace(msg)
     }
 
-    override fun trace(marker: Marker?, format: String, arg: Any) {
+    override fun trace(marker: Marker?, format: String, arg: Any?) {
         trace(format, arg)
     }
 
-    override fun trace(marker: Marker?, format: String, arg1: Any, arg2: Any) {
+    override fun trace(marker: Marker?, format: String, arg1: Any?, arg2: Any?) {
         trace(format, arg1, arg2)
     }
 
-    override fun trace(marker: Marker?, format: String, vararg arguments: Any) {
+    override fun trace(marker: Marker?, format: String, vararg arguments: Any?) {
         trace(format, *arguments)
     }
 
@@ -79,15 +69,15 @@ abstract class MarkerIgnoringBase : NamedLoggerBase(), Logger {
         debug(msg)
     }
 
-    override fun debug(marker: Marker?, format: String, arg: Any) {
+    override fun debug(marker: Marker?, format: String, arg: Any?) {
         debug(format, arg)
     }
 
-    override fun debug(marker: Marker?, format: String, arg1: Any, arg2: Any) {
+    override fun debug(marker: Marker?, format: String, arg1: Any?, arg2: Any?) {
         debug(format, arg1, arg2)
     }
 
-    override fun debug(marker: Marker?, format: String, vararg arguments: Any) {
+    override fun debug(marker: Marker?, format: String, vararg arguments: Any?) {
         debug(format, *arguments)
     }
 
@@ -103,15 +93,15 @@ abstract class MarkerIgnoringBase : NamedLoggerBase(), Logger {
         info(msg)
     }
 
-    override fun info(marker: Marker?, format: String, arg: Any) {
+    override fun info(marker: Marker?, format: String, arg: Any?) {
         info(format, arg)
     }
 
-    override fun info(marker: Marker?, format: String, arg1: Any, arg2: Any) {
+    override fun info(marker: Marker?, format: String, arg1: Any?, arg2: Any?) {
         info(format, arg1, arg2)
     }
 
-    override fun info(marker: Marker?, format: String, vararg arguments: Any) {
+    override fun info(marker: Marker?, format: String, vararg arguments: Any?) {
         info(format, *arguments)
     }
 
@@ -127,15 +117,15 @@ abstract class MarkerIgnoringBase : NamedLoggerBase(), Logger {
         warn(msg)
     }
 
-    override fun warn(marker: Marker?, format: String, arg: Any) {
+    override fun warn(marker: Marker?, format: String, arg: Any?) {
         warn(format, arg)
     }
 
-    override fun warn(marker: Marker?, format: String, arg1: Any, arg2: Any) {
+    override fun warn(marker: Marker?, format: String, arg1: Any?, arg2: Any?) {
         warn(format, arg1, arg2)
     }
 
-    override fun warn(marker: Marker?, format: String, vararg arguments: Any) {
+    override fun warn(marker: Marker?, format: String, vararg arguments: Any?) {
         warn(format, *arguments)
     }
 
@@ -151,15 +141,15 @@ abstract class MarkerIgnoringBase : NamedLoggerBase(), Logger {
         error(msg)
     }
 
-    override fun error(marker: Marker?, format: String, arg: Any) {
+    override fun error(marker: Marker?, format: String, arg: Any?) {
         error(format, arg)
     }
 
-    override fun error(marker: Marker?, format: String, arg1: Any, arg2: Any) {
+    override fun error(marker: Marker?, format: String, arg1: Any?, arg2: Any?) {
         error(format, arg1, arg2)
     }
 
-    override fun error(marker: Marker?, format: String, vararg arguments: Any) {
+    override fun error(marker: Marker?, format: String, vararg arguments: Any?) {
         error(format, *arguments)
     }
 
@@ -168,8 +158,7 @@ abstract class MarkerIgnoringBase : NamedLoggerBase(), Logger {
     }
 
     override fun toString(): String {
-//        return (this::class.qualifiedName ?: "noName") + "(" + name + ")"
-        return this.javaClass.getName() + "(" + name + ")"
+        return Adapter.className(this) + "(" + name + ")"
     }
 
     companion object {

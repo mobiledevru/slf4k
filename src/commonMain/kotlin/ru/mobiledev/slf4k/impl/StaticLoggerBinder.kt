@@ -42,11 +42,13 @@ class StaticLoggerBinder private constructor() {
         throw UnsupportedOperationException("This code should have never made it into slf4j-api.jar")
     }
 
-    val loggerFactory: ILoggerFactory
-        get() = throw UnsupportedOperationException("This code should never make it into slf4j-api.jar")
+    fun getLoggerFactory(): ILoggerFactory {
+        throw UnsupportedOperationException("This code should never make it into slf4j-api.jar")
+    }
 
-    val loggerFactoryClassStr: String
-        get() = throw UnsupportedOperationException("This code should never make it into slf4j-api.jar")
+    fun getLoggerFactoryClassStr(): String {
+        throw UnsupportedOperationException("This code should never make it into slf4j-api.jar")
+    }
 
     companion object {
         /**

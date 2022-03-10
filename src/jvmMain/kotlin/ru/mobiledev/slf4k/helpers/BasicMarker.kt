@@ -32,7 +32,7 @@ import ru.mobiledev.slf4k.Marker
  * @author Ceki G&uuml;lc&uuml;
  * @author Joern Huxhorn
  */
-class BasicMarker internal constructor(name: String) : Marker {
+class BasicMarker internal constructor(name: String) : Marker, java.io.Serializable {
 
     override val name: String
     private val referenceList: MutableList<Marker> = java.util.concurrent.CopyOnWriteArrayList<Marker>()

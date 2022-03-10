@@ -33,7 +33,7 @@ import kotlin.jvm.JvmOverloads
  */
 class FormattingTuple @JvmOverloads constructor(
     val message: String?,
-    val argArray: Array<Any>? = null,
+    val argArray: Array<Any?>? = null,
     val throwable: Throwable? = null
 ) {
 

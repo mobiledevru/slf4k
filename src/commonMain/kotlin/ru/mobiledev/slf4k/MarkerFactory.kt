@@ -24,8 +24,6 @@
  */
 package ru.mobiledev.slf4k
 
-import ru.mobiledev.slf4k.helpers.BasicMarkerFactory
-import ru.mobiledev.slf4k.helpers.Util
 import ru.mobiledev.slf4k.impl.StaticMarkerBinder
 
 /**

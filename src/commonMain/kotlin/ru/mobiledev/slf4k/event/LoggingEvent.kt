@@ -13,7 +13,7 @@ interface LoggingEvent {
     val loggerName: String?
     val message: String?
     val threadName: String?
-    val argumentArray: Array<out Any>?
+    val argumentArray: Array<out Any?>?
     val timeStamp: Long?
     val throwable: Throwable?
 }
