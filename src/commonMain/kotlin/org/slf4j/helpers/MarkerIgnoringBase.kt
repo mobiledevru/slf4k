@@ -41,23 +41,23 @@ abstract class MarkerIgnoringBase : NamedLoggerBase(), Logger {
         return isTraceEnabled
     }
 
-    override fun trace(marker: Marker?, msg: String) {
+    override fun trace(marker: Marker?, msg: String?) {
         trace(msg)
     }
 
-    override fun trace(marker: Marker?, format: String, arg: Any?) {
+    override fun trace(marker: Marker?, format: String?, arg: Any?) {
         trace(format, arg)
     }
 
-    override fun trace(marker: Marker?, format: String, arg1: Any?, arg2: Any?) {
+    override fun trace(marker: Marker?, format: String?, arg1: Any?, arg2: Any?) {
         trace(format, arg1, arg2)
     }
 
-    override fun trace(marker: Marker?, format: String, vararg arguments: Any?) {
+    override fun trace(marker: Marker?, format: String?, vararg arguments: Any?) {
         trace(format, *arguments)
     }
 
-    override fun trace(marker: Marker?, msg: String, t: Throwable?) {
+    override fun trace(marker: Marker?, msg: String?, t: Throwable?) {
         trace(msg, t)
     }
 
@@ -65,23 +65,23 @@ abstract class MarkerIgnoringBase : NamedLoggerBase(), Logger {
         return isDebugEnabled
     }
 
-    override fun debug(marker: Marker?, msg: String) {
+    override fun debug(marker: Marker?, msg: String?) {
         debug(msg)
     }
 
-    override fun debug(marker: Marker?, format: String, arg: Any?) {
+    override fun debug(marker: Marker?, format: String?, arg: Any?) {
         debug(format, arg)
     }
 
-    override fun debug(marker: Marker?, format: String, arg1: Any?, arg2: Any?) {
+    override fun debug(marker: Marker?, format: String?, arg1: Any?, arg2: Any?) {
         debug(format, arg1, arg2)
     }
 
-    override fun debug(marker: Marker?, format: String, vararg arguments: Any?) {
+    override fun debug(marker: Marker?, format: String?, vararg arguments: Any?) {
         debug(format, *arguments)
     }
 
-    override fun debug(marker: Marker?, msg: String, t: Throwable?) {
+    override fun debug(marker: Marker?, msg: String?, t: Throwable?) {
         debug(msg, t)
     }
 
@@ -89,23 +89,23 @@ abstract class MarkerIgnoringBase : NamedLoggerBase(), Logger {
         return isInfoEnabled
     }
 
-    override fun info(marker: Marker?, msg: String) {
+    override fun info(marker: Marker?, msg: String?) {
         info(msg)
     }
 
-    override fun info(marker: Marker?, format: String, arg: Any?) {
+    override fun info(marker: Marker?, format: String?, arg: Any?) {
         info(format, arg)
     }
 
-    override fun info(marker: Marker?, format: String, arg1: Any?, arg2: Any?) {
+    override fun info(marker: Marker?, format: String?, arg1: Any?, arg2: Any?) {
         info(format, arg1, arg2)
     }
 
-    override fun info(marker: Marker?, format: String, vararg arguments: Any?) {
+    override fun info(marker: Marker?, format: String?, vararg arguments: Any?) {
         info(format, *arguments)
     }
 
-    override fun info(marker: Marker?, msg: String, t: Throwable?) {
+    override fun info(marker: Marker?, msg: String?, t: Throwable?) {
         info(msg, t)
     }
 
@@ -113,23 +113,23 @@ abstract class MarkerIgnoringBase : NamedLoggerBase(), Logger {
         return isWarnEnabled
     }
 
-    override fun warn(marker: Marker?, msg: String) {
+    override fun warn(marker: Marker?, msg: String?) {
         warn(msg)
     }
 
-    override fun warn(marker: Marker?, format: String, arg: Any?) {
+    override fun warn(marker: Marker?, format: String?, arg: Any?) {
         warn(format, arg)
     }
 
-    override fun warn(marker: Marker?, format: String, arg1: Any?, arg2: Any?) {
+    override fun warn(marker: Marker?, format: String?, arg1: Any?, arg2: Any?) {
         warn(format, arg1, arg2)
     }
 
-    override fun warn(marker: Marker?, format: String, vararg arguments: Any?) {
+    override fun warn(marker: Marker?, format: String?, vararg arguments: Any?) {
         warn(format, *arguments)
     }
 
-    override fun warn(marker: Marker?, msg: String, t: Throwable?) {
+    override fun warn(marker: Marker?, msg: String?, t: Throwable?) {
         warn(msg, t)
     }
 
@@ -137,23 +137,23 @@ abstract class MarkerIgnoringBase : NamedLoggerBase(), Logger {
         return isErrorEnabled
     }
 
-    override fun error(marker: Marker?, msg: String) {
+    override fun error(marker: Marker?, msg: String?) {
         error(msg)
     }
 
-    override fun error(marker: Marker?, format: String, arg: Any?) {
+    override fun error(marker: Marker?, format: String?, arg: Any?) {
         error(format, arg)
     }
 
-    override fun error(marker: Marker?, format: String, arg1: Any?, arg2: Any?) {
+    override fun error(marker: Marker?, format: String?, arg1: Any?, arg2: Any?) {
         error(format, arg1, arg2)
     }
 
-    override fun error(marker: Marker?, format: String, vararg arguments: Any?) {
+    override fun error(marker: Marker?, format: String?, vararg arguments: Any?) {
         error(format, *arguments)
     }
 
-    override fun error(marker: Marker?, msg: String, t: Throwable?) {
+    override fun error(marker: Marker?, msg: String?, t: Throwable?) {
         error(msg, t)
     }
 

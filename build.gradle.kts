@@ -97,6 +97,38 @@ kotlin {
     }
 }
 
+/*tasks {
+    val compileJava = named("compileJava", JavaCompile::class).get()
+    val compileKotlin = named("compileKotlin", KotlinCompile::class).get()
+    val compileGroovy = named("compileGroovy", GroovyCompile::class).get()
+    val classes by getting
+
+    compileGroovy.dependsOn.remove("compileJava")
+    compileKotlin.setDependsOn(mutableListOf(compileGroovy))
+    compileKotlin.classpath += files(compileGroovy.destinationDir)
+    classes.setDependsOn(mutableListOf(compileKotlin))
+}*/
+
+task("processClasses") {
+    tasks.findByName("classes")?.dependsOn(this)
+    doLast {
+        println("deleted!")
+//        delete("**/slf4j/impl/*.*")
+        ant.withGroovyBuilder {
+            "delete"("includeemptydirs" to "true") {
+                "fileset"("dir" to "$buildDir/classes/kotlin/jvm/main/org/slf4j/impl") {
+//                    "include"("name" to "**/slf4j/impl/*.class")
+                    "include"("name" to "**/*.class")
+                }
+            }
+        }
+//        ant.delete() {
+//            fileset(dir: '**/slf4j/impl/') {
+//            include(name: '**/*')
+//        }
+    }
+}
+
 val packForXcode by tasks.creating(Sync::class) {
     group = "build"
     val mode = System.getenv("CONFIGURATION") ?: "DEBUG"

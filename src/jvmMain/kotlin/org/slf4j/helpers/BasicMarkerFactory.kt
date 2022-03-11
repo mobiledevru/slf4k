@@ -37,7 +37,7 @@ import org.slf4j.Marker
  *
  * @author Ceki G&uuml;lc&uuml;
  */
-class BasicMarkerFactory
+open class BasicMarkerFactory
 /**
  * Regular users should *not* create
  * `BasicMarkerFactory` instances. `Marker`

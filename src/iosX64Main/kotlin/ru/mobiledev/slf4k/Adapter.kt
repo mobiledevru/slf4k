@@ -7,9 +7,5 @@ actual object Adapter {
 
     actual fun timeStamp(): Long = kotlin.system.getTimeMillis()
 
-    actual fun threadName(): String? {
-        TODO("Not yet implemented")
-    }
-
     actual fun className(obj: Any): String = this::class.qualifiedName ?: "NIL"
 }

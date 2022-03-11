@@ -43,9 +43,9 @@ import kotlin.jvm.Volatile
  * @author Chetan Mehrotra
  * @author Ceki Gulcu
  */
-class SubstituteLogger(
+open class SubstituteLogger(
     override val name: String,
-    eventQueue: Queue<SubstituteLoggingEvent>,
+    eventQueue: Queue<SubstituteLoggingEvent>?,
     createdPostInitialization: Boolean
 ) : Logger {
 
@@ -69,7 +69,7 @@ class SubstituteLogger(
 
     private var eventRecodingLogger: EventRecodingLogger? = null
 
-    private val eventQueue: Queue<SubstituteLoggingEvent>
+    private val eventQueue: Queue<SubstituteLoggingEvent>?
     
     private val createdPostInitialization: Boolean
 
@@ -81,23 +81,23 @@ class SubstituteLogger(
     override val isTraceEnabled: Boolean
         get() = delegate().isTraceEnabled
 
-    override fun trace(msg: String) {
+    override fun trace(msg: String?) {
         delegate().trace(msg)
     }
 
-    override fun trace(format: String, arg: Any?) {
+    override fun trace(format: String?, arg: Any?) {
         delegate().trace(format, arg)
     }
 
-    override fun trace(format: String, arg1: Any?, arg2: Any?) {
+    override fun trace(format: String?, arg1: Any?, arg2: Any?) {
         delegate().trace(format, arg1, arg2)
     }
 
-    override fun trace(format: String, vararg arguments: Any?) {
+    override fun trace(format: String?, vararg arguments: Any?) {
         delegate().trace(format, *arguments)
     }
 
-    override fun trace(msg: String, t: Throwable?) {
+    override fun trace(msg: String?, t: Throwable?) {
         delegate().trace(msg, t)
     }
 
@@ -105,46 +105,46 @@ class SubstituteLogger(
         return delegate().isTraceEnabled(marker)
     }
 
-    override fun trace(marker: Marker?, msg: String) {
+    override fun trace(marker: Marker?, msg: String?) {
         delegate().trace(marker, msg)
     }
 
-    override fun trace(marker: Marker?, format: String, arg: Any?) {
+    override fun trace(marker: Marker?, format: String?, arg: Any?) {
         delegate().trace(marker, format, arg)
     }
 
-    override fun trace(marker: Marker?, format: String, arg1: Any?, arg2: Any?) {
+    override fun trace(marker: Marker?, format: String?, arg1: Any?, arg2: Any?) {
         delegate().trace(marker, format, arg1, arg2)
     }
 
-    override fun trace(marker: Marker?, format: String, vararg arguments: Any?) {
+    override fun trace(marker: Marker?, format: String?, vararg arguments: Any?) {
         delegate().trace(marker, format, *arguments)
     }
 
-    override fun trace(marker: Marker?, msg: String, t: Throwable?) {
+    override fun trace(marker: Marker?, msg: String?, t: Throwable?) {
         delegate().trace(marker, msg, t)
     }
 
     override val isDebugEnabled: Boolean
         get() = delegate().isDebugEnabled
 
-    override fun debug(msg: String) {
+    override fun debug(msg: String?) {
         delegate().debug(msg)
     }
 
-    override fun debug(format: String, arg: Any?) {
+    override fun debug(format: String?, arg: Any?) {
         delegate().debug(format, arg)
     }
 
-    override fun debug(format: String, arg1: Any?, arg2: Any?) {
+    override fun debug(format: String?, arg1: Any?, arg2: Any?) {
         delegate().debug(format, arg1, arg2)
     }
 
-    override fun debug(format: String, vararg arguments: Any?) {
+    override fun debug(format: String?, vararg arguments: Any?) {
         delegate().debug(format, *arguments)
     }
 
-    override fun debug(msg: String, t: Throwable?) {
+    override fun debug(msg: String?, t: Throwable?) {
         delegate().debug(msg, t)
     }
 
@@ -152,46 +152,46 @@ class SubstituteLogger(
         return delegate().isDebugEnabled(marker)
     }
 
-    override fun debug(marker: Marker?, msg: String) {
+    override fun debug(marker: Marker?, msg: String?) {
         delegate().debug(marker, msg)
     }
 
-    override fun debug(marker: Marker?, format: String, arg: Any?) {
+    override fun debug(marker: Marker?, format: String?, arg: Any?) {
         delegate().debug(marker, format, arg)
     }
 
-    override fun debug(marker: Marker?, format: String, arg1: Any?, arg2: Any?) {
+    override fun debug(marker: Marker?, format: String?, arg1: Any?, arg2: Any?) {
         delegate().debug(marker, format, arg1, arg2)
     }
 
-    override fun debug(marker: Marker?, format: String, vararg arguments: Any?) {
+    override fun debug(marker: Marker?, format: String?, vararg arguments: Any?) {
         delegate().debug(marker, format, *arguments)
     }
 
-    override fun debug(marker: Marker?, msg: String, t: Throwable?) {
+    override fun debug(marker: Marker?, msg: String?, t: Throwable?) {
         delegate().debug(marker, msg, t)
     }
 
     override val isInfoEnabled: Boolean
         get() = delegate().isInfoEnabled
 
-    override fun info(msg: String) {
+    override fun info(msg: String?) {
         delegate().info(msg)
     }
 
-    override fun info(format: String, arg: Any?) {
+    override fun info(format: String?, arg: Any?) {
         delegate().info(format, arg)
     }
 
-    override fun info(format: String, arg1: Any?, arg2: Any?) {
+    override fun info(format: String?, arg1: Any?, arg2: Any?) {
         delegate().info(format, arg1, arg2)
     }
 
-    override fun info(format: String, vararg arguments: Any?) {
+    override fun info(format: String?, vararg arguments: Any?) {
         delegate().info(format, *arguments)
     }
 
-    override fun info(msg: String, t: Throwable?) {
+    override fun info(msg: String?, t: Throwable?) {
         delegate().info(msg, t)
     }
 
@@ -199,46 +199,46 @@ class SubstituteLogger(
         return delegate().isInfoEnabled(marker)
     }
 
-    override fun info(marker: Marker?, msg: String) {
+    override fun info(marker: Marker?, msg: String?) {
         delegate().info(marker, msg)
     }
 
-    override fun info(marker: Marker?, format: String, arg: Any?) {
+    override fun info(marker: Marker?, format: String?, arg: Any?) {
         delegate().info(marker, format, arg)
     }
 
-    override fun info(marker: Marker?, format: String, arg1: Any?, arg2: Any?) {
+    override fun info(marker: Marker?, format: String?, arg1: Any?, arg2: Any?) {
         delegate().info(marker, format, arg1, arg2)
     }
 
-    override fun info(marker: Marker?, format: String, vararg arguments: Any?) {
+    override fun info(marker: Marker?, format: String?, vararg arguments: Any?) {
         delegate().info(marker, format, *arguments)
     }
 
-    override fun info(marker: Marker?, msg: String, t: Throwable?) {
+    override fun info(marker: Marker?, msg: String?, t: Throwable?) {
         delegate().info(marker, msg, t)
     }
 
     override val isWarnEnabled: Boolean
         get() = delegate().isWarnEnabled
 
-    override fun warn(msg: String) {
+    override fun warn(msg: String?) {
         delegate().warn(msg)
     }
 
-    override fun warn(format: String, arg: Any?) {
+    override fun warn(format: String?, arg: Any?) {
         delegate().warn(format, arg)
     }
 
-    override fun warn(format: String, arg1: Any?, arg2: Any?) {
+    override fun warn(format: String?, arg1: Any?, arg2: Any?) {
         delegate().warn(format, arg1, arg2)
     }
 
-    override fun warn(format: String, vararg arguments: Any?) {
+    override fun warn(format: String?, vararg arguments: Any?) {
         delegate().warn(format, *arguments)
     }
 
-    override fun warn(msg: String, t: Throwable?) {
+    override fun warn(msg: String?, t: Throwable?) {
         delegate().warn(msg, t)
     }
 
@@ -246,46 +246,46 @@ class SubstituteLogger(
         return delegate().isWarnEnabled(marker)
     }
 
-    override fun warn(marker: Marker?, msg: String) {
+    override fun warn(marker: Marker?, msg: String?) {
         delegate().warn(marker, msg)
     }
 
-    override fun warn(marker: Marker?, format: String, arg: Any?) {
+    override fun warn(marker: Marker?, format: String?, arg: Any?) {
         delegate().warn(marker, format, arg)
     }
 
-    override fun warn(marker: Marker?, format: String, arg1: Any?, arg2: Any?) {
+    override fun warn(marker: Marker?, format: String?, arg1: Any?, arg2: Any?) {
         delegate().warn(marker, format, arg1, arg2)
     }
 
-    override fun warn(marker: Marker?, format: String, vararg arguments: Any?) {
+    override fun warn(marker: Marker?, format: String?, vararg arguments: Any?) {
         delegate().warn(marker, format, *arguments)
     }
 
-    override fun warn(marker: Marker?, msg: String, t: Throwable?) {
+    override fun warn(marker: Marker?, msg: String?, t: Throwable?) {
         delegate().warn(marker, msg, t)
     }
 
     override val isErrorEnabled: Boolean
         get() = delegate().isErrorEnabled
 
-    override fun error(msg: String) {
+    override fun error(msg: String?) {
         delegate().error(msg)
     }
 
-    override fun error(format: String, arg: Any?) {
+    override fun error(format: String?, arg: Any?) {
         delegate().error(format, arg)
     }
 
-    override fun error(format: String, arg1: Any?, arg2: Any?) {
+    override fun error(format: String?, arg1: Any?, arg2: Any?) {
         delegate().error(format, arg1, arg2)
     }
 
-    override fun error(format: String, vararg arguments: Any?) {
+    override fun error(format: String?, vararg arguments: Any?) {
         delegate().error(format, *arguments)
     }
 
-    override fun error(msg: String, t: Throwable?) {
+    override fun error(msg: String?, t: Throwable?) {
         delegate().error(msg, t)
     }
 
@@ -293,23 +293,23 @@ class SubstituteLogger(
         return delegate().isErrorEnabled(marker)
     }
 
-    override fun error(marker: Marker?, msg: String) {
+    override fun error(marker: Marker?, msg: String?) {
         delegate().error(marker, msg)
     }
 
-    override fun error(marker: Marker?, format: String, arg: Any?) {
+    override fun error(marker: Marker?, format: String?, arg: Any?) {
         delegate().error(marker, format, arg)
     }
 
-    override fun error(marker: Marker?, format: String, arg1: Any?, arg2: Any?) {
+    override fun error(marker: Marker?, format: String?, arg1: Any?, arg2: Any?) {
         delegate().error(marker, format, arg1, arg2)
     }
 
-    override fun error(marker: Marker?, format: String, vararg arguments: Any?) {
+    override fun error(marker: Marker?, format: String?, vararg arguments: Any?) {
         delegate().error(marker, format, *arguments)
     }
 
-    override fun error(marker: Marker?, msg: String, t: Throwable?) {
+    override fun error(marker: Marker?, msg: String?, t: Throwable?) {
         delegate().error(marker, msg, t)
     }
 

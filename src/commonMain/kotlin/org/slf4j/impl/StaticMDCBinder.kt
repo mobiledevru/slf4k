@@ -25,6 +25,7 @@
 package org.slf4j.impl
 
 import org.slf4j.spi.MDCAdapter
+import kotlin.jvm.JvmStatic
 
 /**
  * This class is only a stub. Real implementations are found in
@@ -58,8 +59,10 @@ class StaticMDCBinder private constructor() {
         /**
          * The unique instance of this class.
          */
+        @JvmStatic
         private val SINGLETON = StaticMDCBinder()
 
+        @JvmStatic
         fun getSingleton(): StaticMDCBinder {
             return SINGLETON
         }

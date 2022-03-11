@@ -69,7 +69,17 @@ public class SubstitutableLoggerTest {
     private void invokeMethods(Logger proxyLogger) throws InvocationTargetException, IllegalAccessException {
         for (Method m : Logger.class.getDeclaredMethods()) {
             if (!EXCLUDED_METHODS.contains(m.getName())) {
-                m.invoke(proxyLogger, new Object[m.getParameterTypes().length]);
+                final Class<?>[] types = m.getParameterTypes();
+                final Object[] arg = new Object[types.length];
+                for (int i = 0; i < types.length; i++) {
+                    final Class<?> type = types[i];
+                    if (type.isArray()) {
+                        arg[i] = new Object[0]; // vararg is unable to accept null
+                    } else {
+                        arg[i] = null;
+                    }
+                }
+                m.invoke(proxyLogger, arg);
             }
         }
     }
@@ -81,6 +91,15 @@ public class SubstitutableLoggerTest {
             invokedMethodSignatures.add(getMethodSignature(method));
             if (method.getName().startsWith("is")) {
                 return true;
+            }
+            if (method.getName().equals("equals")) {
+                return false;
+            }
+            if (method.getName().equals("hashCode")) {
+                return 0;
+            }
+            if (method.getName().equals("toString")) {
+                return "proxy";
             }
             return null;
         }

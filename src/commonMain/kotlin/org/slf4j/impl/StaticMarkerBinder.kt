@@ -26,6 +26,8 @@ package org.slf4j.impl
 
 import org.slf4j.spi.MarkerFactoryBinder
 import org.slf4j.IMarkerFactory
+import kotlin.jvm.JvmField
+import kotlin.jvm.JvmStatic
 
 /**
  *
@@ -68,8 +70,10 @@ class StaticMarkerBinder private constructor() : MarkerFactoryBinder {
         /**
          * The unique instance of this class.
          */
+        @JvmStatic
         val SINGLETON = StaticMarkerBinder()
 
+        @JvmStatic
         fun getSingleton() : StaticMarkerBinder {
             return SINGLETON
         }

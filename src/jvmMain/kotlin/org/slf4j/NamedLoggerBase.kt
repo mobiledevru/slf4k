@@ -1,6 +1,5 @@
 package org.slf4j
 
-import org.slf4j.LoggerFactory
 import org.slf4j.helpers.NamedLoggerBase
 import java.io.ObjectStreamException
 

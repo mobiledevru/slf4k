@@ -130,7 +130,7 @@ object MessageFormatter {
      * @return The formatted message
      */
     @JvmStatic
-    fun format(messagePattern: String, arg: Any): FormattingTuple {
+    fun format(messagePattern: String?, arg: Any?): FormattingTuple {
         return arrayFormat(messagePattern, arrayOf(arg))
     }
 
@@ -159,12 +159,12 @@ object MessageFormatter {
      * @return The formatted message
      */
     @JvmStatic
-    fun format(messagePattern: String, arg1: Any, arg2: Any): FormattingTuple {
+    fun format(messagePattern: String?, arg1: Any?, arg2: Any?): FormattingTuple {
         return arrayFormat(messagePattern, arrayOf(arg1, arg2))
     }
 
     @JvmStatic
-    fun arrayFormat(messagePattern: String?, argArray: Array<Any?>): FormattingTuple {
+    fun arrayFormat(messagePattern: String?, argArray: Array<Any?>?): FormattingTuple {
         val throwableCandidate = getThrowableCandidate(argArray)
         var args = argArray
         if (throwableCandidate != null) {

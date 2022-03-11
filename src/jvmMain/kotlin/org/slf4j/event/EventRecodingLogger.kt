@@ -1,10 +1,10 @@
 package org.slf4j.event
 
-import ru.mobiledev.slf4k.Adapter
 import org.slf4j.Logger
 import org.slf4j.Marker
 import org.slf4j.helpers.MessageFormatter
 import org.slf4j.helpers.SubstituteLogger
+import ru.mobiledev.slf4k.Adapter
 import java.util.*
 
 /**
@@ -16,11 +16,11 @@ import java.util.*
  * @author Ceki G&uuml;lc&uuml;
  * @author Wessel van Norel
  */
-class EventRecodingLogger(logger: SubstituteLogger, eventQueue: Queue<SubstituteLoggingEvent>) : Logger {
+open class EventRecodingLogger(logger: SubstituteLogger, eventQueue: Queue<SubstituteLoggingEvent>?) : Logger {
 
     override var name: String = logger.name
     var logger: SubstituteLogger
-    var eventQueue: Queue<SubstituteLoggingEvent>
+    var eventQueue: Queue<SubstituteLoggingEvent>?
 
     init {
         this.logger = logger
@@ -38,23 +38,23 @@ class EventRecodingLogger(logger: SubstituteLogger, eventQueue: Queue<Substitute
     override val isErrorEnabled: Boolean
         get() = RECORD_ALL_EVENTS
 
-    override fun trace(msg: String) {
+    override fun trace(msg: String?) {
         recordEvent_0Args(Level.TRACE, null, msg, null)
     }
 
-    override fun trace(format: String, arg: Any?) {
+    override fun trace(format: String?, arg: Any?) {
         recordEvent_1Args(Level.TRACE, null, format, arg)
     }
 
-    override fun trace(format: String, arg1: Any?, arg2: Any?) {
+    override fun trace(format: String?, arg1: Any?, arg2: Any?) {
         recordEvent2Args(Level.TRACE, null, format, arg1, arg2)
     }
 
-    override fun trace(format: String, vararg arguments: Any?) {
+    override fun trace(format: String?, vararg arguments: Any?) {
         recordEventArgArray(Level.TRACE, null, format, arguments)
     }
 
-    override fun trace(msg: String, t: Throwable?) {
+    override fun trace(msg: String?, t: Throwable?) {
         recordEvent_0Args(Level.TRACE, null, msg, t)
     }
 
@@ -62,43 +62,43 @@ class EventRecodingLogger(logger: SubstituteLogger, eventQueue: Queue<Substitute
         return isTraceEnabled
     }
 
-    override fun trace(marker: Marker?, msg: String) {
+    override fun trace(marker: Marker?, msg: String?) {
         recordEvent_0Args(Level.TRACE, marker, msg, null)
     }
 
-    override fun trace(marker: Marker?, format: String, arg: Any?) {
+    override fun trace(marker: Marker?, format: String?, arg: Any?) {
         recordEvent_1Args(Level.TRACE, marker, format, arg)
     }
 
-    override fun trace(marker: Marker?, format: String, arg1: Any?, arg2: Any?) {
+    override fun trace(marker: Marker?, format: String?, arg1: Any?, arg2: Any?) {
         recordEvent2Args(Level.TRACE, marker, format, arg1, arg2)
     }
 
-    override fun trace(marker: Marker?, format: String, vararg arguments: Any?) {
+    override fun trace(marker: Marker?, format: String?, vararg arguments: Any?) {
         recordEventArgArray(Level.TRACE, marker, format, arguments)
     }
 
-    override fun trace(marker: Marker?, msg: String, t: Throwable?) {
+    override fun trace(marker: Marker?, msg: String?, t: Throwable?) {
         recordEvent_0Args(Level.TRACE, marker, msg, t)
     }
 
-    override fun debug(msg: String) {
+    override fun debug(msg: String?) {
         recordEvent_0Args(Level.DEBUG, null, msg, null)
     }
 
-    override fun debug(format: String, arg: Any?) {
+    override fun debug(format: String?, arg: Any?) {
         recordEvent_1Args(Level.DEBUG, null, format, arg)
     }
 
-    override fun debug(format: String, arg1: Any?, arg2: Any?) {
+    override fun debug(format: String?, arg1: Any?, arg2: Any?) {
         recordEvent2Args(Level.DEBUG, null, format, arg1, arg2)
     }
 
-    override fun debug(format: String, vararg arguments: Any?) {
+    override fun debug(format: String?, vararg arguments: Any?) {
         recordEventArgArray(Level.DEBUG, null, format, arguments)
     }
 
-    override fun debug(msg: String, t: Throwable?) {
+    override fun debug(msg: String?, t: Throwable?) {
         recordEvent_0Args(Level.DEBUG, null, msg, t)
     }
 
@@ -106,43 +106,43 @@ class EventRecodingLogger(logger: SubstituteLogger, eventQueue: Queue<Substitute
         return isDebugEnabled
     }
 
-    override fun debug(marker: Marker?, msg: String) {
+    override fun debug(marker: Marker?, msg: String?) {
         recordEvent_0Args(Level.DEBUG, marker, msg, null)
     }
 
-    override fun debug(marker: Marker?, format: String, arg: Any?) {
+    override fun debug(marker: Marker?, format: String?, arg: Any?) {
         recordEvent_1Args(Level.DEBUG, marker, format, arg)
     }
 
-    override fun debug(marker: Marker?, format: String, arg1: Any?, arg2: Any?) {
+    override fun debug(marker: Marker?, format: String?, arg1: Any?, arg2: Any?) {
         recordEvent2Args(Level.DEBUG, marker, format, arg1, arg2)
     }
 
-    override fun debug(marker: Marker?, format: String, vararg arguments: Any?) {
+    override fun debug(marker: Marker?, format: String?, vararg arguments: Any?) {
         recordEventArgArray(Level.DEBUG, marker, format, arguments)
     }
 
-    override fun debug(marker: Marker?, msg: String, t: Throwable?) {
+    override fun debug(marker: Marker?, msg: String?, t: Throwable?) {
         recordEvent_0Args(Level.DEBUG, marker, msg, t)
     }
 
-    override fun info(msg: String) {
+    override fun info(msg: String?) {
         recordEvent_0Args(Level.INFO, null, msg, null)
     }
 
-    override fun info(format: String, arg: Any?) {
+    override fun info(format: String?, arg: Any?) {
         recordEvent_1Args(Level.INFO, null, format, arg)
     }
 
-    override fun info(format: String, arg1: Any?, arg2: Any?) {
+    override fun info(format: String?, arg1: Any?, arg2: Any?) {
         recordEvent2Args(Level.INFO, null, format, arg1, arg2)
     }
 
-    override fun info(format: String, vararg arguments: Any?) {
+    override fun info(format: String?, vararg arguments: Any?) {
         recordEventArgArray(Level.INFO, null, format, arguments)
     }
 
-    override fun info(msg: String, t: Throwable?) {
+    override fun info(msg: String?, t: Throwable?) {
         recordEvent_0Args(Level.INFO, null, msg, t)
     }
 
@@ -150,43 +150,43 @@ class EventRecodingLogger(logger: SubstituteLogger, eventQueue: Queue<Substitute
         return isInfoEnabled
     }
 
-    override fun info(marker: Marker?, msg: String) {
+    override fun info(marker: Marker?, msg: String?) {
         recordEvent_0Args(Level.INFO, marker, msg, null)
     }
 
-    override fun info(marker: Marker?, format: String, arg: Any?) {
+    override fun info(marker: Marker?, format: String?, arg: Any?) {
         recordEvent_1Args(Level.INFO, marker, format, arg)
     }
 
-    override fun info(marker: Marker?, format: String, arg1: Any?, arg2: Any?) {
+    override fun info(marker: Marker?, format: String?, arg1: Any?, arg2: Any?) {
         recordEvent2Args(Level.INFO, marker, format, arg1, arg2)
     }
 
-    override fun info(marker: Marker?, format: String, vararg arguments: Any?) {
+    override fun info(marker: Marker?, format: String?, vararg arguments: Any?) {
         recordEventArgArray(Level.INFO, marker, format, arguments)
     }
 
-    override fun info(marker: Marker?, msg: String, t: Throwable?) {
+    override fun info(marker: Marker?, msg: String?, t: Throwable?) {
         recordEvent_0Args(Level.INFO, marker, msg, t)
     }
 
-    override fun warn(msg: String) {
+    override fun warn(msg: String?) {
         recordEvent_0Args(Level.WARN, null, msg, null)
     }
 
-    override fun warn(format: String, arg: Any?) {
+    override fun warn(format: String?, arg: Any?) {
         recordEvent_1Args(Level.WARN, null, format, arg)
     }
 
-    override fun warn(format: String, arg1: Any?, arg2: Any?) {
+    override fun warn(format: String?, arg1: Any?, arg2: Any?) {
         recordEvent2Args(Level.WARN, null, format, arg1, arg2)
     }
 
-    override fun warn(format: String, vararg arguments: Any?) {
+    override fun warn(format: String?, vararg arguments: Any?) {
         recordEventArgArray(Level.WARN, null, format, arguments)
     }
 
-    override fun warn(msg: String, t: Throwable?) {
+    override fun warn(msg: String?, t: Throwable?) {
         recordEvent_0Args(Level.WARN, null, msg, t)
     }
 
@@ -194,43 +194,43 @@ class EventRecodingLogger(logger: SubstituteLogger, eventQueue: Queue<Substitute
         return isWarnEnabled
     }
 
-    override fun warn(marker: Marker?, msg: String) {
+    override fun warn(marker: Marker?, msg: String?) {
         recordEvent_0Args(Level.WARN, marker, msg, null)
     }
 
-    override fun warn(marker: Marker?, format: String, arg: Any?) {
+    override fun warn(marker: Marker?, format: String?, arg: Any?) {
         recordEvent_1Args(Level.WARN, marker, format, arg)
     }
 
-    override fun warn(marker: Marker?, format: String, arg1: Any?, arg2: Any?) {
+    override fun warn(marker: Marker?, format: String?, arg1: Any?, arg2: Any?) {
         recordEvent2Args(Level.WARN, marker, format, arg1, arg2)
     }
 
-    override fun warn(marker: Marker?, format: String, vararg arguments: Any?) {
+    override fun warn(marker: Marker?, format: String?, vararg arguments: Any?) {
         recordEventArgArray(Level.WARN, marker, format, arguments)
     }
 
-    override fun warn(marker: Marker?, msg: String, t: Throwable?) {
+    override fun warn(marker: Marker?, msg: String?, t: Throwable?) {
         recordEvent_0Args(Level.WARN, marker, msg, t)
     }
 
-    override fun error(msg: String) {
+    override fun error(msg: String?) {
         recordEvent_0Args(Level.ERROR, null, msg, null)
     }
 
-    override fun error(format: String, arg: Any?) {
+    override fun error(format: String?, arg: Any?) {
         recordEvent_1Args(Level.ERROR, null, format, arg)
     }
 
-    override fun error(format: String, arg1: Any?, arg2: Any?) {
+    override fun error(format: String?, arg1: Any?, arg2: Any?) {
         recordEvent2Args(Level.ERROR, null, format, arg1, arg2)
     }
 
-    override fun error(format: String, vararg arguments: Any?) {
+    override fun error(format: String?, vararg arguments: Any?) {
         recordEventArgArray(Level.ERROR, null, format, arguments)
     }
 
-    override fun error(msg: String, t: Throwable?) {
+    override fun error(msg: String?, t: Throwable?) {
         recordEvent_0Args(Level.ERROR, null, msg, t)
     }
 
@@ -238,35 +238,35 @@ class EventRecodingLogger(logger: SubstituteLogger, eventQueue: Queue<Substitute
         return isErrorEnabled
     }
 
-    override fun error(marker: Marker?, msg: String) {
+    override fun error(marker: Marker?, msg: String?) {
         recordEvent_0Args(Level.ERROR, marker, msg, null)
     }
 
-    override fun error(marker: Marker?, format: String, arg: Any?) {
+    override fun error(marker: Marker?, format: String?, arg: Any?) {
         recordEvent_1Args(Level.ERROR, marker, format, arg)
     }
 
-    override fun error(marker: Marker?, format: String, arg1: Any?, arg2: Any?) {
+    override fun error(marker: Marker?, format: String?, arg1: Any?, arg2: Any?) {
         recordEvent2Args(Level.ERROR, marker, format, arg1, arg2)
     }
 
-    override fun error(marker: Marker?, format: String, vararg arguments: Any?) {
+    override fun error(marker: Marker?, format: String?, vararg arguments: Any?) {
         recordEventArgArray(Level.ERROR, marker, format, arguments)
     }
 
-    override fun error(marker: Marker?, msg: String, t: Throwable?) {
+    override fun error(marker: Marker?, msg: String?, t: Throwable?) {
         recordEvent_0Args(Level.ERROR, marker, msg, t)
     }
 
-    private fun recordEvent_0Args(level: Level, marker: Marker?, msg: String, t: Throwable?) {
+    private fun recordEvent_0Args(level: Level, marker: Marker?, msg: String?, t: Throwable?) {
         recordEvent(level, marker, msg, null, t)
     }
 
-    private fun recordEvent_1Args(level: Level, marker: Marker?, msg: String, arg1: Any?) {
+    private fun recordEvent_1Args(level: Level, marker: Marker?, msg: String?, arg1: Any?) {
         recordEvent(level, marker, msg, arrayOf(arg1), null)
     }
 
-    private fun recordEvent2Args(level: Level, marker: Marker?, msg: String, arg1: Any?, arg2: Any?) {
+    private fun recordEvent2Args(level: Level, marker: Marker?, msg: String?, arg1: Any?, arg2: Any?) {
         if (arg2 is Throwable) {
             recordEvent(level, marker, msg, arrayOf(arg1), arg2)
         } else {
@@ -274,7 +274,7 @@ class EventRecodingLogger(logger: SubstituteLogger, eventQueue: Queue<Substitute
         }
     }
 
-    private fun recordEventArgArray(level: Level, marker: Marker?, msg: String, args: Array<out Any?>?) {
+    private fun recordEventArgArray(level: Level, marker: Marker?, msg: String?, args: Array<out Any?>?) {
         val throwableCandidate: Throwable? = MessageFormatter.getThrowableCandidate(args)
         if (throwableCandidate != null) {
             val trimmedCopy: Array<*> = MessageFormatter.trimmedCopy(args)
@@ -285,18 +285,18 @@ class EventRecodingLogger(logger: SubstituteLogger, eventQueue: Queue<Substitute
     }
 
     // WARNING: this method assumes that any throwable is properly extracted
-    private fun recordEvent(level: Level, marker: Marker?, msg: String, args: Array<out Any?>?, throwable: Throwable?) {
+    private fun recordEvent(level: Level, marker: Marker?, msg: String?, args: Array<out Any?>?, throwable: Throwable?) {
         val loggingEvent = SubstituteLoggingEvent()
-        loggingEvent.timeStamp = Adapter.timeStamp()
+        loggingEvent.timeStamp = Adapter.timeStamp() // System.currentTimeMillis()
         loggingEvent.level = level
         loggingEvent.setLogger(logger)
         loggingEvent.loggerName = name
         loggingEvent.marker = marker
         loggingEvent.message = msg
-        loggingEvent.threadName = Adapter.threadName()
+        loggingEvent.threadName = Thread.currentThread().name
         loggingEvent.argumentArray = args
         loggingEvent.throwable = throwable
-        eventQueue.add(loggingEvent)
+        eventQueue?.add(loggingEvent)
     }
 
     companion object {

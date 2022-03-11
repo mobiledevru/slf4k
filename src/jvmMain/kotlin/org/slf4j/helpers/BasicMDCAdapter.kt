@@ -39,7 +39,7 @@ import org.slf4j.spi.MDCAdapter
  *
  * @since 1.5.0
  */
-class BasicMDCAdapter : MDCAdapter {
+open class BasicMDCAdapter : MDCAdapter {
     private val inheritableThreadLocal: InheritableThreadLocal<MutableMap<String?, String?>?> =
         object : InheritableThreadLocal<MutableMap<String?, String?>?>() {
             protected override fun childValue(parentValue: MutableMap<String?, String?>?): MutableMap<String?, String?>? {

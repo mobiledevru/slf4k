@@ -24,6 +24,9 @@
  */
 package org.slf4j
 
+import kotlin.jvm.JvmField
+import kotlin.jvm.JvmStatic
+
 /**
  * The org.slf4j.Logger interface is the main user entry point of SLF4J API.
  * It is expected that logging takes place through concrete implementations
@@ -84,7 +87,7 @@ interface Logger {
      * @param msg the message string to be logged
      * @since 1.4
      */
-    fun trace(msg: String)
+    fun trace(msg: String?)
 
     /**
      * Log a message at the TRACE level according to the specified format
@@ -99,7 +102,7 @@ interface Logger {
      * @param arg    the argument
      * @since 1.4
      */
-    fun trace(format: String, arg: Any?)
+    fun trace(format: String?, arg: Any?)
 
     /**
      * Log a message at the TRACE level according to the specified format
@@ -115,7 +118,7 @@ interface Logger {
      * @param arg2   the second argument
      * @since 1.4
      */
-    fun trace(format: String, arg1: Any?, arg2: Any?)
+    fun trace(format: String?, arg1: Any?, arg2: Any?)
 
     /**
      * Log a message at the TRACE level according to the specified format
@@ -133,7 +136,7 @@ interface Logger {
      * @param arguments a list of 3 or more arguments
      * @since 1.4
      */
-    fun trace(format: String, vararg arguments: Any?)
+    fun trace(format: String?, vararg arguments: Any?)
 
     /**
      * Log an exception (throwable) at the TRACE level with an
@@ -143,7 +146,7 @@ interface Logger {
      * @param t   the exception (throwable) to log
      * @since 1.4
      */
-    fun trace(msg: String, t: Throwable?)
+    fun trace(msg: String?, t: Throwable?)
 
     /**
      * Similar to [.isTraceEnabled] method except that the
@@ -164,7 +167,7 @@ interface Logger {
      * @param msg    the message string to be logged
      * @since 1.4
      */
-    fun trace(marker: Marker?, msg: String)
+    fun trace(marker: Marker?, msg: String?)
 
     /**
      * This method is similar to [.trace] method except that the
@@ -175,7 +178,7 @@ interface Logger {
      * @param arg    the argument
      * @since 1.4
      */
-    fun trace(marker: Marker?, format: String, arg: Any?)
+    fun trace(marker: Marker?, format: String?, arg: Any?)
 
     /**
      * This method is similar to [.trace]
@@ -188,7 +191,7 @@ interface Logger {
      * @param arg2   the second argument
      * @since 1.4
      */
-    fun trace(marker: Marker?, format: String, arg1: Any?, arg2: Any?)
+    fun trace(marker: Marker?, format: String?, arg1: Any?, arg2: Any?)
 
     /**
      * This method is similar to [.trace]
@@ -200,7 +203,7 @@ interface Logger {
      * @param arguments an array of arguments
      * @since 1.4
      */
-    fun trace(marker: Marker?, format: String, vararg arguments: Any?)
+    fun trace(marker: Marker?, format: String?, vararg arguments: Any?)
 
     /**
      * This method is similar to [.trace] method except that the
@@ -211,7 +214,7 @@ interface Logger {
      * @param t      the exception (throwable) to log
      * @since 1.4
      */
-    fun trace(marker: Marker?, msg: String, t: Throwable?)
+    fun trace(marker: Marker?, msg: String?, t: Throwable?)
 
     /**
      * Is the logger instance enabled for the DEBUG level?
@@ -226,7 +229,7 @@ interface Logger {
      *
      * @param msg the message string to be logged
      */
-    fun debug(msg: String)
+    fun debug(msg: String?)
 
     /**
      * Log a message at the DEBUG level according to the specified format
@@ -240,7 +243,7 @@ interface Logger {
      * @param format the format string
      * @param arg    the argument
      */
-    fun debug(format: String, arg: Any?)
+    fun debug(format: String?, arg: Any?)
 
     /**
      * Log a message at the DEBUG level according to the specified format
@@ -255,7 +258,7 @@ interface Logger {
      * @param arg1   the first argument
      * @param arg2   the second argument
      */
-    fun debug(format: String, arg1: Any?, arg2: Any?)
+    fun debug(format: String?, arg1: Any?, arg2: Any?)
 
     /**
      * Log a message at the DEBUG level according to the specified format
@@ -273,7 +276,7 @@ interface Logger {
      * @param format    the format string
      * @param arguments a list of 3 or more arguments
      */
-    fun debug(format: String, vararg arguments: Any?)
+    fun debug(format: String?, vararg arguments: Any?)
 
     /**
      * Log an exception (throwable) at the DEBUG level with an
@@ -282,7 +285,7 @@ interface Logger {
      * @param msg the message accompanying the exception
      * @param t   the exception (throwable) to log
      */
-    fun debug(msg: String, t: Throwable?)
+    fun debug(msg: String?, t: Throwable?)
 
     /**
      * Similar to [.isDebugEnabled] method except that the
@@ -300,7 +303,7 @@ interface Logger {
      * @param marker the marker data specific to this log statement
      * @param msg    the message string to be logged
      */
-    fun debug(marker: Marker?, msg: String)
+    fun debug(marker: Marker?, msg: String?)
 
     /**
      * This method is similar to [.debug] method except that the
@@ -310,7 +313,7 @@ interface Logger {
      * @param format the format string
      * @param arg    the argument
      */
-    fun debug(marker: Marker?, format: String, arg: Any?)
+    fun debug(marker: Marker?, format: String?, arg: Any?)
 
     /**
      * This method is similar to [.debug]
@@ -322,7 +325,7 @@ interface Logger {
      * @param arg1   the first argument
      * @param arg2   the second argument
      */
-    fun debug(marker: Marker?, format: String, arg1: Any?, arg2: Any?)
+    fun debug(marker: Marker?, format: String?, arg1: Any?, arg2: Any?)
 
     /**
      * This method is similar to [.debug]
@@ -333,7 +336,7 @@ interface Logger {
      * @param format    the format string
      * @param arguments a list of 3 or more arguments
      */
-    fun debug(marker: Marker?, format: String, vararg arguments: Any?)
+    fun debug(marker: Marker?, format: String?, vararg arguments: Any?)
 
     /**
      * This method is similar to [.debug] method except that the
@@ -343,7 +346,7 @@ interface Logger {
      * @param msg    the message accompanying the exception
      * @param t      the exception (throwable) to log
      */
-    fun debug(marker: Marker?, msg: String, t: Throwable?)
+    fun debug(marker: Marker?, msg: String?, t: Throwable?)
 
     /**
      * Is the logger instance enabled for the INFO level?
@@ -358,7 +361,7 @@ interface Logger {
      *
      * @param msg the message string to be logged
      */
-    fun info(msg: String)
+    fun info(msg: String?)
 
     /**
      * Log a message at the INFO level according to the specified format
@@ -372,7 +375,7 @@ interface Logger {
      * @param format the format string
      * @param arg    the argument
      */
-    fun info(format: String, arg: Any?)
+    fun info(format: String?, arg: Any?)
 
     /**
      * Log a message at the INFO level according to the specified format
@@ -387,7 +390,7 @@ interface Logger {
      * @param arg1   the first argument
      * @param arg2   the second argument
      */
-    fun info(format: String, arg1: Any?, arg2: Any?)
+    fun info(format: String?, arg1: Any?, arg2: Any?)
 
     /**
      * Log a message at the INFO level according to the specified format
@@ -405,7 +408,7 @@ interface Logger {
      * @param format    the format string
      * @param arguments a list of 3 or more arguments
      */
-    fun info(format: String, vararg arguments: Any?)
+    fun info(format: String?, vararg arguments: Any?)
 
     /**
      * Log an exception (throwable) at the INFO level with an
@@ -414,7 +417,7 @@ interface Logger {
      * @param msg the message accompanying the exception
      * @param t   the exception (throwable) to log
      */
-    fun info(msg: String, t: Throwable?)
+    fun info(msg: String?, t: Throwable?)
 
     /**
      * Similar to [.isInfoEnabled] method except that the marker
@@ -431,7 +434,7 @@ interface Logger {
      * @param marker The marker specific to this log statement
      * @param msg    the message string to be logged
      */
-    fun info(marker: Marker?, msg: String)
+    fun info(marker: Marker?, msg: String?)
 
     /**
      * This method is similar to [.info] method except that the
@@ -441,7 +444,7 @@ interface Logger {
      * @param format the format string
      * @param arg    the argument
      */
-    fun info(marker: Marker?, format: String, arg: Any?)
+    fun info(marker: Marker?, format: String?, arg: Any?)
 
     /**
      * This method is similar to [.info]
@@ -453,7 +456,7 @@ interface Logger {
      * @param arg1   the first argument
      * @param arg2   the second argument
      */
-    fun info(marker: Marker?, format: String, arg1: Any?, arg2: Any?)
+    fun info(marker: Marker?, format: String?, arg1: Any?, arg2: Any?)
 
     /**
      * This method is similar to [.info]
@@ -464,7 +467,7 @@ interface Logger {
      * @param format    the format string
      * @param arguments a list of 3 or more arguments
      */
-    fun info(marker: Marker?, format: String, vararg arguments: Any?)
+    fun info(marker: Marker?, format: String?, vararg arguments: Any?)
 
     /**
      * This method is similar to [.info] method
@@ -474,7 +477,7 @@ interface Logger {
      * @param msg    the message accompanying the exception
      * @param t      the exception (throwable) to log
      */
-    fun info(marker: Marker?, msg: String, t: Throwable?)
+    fun info(marker: Marker?, msg: String?, t: Throwable?)
 
     /**
      * Is the logger instance enabled for the WARN level?
@@ -489,7 +492,7 @@ interface Logger {
      *
      * @param msg the message string to be logged
      */
-    fun warn(msg: String)
+    fun warn(msg: String?)
 
     /**
      * Log a message at the WARN level according to the specified format
@@ -503,7 +506,7 @@ interface Logger {
      * @param format the format string
      * @param arg    the argument
      */
-    fun warn(format: String, arg: Any?)
+    fun warn(format: String?, arg: Any?)
 
     /**
      * Log a message at the WARN level according to the specified format
@@ -521,7 +524,7 @@ interface Logger {
      * @param format    the format string
      * @param arguments a list of 3 or more arguments
      */
-    fun warn(format: String, vararg arguments: Any?)
+    fun warn(format: String?, vararg arguments: Any?)
 
     /**
      * Log a message at the WARN level according to the specified format
@@ -536,7 +539,7 @@ interface Logger {
      * @param arg1   the first argument
      * @param arg2   the second argument
      */
-    fun warn(format: String, arg1: Any?, arg2: Any?)
+    fun warn(format: String?, arg1: Any?, arg2: Any?)
 
     /**
      * Log an exception (throwable) at the WARN level with an
@@ -545,7 +548,7 @@ interface Logger {
      * @param msg the message accompanying the exception
      * @param t   the exception (throwable) to log
      */
-    fun warn(msg: String, t: Throwable?)
+    fun warn(msg: String?, t: Throwable?)
 
     /**
      * Similar to [.isWarnEnabled] method except that the marker
@@ -563,7 +566,7 @@ interface Logger {
      * @param marker The marker specific to this log statement
      * @param msg    the message string to be logged
      */
-    fun warn(marker: Marker?, msg: String)
+    fun warn(marker: Marker?, msg: String?)
 
     /**
      * This method is similar to [.warn] method except that the
@@ -573,7 +576,7 @@ interface Logger {
      * @param format the format string
      * @param arg    the argument
      */
-    fun warn(marker: Marker?, format: String, arg: Any?)
+    fun warn(marker: Marker?, format: String?, arg: Any?)
 
     /**
      * This method is similar to [.warn]
@@ -585,7 +588,7 @@ interface Logger {
      * @param arg1   the first argument
      * @param arg2   the second argument
      */
-    fun warn(marker: Marker?, format: String, arg1: Any?, arg2: Any?)
+    fun warn(marker: Marker?, format: String?, arg1: Any?, arg2: Any?)
 
     /**
      * This method is similar to [.warn]
@@ -596,7 +599,7 @@ interface Logger {
      * @param format    the format string
      * @param arguments a list of 3 or more arguments
      */
-    fun warn(marker: Marker?, format: String, vararg arguments: Any?)
+    fun warn(marker: Marker?, format: String?, vararg arguments: Any?)
 
     /**
      * This method is similar to [.warn] method
@@ -606,7 +609,7 @@ interface Logger {
      * @param msg    the message accompanying the exception
      * @param t      the exception (throwable) to log
      */
-    fun warn(marker: Marker?, msg: String, t: Throwable?)
+    fun warn(marker: Marker?, msg: String?, t: Throwable?)
 
     /**
      * Is the logger instance enabled for the ERROR level?
@@ -621,7 +624,7 @@ interface Logger {
      *
      * @param msg the message string to be logged
      */
-    fun error(msg: String)
+    fun error(msg: String?)
 
     /**
      * Log a message at the ERROR level according to the specified format
@@ -635,7 +638,7 @@ interface Logger {
      * @param format the format string
      * @param arg    the argument
      */
-    fun error(format: String, arg: Any?)
+    fun error(format: String?, arg: Any?)
 
     /**
      * Log a message at the ERROR level according to the specified format
@@ -650,7 +653,7 @@ interface Logger {
      * @param arg1   the first argument
      * @param arg2   the second argument
      */
-    fun error(format: String, arg1: Any?, arg2: Any?)
+    fun error(format: String?, arg1: Any?, arg2: Any?)
 
     /**
      * Log a message at the ERROR level according to the specified format
@@ -668,7 +671,7 @@ interface Logger {
      * @param format    the format string
      * @param arguments a list of 3 or more arguments
      */
-    fun error(format: String, vararg arguments: Any?)
+    fun error(format: String?, vararg arguments: Any?)
 
     /**
      * Log an exception (throwable) at the ERROR level with an
@@ -677,7 +680,7 @@ interface Logger {
      * @param msg the message accompanying the exception
      * @param t   the exception (throwable) to log
      */
-    fun error(msg: String, t: Throwable?)
+    fun error(msg: String?, t: Throwable?)
 
     /**
      * Similar to [.isErrorEnabled] method except that the
@@ -695,7 +698,7 @@ interface Logger {
      * @param marker The marker specific to this log statement
      * @param msg    the message string to be logged
      */
-    fun error(marker: Marker?, msg: String)
+    fun error(marker: Marker?, msg: String?)
 
     /**
      * This method is similar to [.error] method except that the
@@ -705,7 +708,7 @@ interface Logger {
      * @param format the format string
      * @param arg    the argument
      */
-    fun error(marker: Marker?, format: String, arg: Any?)
+    fun error(marker: Marker?, format: String?, arg: Any?)
 
     /**
      * This method is similar to [.error]
@@ -717,7 +720,7 @@ interface Logger {
      * @param arg1   the first argument
      * @param arg2   the second argument
      */
-    fun error(marker: Marker?, format: String, arg1: Any?, arg2: Any?)
+    fun error(marker: Marker?, format: String?, arg1: Any?, arg2: Any?)
 
     /**
      * This method is similar to [.error]
@@ -728,7 +731,7 @@ interface Logger {
      * @param format    the format string
      * @param arguments a list of 3 or more arguments
      */
-    fun error(marker: Marker?, format: String, vararg arguments: Any?)
+    fun error(marker: Marker?, format: String?, vararg arguments: Any?)
 
     /**
      * This method is similar to [.error]
@@ -739,7 +742,7 @@ interface Logger {
      * @param msg    the message accompanying the exception
      * @param t      the exception (throwable) to log
      */
-    fun error(marker: Marker?, msg: String, t: Throwable?)
+    fun error(marker: Marker?, msg: String?, t: Throwable?)
 
     companion object {
         /**

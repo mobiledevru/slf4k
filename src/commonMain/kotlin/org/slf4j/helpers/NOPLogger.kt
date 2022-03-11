@@ -25,13 +25,14 @@
 package org.slf4j.helpers
 
 import kotlin.jvm.JvmField
+import kotlin.jvm.JvmStatic
 
 /**
  * A direct NOP (no operation) implementation of [Logger].
  *
  * @author Ceki G&uuml;lc&uuml;
  */
-class NOPLogger
+open class NOPLogger
 /**
  * There is no point in creating multiple instances of NOPLogger,
  * except by derived classes, hence the protected  access for the constructor.
@@ -51,27 +52,27 @@ protected constructor() : MarkerIgnoringBase() {
         get() = false
 
     /** A NOP implementation.  */
-    override fun trace(msg: String) {
+    override fun trace(msg: String?) {
         // NOP
     }
 
     /** A NOP implementation.   */
-    override fun trace(format: String, arg: Any?) {
+    override fun trace(format: String?, arg: Any?) {
         // NOP
     }
 
     /** A NOP implementation.   */
-    override fun trace(format: String, arg1: Any?, arg2: Any?) {
+    override fun trace(format: String?, arg1: Any?, arg2: Any?) {
         // NOP
     }
 
     /** A NOP implementation.   */
-    override fun trace(format: String, vararg arguments: Any?) {
+    override fun trace(format: String?, vararg arguments: Any?) {
         // NOP
     }
 
     /** A NOP implementation.  */
-    override fun trace(msg: String, t: Throwable?) {
+    override fun trace(msg: String?, t: Throwable?) {
         // NOP
     }
 
@@ -83,27 +84,27 @@ protected constructor() : MarkerIgnoringBase() {
         get() = false
 
     /** A NOP implementation.  */
-    override fun debug(msg: String) {
+    override fun debug(msg: String?) {
         // NOP
     }
 
     /** A NOP implementation.   */
-    override fun debug(format: String, arg: Any?) {
+    override fun debug(format: String?, arg: Any?) {
         // NOP
     }
 
     /** A NOP implementation.   */
-    override fun debug(format: String, arg1: Any?, arg2: Any?) {
+    override fun debug(format: String?, arg1: Any?, arg2: Any?) {
         // NOP
     }
 
     /** A NOP implementation.   */
-    override fun debug(format: String, vararg arguments: Any?) {
+    override fun debug(format: String?, vararg arguments: Any?) {
         // NOP
     }
 
     /** A NOP implementation.  */
-    override fun debug(msg: String, t: Throwable?) {
+    override fun debug(msg: String?, t: Throwable?) {
         // NOP
     }// NOP
 
@@ -116,27 +117,27 @@ protected constructor() : MarkerIgnoringBase() {
             false
 
     /** A NOP implementation.  */
-    override fun info(msg: String) {
+    override fun info(msg: String?) {
         // NOP
     }
 
     /** A NOP implementation.  */
-    override fun info(format: String, arg: Any?) {
+    override fun info(format: String?, arg: Any?) {
         // NOP
     }
 
     /** A NOP implementation.  */
-    override fun info(format: String, arg1: Any?, arg2: Any?) {
+    override fun info(format: String?, arg1: Any?, arg2: Any?) {
         // NOP
     }
 
     /** A NOP implementation.   */
-    override fun info(format: String, vararg arguments: Any?) {
+    override fun info(format: String?, vararg arguments: Any?) {
         // NOP
     }
 
     /** A NOP implementation.  */
-    override fun info(msg: String, t: Throwable?) {
+    override fun info(msg: String?, t: Throwable?) {
         // NOP
     }
 
@@ -148,27 +149,27 @@ protected constructor() : MarkerIgnoringBase() {
         get() = false
 
     /** A NOP implementation.  */
-    override fun warn(msg: String) {
+    override fun warn(msg: String?) {
         // NOP
     }
 
     /** A NOP implementation.  */
-    override fun warn(format: String, arg: Any?) {
+    override fun warn(format: String?, arg: Any?) {
         // NOP
     }
 
     /** A NOP implementation.  */
-    override fun warn(format: String, arg1: Any?, arg2: Any?) {
+    override fun warn(format: String?, arg1: Any?, arg2: Any?) {
         // NOP
     }
 
     /** A NOP implementation.   */
-    override fun warn(format: String, vararg arguments: Any?) {
+    override fun warn(format: String?, vararg arguments: Any?) {
         // NOP
     }
 
     /** A NOP implementation.  */
-    override fun warn(msg: String, t: Throwable?) {
+    override fun warn(msg: String?, t: Throwable?) {
         // NOP
     }
 
@@ -177,27 +178,27 @@ protected constructor() : MarkerIgnoringBase() {
         get() = false
 
     /** A NOP implementation.  */
-    override fun error(msg: String) {
+    override fun error(msg: String?) {
         // NOP
     }
 
     /** A NOP implementation.  */
-    override fun error(format: String, arg: Any?) {
+    override fun error(format: String?, arg: Any?) {
         // NOP
     }
 
     /** A NOP implementation.  */
-    override fun error(format: String, arg1: Any?, arg2: Any?) {
+    override fun error(format: String?, arg1: Any?, arg2: Any?) {
         // NOP
     }
 
     /** A NOP implementation.   */
-    override fun error(format: String, vararg arguments: Any?) {
+    override fun error(format: String?, vararg arguments: Any?) {
         // NOP
     }
 
     /** A NOP implementation.  */
-    override fun error(msg: String, t: Throwable?) {
+    override fun error(msg: String?, t: Throwable?) {
         // NOP
     }
 
@@ -207,7 +208,7 @@ protected constructor() : MarkerIgnoringBase() {
         /**
          * The unique instance of NOPLogger.
          */
-        @JvmField
+        @JvmStatic
         val NOP_LOGGER = NOPLogger()
     }
 }

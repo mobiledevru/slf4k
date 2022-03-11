@@ -35,7 +35,7 @@ import kotlin.jvm.Synchronized
  * @author Ceki G&uuml;lc&uuml;
  * @author Chetan Mehrotra
  */
-class SubstituteLoggerFactory : ILoggerFactory {
+open class SubstituteLoggerFactory : ILoggerFactory {
     var postInitialization = false
     private val loggers: MutableMap<String, SubstituteLogger> = HashMap()
     private val eventQueue: LinkedBlockingQueue<SubstituteLoggingEvent> = LinkedBlockingQueue<SubstituteLoggingEvent>()

@@ -40,7 +40,7 @@ fun MDC.putCloseable(key: String, `val`: String?): MDCCloseable {
 /**
  * An adapter to remove the key when done.
  */
-class MDCCloseable(private val key: String) : java.io.Closeable {
+open class MDCCloseable(private val key: String) : java.io.Closeable {
     override fun close() {
         MDC.remove(key)
     }

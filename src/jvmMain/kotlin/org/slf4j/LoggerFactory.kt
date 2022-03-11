@@ -283,7 +283,7 @@ actual object LoggerFactory {
         // during iteration
         val staticLoggerBinderPathSet: MutableSet<java.net.URL> = LinkedHashSet<java.net.URL>()
         try {
-            val loggerFactoryClassLoader: java.lang.ClassLoader = LoggerFactory::class.java.getClassLoader()
+            val loggerFactoryClassLoader: java.lang.ClassLoader? = LoggerFactory::class.java.getClassLoader()
             val paths: Enumeration<java.net.URL>
             paths = if (loggerFactoryClassLoader == null) {
                 java.lang.ClassLoader.getSystemResources(STATIC_LOGGER_BINDER_PATH)

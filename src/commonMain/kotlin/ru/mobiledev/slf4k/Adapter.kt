@@ -7,8 +7,6 @@ expect object Adapter {
 
     fun timeStamp(): Long
 
-    fun threadName(): String?
-
     /**
      * Qualified name of class 
      */

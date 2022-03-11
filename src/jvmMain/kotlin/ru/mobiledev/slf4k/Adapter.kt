@@ -12,9 +12,5 @@ actual object Adapter {
 //        return kotlin.system.getTimeMillis()
     }
 
-    actual fun threadName(): String? {
-        TODO("Not yet implemented")
-    }
-
     actual fun className(obj: Any): String = obj.javaClass.name
 }

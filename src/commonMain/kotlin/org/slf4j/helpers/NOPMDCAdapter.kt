@@ -35,7 +35,7 @@ import org.slf4j.spi.MDCAdapter
  *
  * @since 1.4.1
  */
-class NOPMDCAdapter : MDCAdapter {
+open class NOPMDCAdapter : MDCAdapter {
     override fun clear() {}
     override operator fun get(key: String?): String? {
         return null

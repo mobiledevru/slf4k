@@ -33,7 +33,7 @@ import org.slf4j.Logger
  *
  * @author Ceki G&uuml;lc&uuml;
  */
-class NOPLoggerFactory : ILoggerFactory {
+open class NOPLoggerFactory : ILoggerFactory {
     override fun getLogger(name: String): Logger {
         return NOPLogger.NOP_LOGGER
     }

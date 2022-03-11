@@ -8,11 +8,7 @@ actual object Adapter {
         get() = "JS"
 
     actual fun timeStamp(): Long {
-        TODO("Not yet implemented")
-    }
-
-    actual fun threadName(): String? {
-        return "MAIN"
+        TODO("Not yet implemented for $platform")
     }
 
     actual fun className(obj: Any): String = this::class.simpleName ?: "undefined"

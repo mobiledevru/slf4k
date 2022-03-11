@@ -25,6 +25,8 @@
 package org.slf4j.impl
 
 import org.slf4j.ILoggerFactory
+import kotlin.jvm.JvmField
+import kotlin.jvm.JvmStatic
 
 /**
  * The binding of [org.slf4j.LoggerFactory] class with an actual instance of
@@ -59,6 +61,7 @@ class StaticLoggerBinder private constructor() {
         /**
          * The unique instance of this class.
          */
+        @JvmStatic
         val singleton = StaticLoggerBinder()
 
         /**
@@ -66,6 +69,7 @@ class StaticLoggerBinder private constructor() {
          * The value of this field is modified with each major release.
          */
         // to avoid constant folding by the compiler, this field must *not* be final
+        @JvmStatic
         var REQUESTED_API_VERSION = "1.6.99" // !final
     }
 }

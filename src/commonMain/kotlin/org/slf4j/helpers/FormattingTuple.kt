@@ -24,20 +24,23 @@
  */
 package org.slf4j.helpers
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmOverloads
+import kotlin.jvm.JvmStatic
 
 /**
  * Holds the results of formatting done by [MessageFormatter].
  *
  * @author Joern Huxhorn
  */
-class FormattingTuple @JvmOverloads constructor(
+open class FormattingTuple @JvmOverloads constructor(
     val message: String?,
     val argArray: Array<Any?>? = null,
     val throwable: Throwable? = null
 ) {
 
     companion object {
+        @JvmStatic
         var NULL = FormattingTuple(null)
     }
 }
