@@ -30,7 +30,6 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.slf4j.Logger;
-import org.slf4j.SubstituteLoggerFactory;
 
 import java.util.Arrays;
 import java.util.HashSet;

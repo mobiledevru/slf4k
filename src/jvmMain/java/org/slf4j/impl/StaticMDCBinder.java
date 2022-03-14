@@ -22,37 +22,46 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.slf4j.spi
+package org.slf4j.impl;
 
-import org.slf4j.IMarkerFactory
+import org.slf4j.spi.MDCAdapter;
 
 /**
- * An internal interface which helps the static [org.slf4j.MarkerFactory]
- * class bind with the appropriate [IMarkerFactory] instance.
+ * This class is only a stub. Real implementations are found in 
+ * each SLF4J binding project, e.g. slf4j-nop, slf4j-log4j12 etc.
  *
  * @author Ceki G&uuml;lc&uuml;
  */
-interface MarkerFactoryBinder {
+public class StaticMDCBinder {
 
     /**
-     * Return the instance of [IMarkerFactory] that
-     * [org.slf4j.MarkerFactory] class should bind to.
-     *
-     * @return the instance of [IMarkerFactory] that
-     * [org.slf4j.MarkerFactory] class should bind to.
+     * The unique instance of this class.
      */
-    fun getMarkerFactory(): IMarkerFactory
+    public static final StaticMDCBinder SINGLETON = new StaticMDCBinder();
+
+    private StaticMDCBinder() {
+        throw new UnsupportedOperationException("This code should never make it into the jar");
+    }
 
     /**
-     * The String form of the [IMarkerFactory] object that this
-     * `MarkerFactoryBinder` instance is *intended* to return.
-     *
-     *
-     * This method allows the developer to interrogate this binder's intention
-     * which may be different from the [IMarkerFactory] instance it is able to
-     * return. Such a discrepancy should only occur in case of errors.
-     *
-     * @return the class name of the intended [IMarkerFactory] instance
+     * Return the singleton of this class.
+     * 
+     * @return the StaticMDCBinder singleton
+     * @since 1.7.14
      */
-    fun getMarkerFactoryClassStr(): String
+    public static final StaticMDCBinder getSingleton() {
+        return SINGLETON;
+    }
+
+    /**
+     * Currently this method always returns an instance of 
+     * {@link StaticMDCBinder}.
+     */
+    public MDCAdapter getMDCA() {
+        throw new UnsupportedOperationException("This code should never make it into the jar");
+    }
+
+    public String getMDCAdapterClassStr() {
+        throw new UnsupportedOperationException("This code should never make it into the jar");
+    }
 }

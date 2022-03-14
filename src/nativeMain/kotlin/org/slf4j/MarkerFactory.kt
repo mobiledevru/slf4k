@@ -25,7 +25,6 @@
 package org.slf4j
 
 import org.slf4j.impl.StaticMarkerBinder
-import kotlin.jvm.JvmStatic
 
 /**
  * MarkerFactory is a utility class producing [Marker] instances as
@@ -42,8 +41,8 @@ import kotlin.jvm.JvmStatic
  *
  * @author Ceki G&uuml;lc&uuml;
  */
-expect object MarkerFactory {
-    var MARKER_FACTORY: IMarkerFactory?
+actual object MarkerFactory {
+    actual var MARKER_FACTORY: IMarkerFactory? = null
 
     /**
      * As of SLF4J version 1.7.14, StaticMarkerBinder classes shipping in various bindings
@@ -55,15 +54,14 @@ expect object MarkerFactory {
      * @since 1.7.14
      */
     // @Throws(NoClassDefFoundError::class)
-    /*@JvmStatic
     private fun bwCompatibleGetMarkerFactoryFromBinder(): IMarkerFactory {
-        return StaticMarkerBinder.getSingleton().markerFactory
-        *//*return try {
+        return StaticMarkerBinder.getSingleton().getMarkerFactory()
+        /*return try {
             StaticMarkerBinder.getSingleton().markerFactory
         } catch (nsme: NoSuchMethodError) {
             // binding is probably a version of SLF4J older than 1.7.14
             StaticMarkerBinder.SINGLETON.markerFactory
-        }*//*
+        }*/
     }
 
     // this is where the binding happens
@@ -76,7 +74,7 @@ expect object MarkerFactory {
             // we should never get here
             Util.report("Unexpected failure while binding MarkerFactory", e)
         }
-    }*/
+    }
 
     /**
      * Return a Marker instance as specified by the name parameter using the
@@ -86,9 +84,9 @@ expect object MarkerFactory {
      * The name of the [Marker] object to return.
      * @return marker
      */
-    fun getMarker(name: String): Marker? /*{
+    actual fun getMarker(name: String): Marker? {
         return MARKER_FACTORY?.getMarker(name)
-    }*/
+    }
 
     /**
      * Create a marker which is detached (even at birth) from the MarkerFactory.
@@ -97,9 +95,9 @@ expect object MarkerFactory {
      * @return a dangling marker
      * @since 1.5.1
      */
-    fun getDetachedMarker(name: String): Marker? /*{
+    actual fun getDetachedMarker(name: String): Marker? {
         return MARKER_FACTORY?.getDetachedMarker(name)
-    }*/
+    }
 
     /**
      * Return the [IMarkerFactory]instance in use.
@@ -110,6 +108,6 @@ expect object MarkerFactory {
      *
      * @return the IMarkerFactory instance in use
      */
-    val iMarkerFactory: IMarkerFactory?
-//        get() = MARKER_FACTORY
+    actual val iMarkerFactory: IMarkerFactory?
+        get() = MARKER_FACTORY
 }

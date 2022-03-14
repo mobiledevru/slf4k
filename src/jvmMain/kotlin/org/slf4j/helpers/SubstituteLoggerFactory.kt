@@ -22,10 +22,11 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.slf4j
+package org.slf4j.helpers
 
+import org.slf4j.ILoggerFactory
+import org.slf4j.Logger
 import org.slf4j.event.SubstituteLoggingEvent
-import org.slf4j.helpers.SubstituteLogger
 import java.util.concurrent.LinkedBlockingQueue
 import kotlin.jvm.Synchronized
 

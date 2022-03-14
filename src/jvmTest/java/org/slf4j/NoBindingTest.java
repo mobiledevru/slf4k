@@ -41,7 +41,7 @@ public class NoBindingTest {
     public void testLogger() {
         Logger logger = LoggerFactory.getLogger(NoBindingTest.class);
         logger.debug("hello" + diff);
-        assertTrue(logger instanceof NOPLogger);
+        assertTrue("Expected NOPLogger, but current is " + logger.getClass().getCanonicalName(), logger instanceof NOPLogger);
     }
 
     @Test

@@ -2,9 +2,10 @@ val kotlinVersion = "1.6.10"
 
 plugins {
     kotlin("multiplatform") version "1.6.10"
+    id("maven-publish")
 }
 
-group = "ru.mobiledev.slf4k"
+group = "ru.mobiledev.lib.slf4k"
 version = "1.0"
 
 repositories {
@@ -69,6 +70,19 @@ kotlin {
         }
         val jvmTest by getting {
             dependencies {
+                /*implementation("ch.qos.logback:logback-classic:1.2.10") {
+                    exclude("org.slf4j", "slf4j-api")
+                }*/
+                implementation("org.slf4j:slf4j-nop:1.7.36")
+                implementation("org.slf4j:slf4j-api:1.7.36")
+                implementation("junit:junit:4.13")
+                implementation(kotlin("test"))
+                implementation(kotlin("test-junit"))
+
+            }
+        }
+        /*val jvmTest by getting {
+            dependencies {
                 implementation("ch.qos.logback:logback-classic:1.2.10") {
                     exclude("org.slf4j", "slf4j-api")
                 }
@@ -77,14 +91,14 @@ kotlin {
                 implementation(kotlin("test-junit"))
 
             }
-        }
-        val jsMain by getting {
+        }*/
+        /*val jsMain by getting {
             dependencies {
 //                implementation(kotlin("org.jetbrains.kotlin:kotlin-stdlib-js:${kotlinVersion}"))
                 implementation("org.jetbrains.kotlin:kotlin-stdlib-js:${kotlinVersion}")
             }
         }
-        val jsTest by getting
+        val jsTest by getting*/
 //        val nativeMain by getting
 //        val nativeTest by getting
         val iosMain by getting
@@ -110,22 +124,24 @@ kotlin {
 }*/
 
 task("processClasses") {
-    tasks.findByName("classes")?.dependsOn(this)
+//    tasks.findByName("classes")?.dependsOn(this)
+    tasks.findByName("jvmJar")?.dependsOn(this)
     doLast {
-        println("deleted!")
-//        delete("**/slf4j/impl/*.*")
         ant.withGroovyBuilder {
             "delete"("includeemptydirs" to "true") {
-                "fileset"("dir" to "$buildDir/classes/kotlin/jvm/main/org/slf4j/impl") {
-//                    "include"("name" to "**/slf4j/impl/*.class")
+                // by slf4j design
+                "fileset"("dir" to "$buildDir/classes/java/main/org/slf4j/impl") {
+                    "include"("name" to "**/*.class")
+                }
+                // exclude all slf4j classes to be completely replaced with original slf4j api implementation under jvm
+                "fileset"("dir" to "$buildDir/classes/java/main/org/slf4j/") {
+                    "include"("name" to "**/*.class")
+                }
+                "fileset"("dir" to "$buildDir/classes/kotlin/jvm/main/org/slf4j/") {
                     "include"("name" to "**/*.class")
                 }
             }
         }
-//        ant.delete() {
-//            fileset(dir: '**/slf4j/impl/') {
-//            include(name: '**/*')
-//        }
     }
 }
 

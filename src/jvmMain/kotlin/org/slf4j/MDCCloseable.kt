@@ -33,7 +33,7 @@ package org.slf4j
  */
 @Throws(IllegalArgumentException::class)
 fun MDC.putCloseable(key: String, `val`: String?): MDCCloseable {
-    put(key, `val`)
+    MDC.put(key, `val`)
     return MDCCloseable(key)
 }
 

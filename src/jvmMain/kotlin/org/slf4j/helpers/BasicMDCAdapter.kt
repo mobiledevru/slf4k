@@ -121,15 +121,14 @@ open class BasicMDCAdapter : MDCAdapter {
      * Returned value may be null.
      *
      */
-    override val copyOfContextMap: Map<String?, String?>?
-        get() {
-            val oldMap: Map<String?, String?>? = inheritableThreadLocal.get()
-            return if (oldMap != null) {
-                HashMap(oldMap)
-            } else {
-                null
-            }
+    override fun getCopyOfContextMap(): Map<String?, String?>? {
+        val oldMap: Map<String?, String?>? = inheritableThreadLocal.get()
+        return if (oldMap != null) {
+            HashMap(oldMap)
+        } else {
+            null
         }
+    }
 
     override fun setContextMap(contextMap: Map<String?, String?>?) {
 //        inheritableThreadLocal.set(HashMap(contextMap))

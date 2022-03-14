@@ -43,8 +43,7 @@ open class NOPMDCAdapter : MDCAdapter {
 
     override fun put(key: String, `val`: String?) {}
     override fun remove(key: String?) {}
-    override val copyOfContextMap: Map<String?, String?>?
-        get() = null
+    override fun getCopyOfContextMap(): Map<String?, String?>? = null
 
     override fun setContextMap(contextMap: Map<String?, String?>?) {
         // NOP

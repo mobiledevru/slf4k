@@ -24,7 +24,6 @@
  */
 package org.slf4j.helpers
 
-import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 
 /**

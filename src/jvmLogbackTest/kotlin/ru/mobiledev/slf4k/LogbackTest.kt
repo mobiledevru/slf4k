@@ -11,6 +11,6 @@ class LogbackTest {
         val logback = Class.forName("ch.qos.logback.classic.Logger")
         assertNotNull(logback) // in fact, ClassNotFoundException already will be thrown
         val logger = LoggerFactory.getLogger("test-logger")
-        logger.debug("test")
+        logger.debug("test LogbackTest!!!!")
     }
 }

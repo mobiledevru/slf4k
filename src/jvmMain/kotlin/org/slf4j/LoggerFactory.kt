@@ -29,6 +29,7 @@ import org.slf4j.Util.safeGetBooleanSystemProperty
 import org.slf4j.Util.safeGetSystemProperty
 import org.slf4j.event.SubstituteLoggingEvent
 import org.slf4j.helpers.NOPLoggerFactory
+import org.slf4j.helpers.SubstituteLoggerFactory
 import org.slf4j.impl.StaticLoggerBinder
 import java.io.IOException
 import java.util.*
@@ -137,7 +138,9 @@ actual object LoggerFactory {
                 reportMultipleBindingAmbiguity(staticLoggerBinderPathSet)
             }
             // the next line does the binding
-            StaticLoggerBinder.singleton
+//            val binder: StaticLoggerBinder
+//            ClassLoader.getSystemClassLoader().loadClass("org.slf4j.impl.StaticLoggerBinder")
+            StaticLoggerBinder.getSingleton()
             INITIALIZATION_STATE = SUCCESSFUL_INITIALIZATION
             reportActualBinding(staticLoggerBinderPathSet)
         } catch (ncde: NoClassDefFoundError) {
@@ -329,7 +332,7 @@ actual object LoggerFactory {
         // binderPathSet can be null under Android
         if (binderPathSet != null && isAmbiguousStaticLoggerBinderPathSet(binderPathSet)) {
             report(
-                "Actual binding is of type [" + StaticLoggerBinder.singleton.getLoggerFactoryClassStr() + "]"
+                "Actual binding is of type [" + StaticLoggerBinder.getSingleton().getLoggerFactoryClassStr() + "]"
             )
         }
     }
@@ -441,7 +444,7 @@ actual object LoggerFactory {
                 }
             }
             when (INITIALIZATION_STATE) {
-                SUCCESSFUL_INITIALIZATION -> return StaticLoggerBinder.singleton.getLoggerFactory()
+                SUCCESSFUL_INITIALIZATION -> return StaticLoggerBinder.getSingleton().getLoggerFactory()
                 NOP_FALLBACK_INITIALIZATION -> return NOP_FALLBACK_FACTORY
                 FAILED_INITIALIZATION -> throw IllegalStateException(UNSUCCESSFUL_INIT_MSG)
                 ONGOING_INITIALIZATION ->             // support re-entrant behavior.
