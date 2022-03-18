@@ -24,9 +24,6 @@
  */
 package org.slf4j
 
-import kotlin.jvm.JvmField
-import kotlin.jvm.JvmStatic
-
 /**
  * The org.slf4j.Logger interface is the main user entry point of SLF4J API.
  * It is expected that logging takes place through concrete implementations
@@ -514,6 +511,21 @@ interface Logger {
      *
      *
      *
+     * This form avoids superfluous object creation when the logger
+     * is disabled for the WARN level.
+     *
+     * @param format the format string
+     * @param arg1   the first argument
+     * @param arg2   the second argument
+     */
+    fun warn(format: String?, arg1: Any?, arg2: Any?)
+
+    /**
+     * Log a message at the WARN level according to the specified format
+     * and arguments.
+     *
+     *
+     *
      * This form avoids superfluous string concatenation when the logger
      * is disabled for the WARN level. However, this variant incurs the hidden
      * (and relatively small) cost of creating an `Object[]` before invoking the method,
@@ -525,21 +537,6 @@ interface Logger {
      * @param arguments a list of 3 or more arguments
      */
     fun warn(format: String?, vararg arguments: Any?)
-
-    /**
-     * Log a message at the WARN level according to the specified format
-     * and arguments.
-     *
-     *
-     *
-     * This form avoids superfluous object creation when the logger
-     * is disabled for the WARN level.
-     *
-     * @param format the format string
-     * @param arg1   the first argument
-     * @param arg2   the second argument
-     */
-    fun warn(format: String?, arg1: Any?, arg2: Any?)
 
     /**
      * Log an exception (throwable) at the WARN level with an

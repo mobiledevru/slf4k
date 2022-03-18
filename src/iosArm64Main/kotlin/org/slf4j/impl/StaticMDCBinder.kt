@@ -62,8 +62,6 @@ actual class StaticMDCBinder private constructor() {
          */
         private val SINGLETON = StaticMDCBinder()
 
-        fun getSingleton(): StaticMDCBinder {
-            return SINGLETON
-        }
+        fun getSingleton(): StaticMDCBinder = SINGLETON
     }
 }

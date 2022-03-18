@@ -1,5 +1,9 @@
 package ru.mobiledev.slf4k
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import kotlin.reflect.KClass
+
 actual interface SerializableAdapter
 
 actual object Adapter {
@@ -9,3 +13,5 @@ actual object Adapter {
 
     actual fun className(obj: Any): String = this::class.qualifiedName ?: "NIL"
 }
+
+actual fun LoggerFactory.getLogger(clazz: KClass<*>): Logger = getLogger(clazz.qualifiedName ?: Logger.ROOT_LOGGER_NAME)

@@ -2,11 +2,12 @@ val kotlinVersion = "1.6.10"
 
 plugins {
     kotlin("multiplatform") version "1.6.10"
+    kotlin("native.cocoapods") version "1.6.10"
     id("maven-publish")
 }
 
 group = "ru.mobiledev.lib.slf4k"
-version = "1.0"
+version = "0.1"
 
 repositories {
     mavenCentral()
@@ -33,13 +34,59 @@ kotlin {
     ios {
         binaries {
             framework {
-                baseName = "app-shared"
+                baseName = "shared"
             }
         }
     }
+    /*configure(listOf(iosX64(), iosArm64())) {
+        binaries {
+            framework {
+                baseName = "shared"
+            }
+        }
+    }*/
 
-    val hostOs = System.getProperty("os.name")
-    val isMingwX64 = hostOs.startsWith("Windows")
+    cocoapods {
+
+        ios.deploymentTarget = "13.5"
+
+        summary = "CocoaPods test library"
+        homepage = "https://github.com/JetBrains/kotlin"
+
+        /*pod("AFNetworking") {
+            version = "~> 4.0.1"
+        }*/
+
+        /*pod("Logging") {
+            path("/Users/gda/Projects/md/swift-log/")
+            version = "~> 1.4.0"
+        }*/
+
+        framework {
+            // Mandatory properties
+            // Configure fields required by CocoaPods.
+            summary = "Some description for a Kotlin/Native module"
+            homepage = "Link to a Kotlin/Native module homepage"
+            // Framework name configuration. Use this property instead of deprecated 'frameworkName'
+            baseName = "slf4k"
+
+            // Optional properties
+            // (Optional) Dynamic framework support
+            // isStatic = false
+            // (Optional) Dependency export
+//            export(project(":anotherKMMModule"))
+            transitiveExport = true
+            // (Optional) Bitcode embedding
+            embedBitcode(org.jetbrains.kotlin.gradle.plugin.mpp.BitcodeEmbeddingMode.BITCODE)
+        }
+
+        // Maps custom Xcode configuration to NativeBuildType
+        // xcodeConfigurationToNativeBuildType["CUSTOM_DEBUG"] = org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType.DEBUG
+        // xcodeConfigurationToNativeBuildType["CUSTOM_RELEASE"] = org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType.RELEASE
+    }
+
+//    val hostOs = System.getProperty("os.name")
+//    val isMingwX64 = hostOs.startsWith("Windows")
 //    val nativeTarget = when {
 //        hostOs == "Mac OS X" -> macosX64("native")
 //        hostOs == "Linux" -> linuxX64("native")
@@ -60,6 +107,10 @@ kotlin {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
             }
+        }
+        val iosArm64Main by getting
+        val iosX64Main by getting {
+            dependsOn(iosArm64Main)
         }
         val jvmMain by getting {
             dependencies {
@@ -99,6 +150,7 @@ kotlin {
             }
         }
         val jsTest by getting*/
+// https://github.com/ktorio/ktor/blob/main/ktor-client/ktor-client-curl/build.gradle.kts
 //        val nativeMain by getting
 //        val nativeTest by getting
         val iosMain by getting

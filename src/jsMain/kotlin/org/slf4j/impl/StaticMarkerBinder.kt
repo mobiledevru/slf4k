@@ -24,8 +24,9 @@
  */
 package org.slf4j.impl
 
-import org.slf4j.spi.MarkerFactoryBinder
 import org.slf4j.IMarkerFactory
+import org.slf4j.spi.MarkerFactoryBinder
+import org.slf4j.helpers.BasicMarkerFactory
 
 /**
  *
@@ -37,28 +38,23 @@ import org.slf4j.IMarkerFactory
  * slf4j-simple, slf4j-log4j12 etc.
  *
  * @author Ceki G&uuml;lc&uuml;
+ * @author Golubev Dmitrii
  */
 actual class StaticMarkerBinder private constructor() : MarkerFactoryBinder {
 
-    init {
-        throw UnsupportedOperationException("This code should never make it into the jar")
-    }
+    private val markerFactory: IMarkerFactory = BasicMarkerFactory()
 
     /**
      * Currently this method always returns an instance of
      * [BasicMarkerFactory].
      */
-    override fun getMarkerFactory(): IMarkerFactory {
-        throw UnsupportedOperationException("This code should never make it into the jar")
-    }
+    override fun getMarkerFactory(): IMarkerFactory = markerFactory
 
     /**
      * Currently, this method returns the class name of
      * [BasicMarkerFactory].
      */
-    override fun getMarkerFactoryClassStr(): String {
-        throw UnsupportedOperationException("This code should never make it into the jar")
-    }
+    override fun getMarkerFactoryClassStr(): String = BasicMarkerFactory::class.simpleName.toString()
 
     companion object {
         /**
@@ -72,8 +68,6 @@ actual class StaticMarkerBinder private constructor() : MarkerFactoryBinder {
          */
         val SINGLETON = StaticMarkerBinder()
 
-        fun getSingleton() : StaticMarkerBinder {
-            return SINGLETON
-        }
+        fun getSingleton() : StaticMarkerBinder = SINGLETON
     }
 }

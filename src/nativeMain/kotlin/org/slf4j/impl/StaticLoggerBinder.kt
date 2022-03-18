@@ -4,9 +4,6 @@ import org.slf4j.ILoggerFactory
 
 actual class StaticLoggerBinder {
 
-    actual fun StaticLoggerBinder() {
-    }
-
     actual fun getLoggerFactory(): ILoggerFactory {
         TODO("Not yet implemented")
     }
