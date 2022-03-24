@@ -25,11 +25,15 @@ kotlin {
         }
     }
     js(BOTH) {
-        browser {
-            commonWebpackConfig {
-                cssSupport.enabled = true
+        compilations.all {
+            kotlinOptions {
+                sourceMap = true
+                moduleKind = "umd"
+                metaInfo = true
             }
         }
+        browser()
+        nodejs()
     }
     ios {
         binaries {
