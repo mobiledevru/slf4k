@@ -24,11 +24,9 @@
  */
 package org.slf4j
 
-import org.slf4j.Util.report
 import org.slf4j.helpers.NOPMDCAdapter
-import org.slf4j.impl.StaticMDCBinder
 import org.slf4j.spi.MDCAdapter
-import kotlin.jvm.JvmStatic
+import kotlin.native.concurrent.ThreadLocal
 
 /**
  * This class hides and serves as a substitute for the underlying logging
@@ -61,6 +59,7 @@ import kotlin.jvm.JvmStatic
  * @author Ceki Glc
  * @since 1.4.1
  */
+@ThreadLocal
 expect object MDC {
 
     /**

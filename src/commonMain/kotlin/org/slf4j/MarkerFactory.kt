@@ -24,8 +24,7 @@
  */
 package org.slf4j
 
-import org.slf4j.impl.StaticMarkerBinder
-import kotlin.jvm.JvmStatic
+import kotlin.native.concurrent.ThreadLocal
 
 /**
  * MarkerFactory is a utility class producing [Marker] instances as
@@ -42,6 +41,7 @@ import kotlin.jvm.JvmStatic
  *
  * @author Ceki G&uuml;lc&uuml;
  */
+@ThreadLocal
 expect object MarkerFactory {
     var MARKER_FACTORY: IMarkerFactory?
 

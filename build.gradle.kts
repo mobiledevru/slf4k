@@ -15,6 +15,35 @@ repositories {
 
 kotlin {
     jvm {
+        compilations {
+            val logbackTest by compilations.creating {
+                defaultSourceSet {
+                    dependencies {
+                        implementation("ch.qos.logback:logback-classic:1.2.10")
+                        implementation(kotlin("test"))
+                        implementation(kotlin("test-junit"))
+                    }
+                }
+
+                // Create a test task to run the tests produced by this compilation:
+                tasks.register<Test>("jvmLogbackTest") {
+                    description = "Runs the integration tests with JVM Logback."
+                    group = "verification"
+
+                    useJUnit()
+
+                    outputs.upToDateWhen { false }
+                    mustRunAfter("test")
+
+                    // Run the tests with the classpath containing the compile dependencies (including 'main'),
+                    // runtime dependencies, and the outputs of this compilation:
+                    classpath = compileDependencyFiles + runtimeDependencyFiles + output.allOutputs
+
+                    // Run only the tests from this compilation's outputs:
+                    testClassesDirs = output.classesDirs
+                }
+            }
+        }
         compilations.all {
             kotlinOptions.jvmTarget = "1.8"
         }
@@ -89,21 +118,19 @@ kotlin {
         // xcodeConfigurationToNativeBuildType["CUSTOM_RELEASE"] = org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType.RELEASE
     }
 
-//    val hostOs = System.getProperty("os.name")
-//    val isMingwX64 = hostOs.startsWith("Windows")
-//    val nativeTarget = when {
-//        hostOs == "Mac OS X" -> macosX64("native")
-//        hostOs == "Linux" -> linuxX64("native")
-//        isMingwX64 -> mingwX64("native")
-//        else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
-//    }
+    val hostOs = System.getProperty("os.name")
+    val isMingwX64 = hostOs.startsWith("Windows")
+    val nativeTarget = when {
+        hostOs == "Mac OS X" -> macosX64("native")
+        hostOs == "Linux" -> linuxX64("native")
+        isMingwX64 -> mingwX64("native")
+        else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
+    }
 
-    
     sourceSets {
         val commonMain by getting {
             dependencies {
-//                implementation(kotlin("stdlib-common"))
-                implementation("org.jetbrains.kotlin:kotlin-stdlib-common:${kotlinVersion}")
+                implementation(kotlin("stdlib-common"))
             }
         }
         val commonTest by getting {
@@ -118,70 +145,40 @@ kotlin {
         }
         val jvmMain by getting {
             dependencies {
-//                implementation(kotlin("org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}"))
-//                implementation("org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}")
                 implementation(kotlin("stdlib-jdk8"))
+                implementation("org.slf4j:slf4j-api:1.7.36")
             }
         }
         val jvmTest by getting {
             dependencies {
-                /*implementation("ch.qos.logback:logback-classic:1.2.10") {
-                    exclude("org.slf4j", "slf4j-api")
-                }*/
                 implementation("org.slf4j:slf4j-nop:1.7.36")
-                implementation("org.slf4j:slf4j-api:1.7.36")
-                implementation("junit:junit:4.13")
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
-
             }
         }
-        /*val jvmTest by getting {
+        val jsMain by getting
+        val jsTest by getting {
             dependencies {
-                implementation("ch.qos.logback:logback-classic:1.2.10") {
-                    exclude("org.slf4j", "slf4j-api")
-                }
-                implementation("junit:junit:4.13")
-                implementation(kotlin("test"))
-                implementation(kotlin("test-junit"))
-
-            }
-        }*/
-        /*val jsMain by getting {
-            dependencies {
-//                implementation(kotlin("org.jetbrains.kotlin:kotlin-stdlib-js:${kotlinVersion}"))
-                implementation("org.jetbrains.kotlin:kotlin-stdlib-js:${kotlinVersion}")
+                implementation(kotlin("test-js"))
             }
         }
-        val jsTest by getting*/
-// https://github.com/ktorio/ktor/blob/main/ktor-client/ktor-client-curl/build.gradle.kts
-//        val nativeMain by getting
-//        val nativeTest by getting
+        val nativeMain by getting {
+            dependencies {
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
+            }
+        }
+        val nativeTest by getting
         val iosMain by getting
-        /*val iosMain by getting {
-            dependencies {
-                implementation("io.ktor:ktor-client-ios:1.6.3")
-            }
-        }*/
         val iosTest by getting
+
+        // https://github.com/ktorio/ktor/blob/main/ktor-client/ktor-client-curl/build.gradle.kts
+        // https://github.com/benasher44/uuid
     }
 }
 
-/*tasks {
-    val compileJava = named("compileJava", JavaCompile::class).get()
-    val compileKotlin = named("compileKotlin", KotlinCompile::class).get()
-    val compileGroovy = named("compileGroovy", GroovyCompile::class).get()
-    val classes by getting
-
-    compileGroovy.dependsOn.remove("compileJava")
-    compileKotlin.setDependsOn(mutableListOf(compileGroovy))
-    compileKotlin.classpath += files(compileGroovy.destinationDir)
-    classes.setDependsOn(mutableListOf(compileKotlin))
-}*/
-
 task("processClasses") {
-//    tasks.findByName("classes")?.dependsOn(this)
-    tasks.findByName("jvmJar")?.dependsOn(this)
+    this.dependsOn(tasks.findByName("jvmMainClasses"))
+    setOf("jvmJar", "jvmTest", "jvmLogbackTest").forEach { tasks.findByName(it)?.dependsOn(this) }
     doLast {
         ant.withGroovyBuilder {
             "delete"("includeemptydirs" to "true") {
@@ -215,3 +212,5 @@ val packForXcode by tasks.creating(Sync::class) {
 }
 
 tasks.getByName("build").dependsOn(packForXcode)
+
+// https://dev.to/kotlin/how-to-build-and-publish-a-kotlin-multiplatform-library-going-public-4a8k
