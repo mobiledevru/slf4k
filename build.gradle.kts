@@ -71,6 +71,14 @@ kotlin {
             }
         }
     }
+//    multiplatformSwiftPackage {
+//        packageName("KMPExample")
+//        swiftToolsVersion("5.3")
+//        targetPlatforms {
+//            iOS { v("13") }
+//        }
+//        outputDirectory(File(rootDir, "/"))
+//    }
     /*configure(listOf(iosX64(), iosArm64())) {
         binaries {
             framework {

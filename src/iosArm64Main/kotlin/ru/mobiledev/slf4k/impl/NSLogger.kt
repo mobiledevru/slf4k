@@ -21,7 +21,7 @@ class NSLogger(
 //    private fun ts() = dateFormatter.stringFromDate(NSDate())
 
     override fun out(level: Level, message: String) {
-        val prefix = "[$level]\t "
+        val prefix = "[$level]\t[$name]\t"
         NSLog(prefix + message)
     }
 

@@ -17,7 +17,7 @@ class JSLogger(
 ) : SimpleLogger(name, isTraceEnabled, isDebugEnabled, isInfoEnabled, isWarnEnabled, isErrorEnabled) {
 
     override fun out(level: Level, message: String) {
-        val prefix = if (hasPrefix) "[$level]\t " else ""
+        val prefix = (if (hasLevelPrefix) "[$level]\t" else "") + "[$name]\t"
         when (level) {
             Level.ERROR -> console.error(prefix + message + suffix)
             Level.WARN -> console.warn(prefix + message + suffix)
@@ -30,9 +30,10 @@ class JSLogger(
     companion object {
         private val isBrowser = js("typeof window !== \"undefined\" && typeof window.document !== \"undefined\"") == true
         private val userAgent = js("(typeof navigator !== \"undefined\") ? navigator['userAgent'] : null") as String?
-        private val isHeadless = userAgent?.contains("Headless") ?: true
+        private val isHeadlessBrowser = isBrowser && (userAgent?.contains("Headless") ?: true)
+        private val isNode = userAgent == null || userAgent == "null"
 
-        private val hasPrefix = !isBrowser || isHeadless
-        private val suffix: String = if (!isBrowser || isHeadless) "\n" else ""
+        private val hasLevelPrefix = !isBrowser || isHeadlessBrowser || isNode
+        private val suffix: String = "" // if (!isBrowser || isHeadlessBrowser) "\n" else ""
     }
 }

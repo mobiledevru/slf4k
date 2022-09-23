@@ -9,5 +9,8 @@ class LoggerTest {
     fun testHello() {
         val logger = LoggerFactory.getLogger("test-logger")
         logger.debug("test message from JS LoggerTest")
+
+        val logger2 = LoggerFactory[LoggerTest::class]
+
     }
 }
