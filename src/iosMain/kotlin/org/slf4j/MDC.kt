@@ -24,9 +24,10 @@
  */
 package org.slf4j
 
+import org.slf4j.Util.report
 import org.slf4j.helpers.NOPMDCAdapter
+import org.slf4j.impl.StaticMDCBinder
 import org.slf4j.spi.MDCAdapter
-import kotlin.native.concurrent.ThreadLocal
 
 /**
  * This class hides and serves as a substitute for the underlying logging
@@ -59,8 +60,9 @@ import kotlin.native.concurrent.ThreadLocal
  * @author Ceki Glc
  * @since 1.4.1
  */
-@ThreadLocal
-expect object MDC {
+object MDC {
+    const val NULL_MDCA_URL = "http://www.slf4j.org/codes.html#null_MDCA"
+    const val NO_STATIC_MDC_BINDER_URL = "http://www.slf4j.org/codes.html#no_static_mdc_binder"
 
     /**
      * Returns the MDCAdapter instance currently in use.
@@ -68,7 +70,43 @@ expect object MDC {
      * @return the MDcAdapter instance currently in use.
      * @since 1.4.2
      */
-    var mDCAdapter: MDCAdapter?
+    var mDCAdapter: MDCAdapter? = null
+
+    /**
+     * As of SLF4J version 1.7.14, StaticMDCBinder classes shipping in various bindings
+     * come with a getSingleton() method. Previously only a public field called SINGLETON
+     * was available.
+     *
+     * @return MDCAdapter
+     * @throws NoClassDefFoundError in case no binding is available
+     * @since 1.7.14
+     */
+    private fun bwCompatibleGetMDCAdapterFromBinder(): MDCAdapter = StaticMDCBinder.getSingleton().getMDCA()
+//    try {
+//        return StaticMDCBinder.getSingleton().getMDCA()
+//    } catch (nsme:NoSuchMethodError){
+//        // binding is probably a version of SLF4J older than 1.7.14
+//        return StaticMDCBinder.SINGLETON.getMDCA()
+//    }
+
+    init {
+        try {
+            mDCAdapter = bwCompatibleGetMDCAdapterFromBinder()
+//        } catch (ncde: NoClassDefFoundError) {
+//            mDCAdapter = NOPMDCAdapter()
+//            val msg: String = ncde.message
+//            if (msg != null && msg.contains("StaticMDCBinder")) {
+//                report("Failed to load class \"org.slf4j.impl.StaticMDCBinder\".")
+//                report("Defaulting to no-operation MDCAdapter implementation.")
+//                report("See " + NO_STATIC_MDC_BINDER_URL + " for further details.")
+//            } else {
+//                throw ncde
+//            }
+        } catch (e: Exception) {
+            // we should never get here
+            report("MDC binding unsuccessful.", e)
+        }
+    }
 
     /**
      * Put a diagnostic context value (the `val` parameter) as identified with the
@@ -86,7 +124,12 @@ expect object MDC {
      * @throws IllegalArgumentException
      * in case the "key" parameter is null
      */
-    fun put(key: String, `val`: String?)
+    @Throws(IllegalArgumentException::class)
+    fun put(key: String, `val`: String?) {
+        requireNotNull(key) { "key parameter cannot be null" }
+        checkNotNull(mDCAdapter) { "MDCAdapter cannot be null. See also $NULL_MDCA_URL" }
+        mDCAdapter!!.put(key, `val`)
+    }
     
     /**
      * Get the diagnostic context identified by the `key` parameter. The
@@ -101,7 +144,12 @@ expect object MDC {
      * @throws IllegalArgumentException
      * in case the "key" parameter is null
      */
-    operator fun get(key: String): String?
+    @Throws(IllegalArgumentException::class)
+    operator fun get(key: String): String? {
+        requireNotNull(key) { "key parameter cannot be null" }
+        checkNotNull(mDCAdapter) { "MDCAdapter cannot be null. See also $NULL_MDCA_URL" }
+        return mDCAdapter!![key]
+    }
 
     /**
      * Remove the diagnostic context identified by the `key` parameter using
@@ -113,12 +161,20 @@ expect object MDC {
      * @throws IllegalArgumentException
      * in case the "key" parameter is null
      */
-    fun remove(key: String)
+    @Throws(IllegalArgumentException::class)
+    fun remove(key: String) {
+        requireNotNull(key) { "key parameter cannot be null" }
+        checkNotNull(mDCAdapter) { "MDCAdapter cannot be null. See also $NULL_MDCA_URL" }
+        mDCAdapter!!.remove(key)
+    }
 
     /**
      * Clear all entries in the MDC of the underlying implementation.
      */
-    fun clear()
+    fun clear() {
+        checkNotNull(mDCAdapter) { "MDCAdapter cannot be null. See also $NULL_MDCA_URL" }
+        mDCAdapter!!.clear()
+    }
 
     /**
      * Return a copy of the current thread's context map, with keys and values of
@@ -127,7 +183,10 @@ expect object MDC {
      * @return A copy of the current thread's context map. May be null.
      * @since 1.5.1
      */
-    fun getCopyOfContextMap(): Map<String?, String?>?
+    fun getCopyOfContextMap(): Map<String?, String?>? {
+        checkNotNull(mDCAdapter) { "MDCAdapter cannot be null. See also $NULL_MDCA_URL" }
+        return mDCAdapter!!.getCopyOfContextMap()
+    }
 
     /**
      * Set the current thread's context map by first clearing any existing map and
@@ -138,5 +197,8 @@ expect object MDC {
      * must contain only keys and values of type String
      * @since 1.5.1
      */
-    fun setContextMap(contextMap: Map<String?, String?>?)
+    fun setContextMap(contextMap: Map<String?, String?>?) {
+        checkNotNull(mDCAdapter) { "MDCAdapter cannot be null. See also $NULL_MDCA_URL" }
+        mDCAdapter!!.setContextMap(contextMap)
+    }
 }

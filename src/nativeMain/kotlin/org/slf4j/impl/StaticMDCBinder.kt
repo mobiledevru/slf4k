@@ -32,7 +32,7 @@ import org.slf4j.spi.MDCAdapter
  *
  * @author Ceki G&uuml;lc&uuml;
  */
-actual class StaticMDCBinder private constructor() {
+class StaticMDCBinder private constructor() {
 
     init {
         throw UnsupportedOperationException("This code should never make it into the jar")
@@ -42,11 +42,11 @@ actual class StaticMDCBinder private constructor() {
      * Currently this method always returns an instance of
      * [StaticMDCBinder].
      */
-    actual fun getMDCA(): MDCAdapter {
+    fun getMDCA(): MDCAdapter {
         throw UnsupportedOperationException("This code should never make it into the jar")
     }
 
-    actual fun getMDCAdapterClassStr(): String {
+    fun getMDCAdapterClassStr(): String {
         throw UnsupportedOperationException("This code should never make it into the jar")
     }
 

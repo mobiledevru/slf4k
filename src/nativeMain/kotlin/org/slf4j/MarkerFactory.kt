@@ -41,8 +41,8 @@ import org.slf4j.impl.StaticMarkerBinder
  *
  * @author Ceki G&uuml;lc&uuml;
  */
-actual object MarkerFactory {
-    actual var MARKER_FACTORY: IMarkerFactory? = null
+object MarkerFactory {
+    var MARKER_FACTORY: IMarkerFactory? = null
 
     /**
      * As of SLF4J version 1.7.14, StaticMarkerBinder classes shipping in various bindings
@@ -84,7 +84,7 @@ actual object MarkerFactory {
      * The name of the [Marker] object to return.
      * @return marker
      */
-    actual fun getMarker(name: String): Marker? {
+    fun getMarker(name: String): Marker? {
         return MARKER_FACTORY?.getMarker(name)
     }
 
@@ -95,7 +95,7 @@ actual object MarkerFactory {
      * @return a dangling marker
      * @since 1.5.1
      */
-    actual fun getDetachedMarker(name: String): Marker? {
+    fun getDetachedMarker(name: String): Marker? {
         return MARKER_FACTORY?.getDetachedMarker(name)
     }
 
@@ -108,6 +108,6 @@ actual object MarkerFactory {
      *
      * @return the IMarkerFactory instance in use
      */
-    actual val iMarkerFactory: IMarkerFactory?
+    val iMarkerFactory: IMarkerFactory?
         get() = MARKER_FACTORY
 }

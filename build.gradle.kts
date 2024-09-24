@@ -1,19 +1,29 @@
-val kotlinVersion = "1.6.10"
+import org.jetbrains.kotlin.gradle.dsl.JsModuleKind
 
 plugins {
-    kotlin("multiplatform") version "1.6.10"
-    kotlin("native.cocoapods") version "1.6.10"
+    alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.kotlinNativeCocoapods)
     id("maven-publish")
+    id("root.publication")
 }
 
 group = "ru.mobiledev.lib.slf4k"
-version = "0.1"
+version = "0.2"
 
 repositories {
     mavenCentral()
 }
 
 kotlin {
+
+    compilerOptions {
+        freeCompilerArgs.add("-Xexpect-actual-classes")
+    }
+
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of(8))
+    }
+
     jvm {
         compilations {
             val logbackTest by compilations.creating {
@@ -33,7 +43,7 @@ kotlin {
                     useJUnit()
 
                     outputs.upToDateWhen { false }
-                    mustRunAfter("test")
+                    //mustRunAfter("test")
 
                     // Run the tests with the classpath containing the compile dependencies (including 'main'),
                     // runtime dependencies, and the outputs of this compilation:
@@ -44,33 +54,68 @@ kotlin {
                 }
             }
         }
-        compilations.all {
+        /*compilations.all {
             kotlinOptions.jvmTarget = "1.8"
-        }
+        }*/
+        /*@OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_1_8)
+        }*/
         withJava()
+
         testRuns["test"].executionTask.configure {
 //            useJUnitPlatform()
             useJUnit()
         }
     }
-    js(BOTH) {
-        compilations.all {
-            kotlinOptions {
-                sourceMap = true
-                moduleKind = "umd"
-                metaInfo = true
+    
+    js/*(BOTH)*/ {
+        compilerOptions {
+            sourceMap = true
+            moduleKind = JsModuleKind.MODULE_UMD
+            //metaInfo = true
+        }
+
+        browser {
+            testTask {
+                useKarma {
+                    useChromeHeadless()
+                    useFirefox()
+                }
             }
         }
-        browser()
+        
         nodejs()
     }
-    ios {
-        binaries {
-            framework {
-                baseName = "shared"
-            }
+
+    iosArm64()
+    iosX64()
+    iosSimulatorArm64()
+
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64(),
+    ).forEach {
+        it.compilerOptions {
+            freeCompilerArgs.add("-Xbinary=bundleId=ru.mobiledev.lib.slf4k")
+        }
+        it.binaries.framework {
+            baseName = "slf4k"
+            binaryOption("bundleId", "ru.mobiledev.lib.slf4k")
         }
     }
+
+    //linuxX64()
+
+    /*ios {
+        binaries {
+            framework {
+                baseName = "slf4k"
+            }
+        }
+    }*/
+    
 //    multiplatformSwiftPackage {
 //        packageName("KMPExample")
 //        swiftToolsVersion("5.3")
@@ -128,6 +173,8 @@ kotlin {
 
     val hostOs = System.getProperty("os.name")
     val isMingwX64 = hostOs.startsWith("Windows")
+
+    @Suppress("UNUSED_VARIABLE")
     val nativeTarget = when {
         hostOs == "Mac OS X" -> macosX64("native")
         hostOs == "Linux" -> linuxX64("native")
@@ -147,10 +194,27 @@ kotlin {
                 implementation(kotlin("test-annotations-common"))
             }
         }
-        val iosArm64Main by getting
-        val iosX64Main by getting {
-            dependsOn(iosArm64Main)
+        val iosMain by creating {
+            dependsOn(commonMain)
+            dependencies {
+                implementation(libs.kotlinx.coroutines.core)
+            }
         }
+        val iosX64Main by getting {
+            dependsOn(iosMain)
+        }
+        val iosArm64Main by getting {
+            dependsOn(iosMain)
+        }
+        val iosSimulatorArm64Main by getting {
+            dependsOn(iosMain)
+        }
+        val iosTest by creating {
+            dependencies {
+                implementation(kotlin("test"))
+            }
+        }
+
         val jvmMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-jdk8"))
@@ -172,29 +236,32 @@ kotlin {
         }
         val nativeMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
+                implementation(libs.kotlinx.coroutines.core)
             }
         }
         val nativeTest by getting
-        val iosMain by getting
-        val iosTest by getting
 
+        // https://github.com/Kotlin/multiplatform-library-template
         // https://github.com/ktorio/ktor/blob/main/ktor-client/ktor-client-curl/build.gradle.kts
         // https://github.com/benasher44/uuid
     }
 }
 
-task("processClasses") {
-    this.dependsOn(tasks.findByName("jvmMainClasses"))
+val processClasses by tasks.creating {
+
+    tasks.getByName("build").dependsOn(this)
+    dependsOn(tasks.findByName("jvmMainClasses"))
     setOf("jvmJar", "jvmTest", "jvmLogbackTest").forEach { tasks.findByName(it)?.dependsOn(this) }
+
     doLast {
+        val buildDir = layout.buildDirectory.get().asFile.absolutePath
         ant.withGroovyBuilder {
             "delete"("includeemptydirs" to "true") {
                 // by slf4j design
                 "fileset"("dir" to "$buildDir/classes/java/main/org/slf4j/impl") {
                     "include"("name" to "**/*.class")
                 }
-                // exclude all slf4j classes to be completely replaced with original slf4j api implementation under jvm
+                // exclude all slf4j classes to be completely replaced with an original slf4j api implementation under jvm
                 "fileset"("dir" to "$buildDir/classes/java/main/org/slf4j/") {
                     "include"("name" to "**/*.class")
                 }
@@ -206,6 +273,7 @@ task("processClasses") {
     }
 }
 
+
 val packForXcode by tasks.creating(Sync::class) {
     group = "build"
     val mode = System.getenv("CONFIGURATION") ?: "DEBUG"
@@ -214,6 +282,7 @@ val packForXcode by tasks.creating(Sync::class) {
     val framework = kotlin.targets.getByName<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget>(targetName).binaries.getFramework(mode)
     inputs.property("mode", mode)
     dependsOn(framework.linkTask)
+    val buildDir = layout.buildDirectory.get().asFile.absolutePath
     val targetDir = File(buildDir, "xcode-frameworks")
     from({ framework.outputDirectory })
     into(targetDir)

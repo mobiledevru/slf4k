@@ -27,6 +27,7 @@ class BasicMarker(override val name: String) : Marker {
 
     override fun hasReferences(): Boolean = referenceList.isNotEmpty()
 
+    @Deprecated("Deprecated", ReplaceWith("hasReferences()"))
     override fun hasChildren(): Boolean = hasReferences()
 
     /**

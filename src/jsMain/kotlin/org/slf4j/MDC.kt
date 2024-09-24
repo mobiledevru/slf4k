@@ -60,7 +60,7 @@ import org.slf4j.spi.MDCAdapter
  * @author Ceki Glc
  * @since 1.4.1
  */
-actual object MDC {
+object MDC {
     const val NULL_MDCA_URL = "http://www.slf4j.org/codes.html#null_MDCA"
     const val NO_STATIC_MDC_BINDER_URL = "http://www.slf4j.org/codes.html#no_static_mdc_binder"
 
@@ -70,7 +70,7 @@ actual object MDC {
      * @return the MDcAdapter instance currently in use.
      * @since 1.4.2
      */
-    actual var mDCAdapter: MDCAdapter? = null
+    var mDCAdapter: MDCAdapter? = null
 
     /**
      * As of SLF4J version 1.7.14, StaticMDCBinder classes shipping in various bindings
@@ -124,7 +124,7 @@ actual object MDC {
      * @throws IllegalArgumentException
      * in case the "key" parameter is null
      */
-    actual fun put(key: String, `val`: String?) {
+    fun put(key: String, `val`: String?) {
         requireNotNull(key) { "key parameter cannot be null" }
         checkNotNull(mDCAdapter) { "MDCAdapter cannot be null. See also $NULL_MDCA_URL" }
         mDCAdapter!!.put(key, `val`)
@@ -143,7 +143,7 @@ actual object MDC {
      * @throws IllegalArgumentException
      * in case the "key" parameter is null
      */
-    actual operator fun get(key: String): String? {
+    operator fun get(key: String): String? {
         requireNotNull(key) { "key parameter cannot be null" }
         checkNotNull(mDCAdapter) { "MDCAdapter cannot be null. See also $NULL_MDCA_URL" }
         return mDCAdapter!![key]
@@ -159,7 +159,7 @@ actual object MDC {
      * @throws IllegalArgumentException
      * in case the "key" parameter is null
      */
-    actual fun remove(key: String) {
+    fun remove(key: String) {
         requireNotNull(key) { "key parameter cannot be null" }
         checkNotNull(mDCAdapter) { "MDCAdapter cannot be null. See also $NULL_MDCA_URL" }
         mDCAdapter!!.remove(key)
@@ -168,7 +168,7 @@ actual object MDC {
     /**
      * Clear all entries in the MDC of the underlying implementation.
      */
-    actual fun clear() {
+    fun clear() {
         checkNotNull(mDCAdapter) { "MDCAdapter cannot be null. See also $NULL_MDCA_URL" }
         mDCAdapter!!.clear()
     }
@@ -180,7 +180,7 @@ actual object MDC {
      * @return A copy of the current thread's context map. May be null.
      * @since 1.5.1
      */
-    actual fun getCopyOfContextMap(): Map<String?, String?>? {
+    fun getCopyOfContextMap(): Map<String?, String?>? {
         checkNotNull(mDCAdapter) { "MDCAdapter cannot be null. See also $NULL_MDCA_URL" }
         return mDCAdapter!!.getCopyOfContextMap()
     }
@@ -194,7 +194,7 @@ actual object MDC {
      * must contain only keys and values of type String
      * @since 1.5.1
      */
-    actual fun setContextMap(contextMap: Map<String?, String?>?) {
+    fun setContextMap(contextMap: Map<String?, String?>?) {
         checkNotNull(mDCAdapter) { "MDCAdapter cannot be null. See also $NULL_MDCA_URL" }
         mDCAdapter!!.setContextMap(contextMap)
     }

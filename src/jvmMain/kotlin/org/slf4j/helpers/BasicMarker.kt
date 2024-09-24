@@ -34,7 +34,8 @@ import org.slf4j.Marker
  */
 open class BasicMarker internal constructor(name: String) : Marker, java.io.Serializable {
 
-    override val name: String
+    final override val name: String
+        get() = field
     private val referenceList: MutableList<Marker> = java.util.concurrent.CopyOnWriteArrayList<Marker>()
 
     override fun add(reference: Marker) {
@@ -55,6 +56,7 @@ open class BasicMarker internal constructor(name: String) : Marker, java.io.Seri
         return referenceList.size > 0
     }
 
+    @Deprecated("Deprecated", ReplaceWith("hasReferences()"))
     override fun hasChildren(): Boolean {
         return hasReferences()
     }

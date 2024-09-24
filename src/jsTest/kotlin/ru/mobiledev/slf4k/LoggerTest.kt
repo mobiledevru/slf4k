@@ -10,7 +10,7 @@ class LoggerTest {
         val logger = LoggerFactory.getLogger("test-logger")
         logger.debug("test message from JS LoggerTest")
 
-        val logger2 = LoggerFactory[LoggerTest::class]
-
+        val logger2 = LoggerFactory.getLogger(LoggerTest::class)
+        logger2.debug("test message from JS LoggerTest")
     }
 }

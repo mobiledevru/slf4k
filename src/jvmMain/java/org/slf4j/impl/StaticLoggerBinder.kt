@@ -22,9 +22,9 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.slf4j.impl;
+package org.slf4j.impl
 
-import org.slf4j.ILoggerFactory;
+import org.slf4j.ILoggerFactory
 
 /**
  * The binding of {@link org.slf4j.LoggerFactory} class with an actual instance of
@@ -36,38 +36,41 @@ import org.slf4j.ILoggerFactory;
  *
  * @author Ceki G&uuml;lc&uuml;
  */
-public class StaticLoggerBinder {
-
-    /**
-     * The unique instance of this class.
-     */
-    private static final StaticLoggerBinder SINGLETON = new StaticLoggerBinder();
-
-    /**
-     * Return the singleton of this class.
-     *
-     * @return the StaticLoggerBinder singleton
-     */
-    public static final StaticLoggerBinder getSingleton() {
-        return SINGLETON;
+actual class StaticLoggerBinder private constructor() {
+    
+    init {
+        throw UnsupportedOperationException("This code should have never made it into slf4j-api.jar")
     }
 
-    /**
-     * Declare the version of the SLF4J API this implementation is compiled against.
-     * The value of this field is modified with each major release.
-     */
-    // to avoid constant folding by the compiler, this field must *not* be final
-    public static String REQUESTED_API_VERSION = "1.6.99"; // !final
-
-    private StaticLoggerBinder() {
-        throw new UnsupportedOperationException("This code should have never made it into slf4j-api.jar");
+    actual fun getLoggerFactory(): ILoggerFactory {
+        throw UnsupportedOperationException("This code should never make it into slf4j-api.jar")
     }
 
-    public ILoggerFactory getLoggerFactory() {
-        throw new UnsupportedOperationException("This code should never make it into slf4j-api.jar");
+    actual fun getLoggerFactoryClassStr(): String {
+        throw UnsupportedOperationException("This code should never make it into slf4j-api.jar")
+
     }
 
-    public String getLoggerFactoryClassStr() {
-        throw new UnsupportedOperationException("This code should never make it into slf4j-api.jar");
+    companion object {
+        /**
+         * The unique instance of this class.
+         */
+        private val SINGLETON: StaticLoggerBinder = StaticLoggerBinder()
+
+        /**
+         * Return the singleton of this class.
+         *
+         * @return the StaticLoggerBinder singleton
+         */
+        fun getSingleton(): StaticLoggerBinder {
+            return SINGLETON
+        }
+
+        /**
+         * Declare the version of the SLF4J API this implementation is compiled against.
+         * The value of this field is modified with each major release.
+         */
+        // to avoid constant folding by the compiler, this field must *not* be final
+        var REQUESTED_API_VERSION: String = "1.6.99" // !final
     }
 }

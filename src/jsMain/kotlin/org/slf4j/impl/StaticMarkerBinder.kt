@@ -40,7 +40,7 @@ import org.slf4j.helpers.BasicMarkerFactory
  * @author Ceki G&uuml;lc&uuml;
  * @author Golubev Dmitrii
  */
-actual class StaticMarkerBinder private constructor() : MarkerFactoryBinder {
+class StaticMarkerBinder private constructor() : MarkerFactoryBinder {
 
     private val markerFactory: IMarkerFactory = BasicMarkerFactory()
 
